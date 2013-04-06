@@ -22,7 +22,7 @@
 - (void)setStartButtonTitle:(NSString *)string {
     [startButton setTitle:string forState:UIControlStateNormal];
     
-    if (string == @"Resume") {
+    if ([string isEqualToString:@"Resume"]) {
         [score setHidden:NO];
         [difficulty setHidden:YES];
         [difficultyLabel setHidden:NO];
