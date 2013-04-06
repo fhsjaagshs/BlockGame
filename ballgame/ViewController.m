@@ -461,8 +461,8 @@
     
     [super viewDidLoad];
     
-    isAnimating = NO;
-    bhTimerIsRunning = NO;
+    self.isAnimating = NO;
+    self.bhTimerIsRunning = NO;
     
     gameCenterManager= [[GameCenterManager alloc]init];
     [gameCenterManager setDelegate:self];
@@ -481,7 +481,7 @@
     
     [gameCenterManager reloadHighScoresForCategory:leaderboard];
     
-    [UIAccelerometer sharedAccelerometer].updateInterval = 1 / 180.0; // original speed: 1/30 
+    [UIAccelerometer sharedAccelerometer].updateInterval = 1/180;
     [UIAccelerometer sharedAccelerometer].delegate = nil;
     
     NSArray *targets = [NSArray arrayWithObjects:self.one, self.two, self.three, self.four, self.five, self.six, self.seven, self.eight, self.nine, self.ten, self.eleven, self.twelve, self.thirteen, self.fourteen, self.fifteen, self.sixteen, nil];
@@ -496,21 +496,21 @@
         view.layer.shadowPath = path.CGPath;
     }
 
-    self.a.transform = CGAffineTransformRotate(self.a.transform, 270.0/180*M_PI);
-    self.b.transform = CGAffineTransformRotate(self.b.transform, 270.0/180*M_PI);
-    self.c.transform = CGAffineTransformRotate(self.c.transform, 270.0/180*M_PI);
-    self.d.transform = CGAffineTransformRotate(self.d.transform, 270.0/180*M_PI);
-    self.e.transform = CGAffineTransformRotate(self.e.transform, 270.0/180*M_PI);
-    self.f.transform = CGAffineTransformRotate(self.f.transform, 270.0/180*M_PI);
-    self.g.transform = CGAffineTransformRotate(self.g.transform, 270.0/180*M_PI);
-    self.h.transform = CGAffineTransformRotate(self.h.transform, 270.0/180*M_PI);
-    self.i.transform = CGAffineTransformRotate(self.i.transform, 270.0/180*M_PI);
-    self.j.transform = CGAffineTransformRotate(self.j.transform, 270.0/180*M_PI);
+    self.a.transform = CGAffineTransformRotate(self.a.transform, 270/180*M_PI);
+    self.b.transform = CGAffineTransformRotate(self.b.transform, 270/180*M_PI);
+    self.c.transform = CGAffineTransformRotate(self.c.transform, 270/180*M_PI);
+    self.d.transform = CGAffineTransformRotate(self.d.transform, 270/180*M_PI);
+    self.e.transform = CGAffineTransformRotate(self.e.transform, 270/180*M_PI);
+    self.f.transform = CGAffineTransformRotate(self.f.transform, 270/180*M_PI);
+    self.g.transform = CGAffineTransformRotate(self.g.transform, 270/180*M_PI);
+    self.h.transform = CGAffineTransformRotate(self.h.transform, 270/180*M_PI);
+    self.i.transform = CGAffineTransformRotate(self.i.transform, 270/180*M_PI);
+    self.j.transform = CGAffineTransformRotate(self.j.transform, 270/180*M_PI);
     
     
     self.ball.layer.shadowColor = [UIColor blackColor].CGColor;
     self.ball.layer.shadowOpacity = 0.7f;
-    self.ball.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    self.ball.layer.shadowOffset = CGSizeZero;
     self.ball.layer.shadowRadius = 5.0f;
     self.ball.layer.masksToBounds = NO;
     self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
