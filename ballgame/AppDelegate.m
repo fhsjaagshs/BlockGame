@@ -15,25 +15,7 @@
 @synthesize viewController = _viewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
     application.idleTimerDisabled = YES;
-    /*if ([networkTest connectedToWifi]) {
-        GameCenterManager *gcm = [[GameCenterManager alloc]init];
-        [gcm authenticateLocalUser];
-    
-        NSArray *array = [NSArray arrayWithObjects:[NSNumber numberWithLongLong:gcm.easyScore], [NSNumber numberWithLongLong:gcm.medScore], [NSNumber numberWithLongLong:gcm.hardScore], [NSNumber numberWithLongLong:gcm.insaneScore], nil];
-    
-        NSString *savePath = [[NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES)objectAtIndex:0]stringByAppendingPathComponent:@"scores.plist"];
-    
-        BOOL isThere = [[NSFileManager defaultManager]fileExistsAtPath:savePath];
-        
-        if (isThere) {
-            [[NSFileManager defaultManager]removeItemAtPath:savePath error:nil];
-        }
-    
-        [[NSFileManager defaultManager]createFileAtPath:savePath contents:nil attributes:nil];
-        [array writeToFile:savePath atomically:YES];
-    }*/
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];

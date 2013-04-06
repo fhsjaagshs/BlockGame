@@ -17,15 +17,15 @@
 
 @implementation ViewController
 
-@synthesize targets, timer, isAnimating, blackHole, blackHoleTwo, bonusHole, bhTimerIsRunning, score, gameOverLabel, highscore;
+@synthesize timer, isAnimating, blackHole, blackHoleTwo, bonusHole, bhTimerIsRunning, score, gameOverLabel, highscore;
 
 - (void)setStartButtonTitle:(NSString *)string {
-    [startButton setTitle:string forState:UIControlStateNormal];
+    [self.startButton setTitle:string forState:UIControlStateNormal];
     
     if ([string isEqualToString:@"Resume"]) {
         [score setHidden:NO];
-        [difficulty setHidden:YES];
-        [difficultyLabel setHidden:NO];
+        [self.difficulty setHidden:YES];
+        [self.difficultyLabel setHidden:NO];
     }
 }
 
@@ -38,19 +38,19 @@
     if (connectedToANetwork && isThere) {
         int64_t ff = (int64_t)[[[NSUserDefaults standardUserDefaults]objectForKey:@"scoretosubmit"]intValue];
         
-        if (difficulty.selectedSegmentIndex == 0) {
+        if (self.difficulty.selectedSegmentIndex == 0) {
             /// easy
             [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgamehs"];
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-        } else if (difficulty.selectedSegmentIndex == 1) {
+        } else if (self.difficulty.selectedSegmentIndex == 1) {
             //medium
             [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgameMedium"];
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-        } else if (difficulty.selectedSegmentIndex == 2) {
+        } else if (self.difficulty.selectedSegmentIndex == 2) {
             // hard
             [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameHard"];
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-        } else if (difficulty.selectedSegmentIndex == 3) {
+        } else if (self.difficulty.selectedSegmentIndex == 3) {
             // insane
             [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameInsane"];
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
@@ -72,19 +72,19 @@
 - (int64_t)submitScore {
     
     int64_t ff = [self.score.text intValue];
-    if (difficulty.selectedSegmentIndex == 0) {
+    if (self.difficulty.selectedSegmentIndex == 0) {
         /// easy
         [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgamehs"];
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-    } else if (difficulty.selectedSegmentIndex == 1) {
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
         //medium
         [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgameMedium"];
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-    } else if (difficulty.selectedSegmentIndex == 2) {
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
         // hard
         [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameHard"];
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-    } else if (difficulty.selectedSegmentIndex == 3) {
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
         // insane
         [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameInsane"];
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
@@ -94,16 +94,16 @@
 
 - (void)processGameCenterAuth:(NSError *)error {
 	if(error == nil) {
-        if (difficulty.selectedSegmentIndex == 0) {
+        if (self.difficulty.selectedSegmentIndex == 0) {
             /// easy
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-        } else if (difficulty.selectedSegmentIndex == 1) {
+        } else if (self.difficulty.selectedSegmentIndex == 1) {
             //medium
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-        } else if (difficulty.selectedSegmentIndex == 2) {
+        } else if (self.difficulty.selectedSegmentIndex == 2) {
             // hard
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-        } else if (difficulty.selectedSegmentIndex == 3) {
+        } else if (self.difficulty.selectedSegmentIndex == 3) {
             // insane
             [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
         }
@@ -114,19 +114,19 @@
     if ([networkTest connectedToNetwork]) {
         GKLeaderboardViewController *leaderboardController = [[GKLeaderboardViewController alloc]init];
         if (leaderboardController != nil) {
-            if (difficulty.selectedSegmentIndex == 0) {
+            if (self.difficulty.selectedSegmentIndex == 0) {
                 /// easy
                 [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
                 leaderboardController.category = @"com.fhsjaagshs.blockgamehs";
-            } else if (difficulty.selectedSegmentIndex == 1) {
+            } else if (self.difficulty.selectedSegmentIndex == 1) {
                 //medium
                 [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
                 leaderboardController.category = @"com.fhsjaagshs.blockgameMedium";
-            } else if (difficulty.selectedSegmentIndex == 2) {
+            } else if (self.difficulty.selectedSegmentIndex == 2) {
                 // hard
                 [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
                 leaderboardController.category = @"com.fhsjaagshs.blockGameHard";
-            } else if (difficulty.selectedSegmentIndex == 3) {
+            } else if (self.difficulty.selectedSegmentIndex == 3) {
                 // insane
                 [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
                 leaderboardController.category = @"com.fhsjaagshs.blockGameInsane";
@@ -153,16 +153,16 @@
 }
 
 - (void)scoreReported:(NSError *)error {
-    if (difficulty.selectedSegmentIndex == 0) {
+    if (self.difficulty.selectedSegmentIndex == 0) {
         /// easy
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-    } else if (difficulty.selectedSegmentIndex == 1) {
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
         //medium
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-    } else if (difficulty.selectedSegmentIndex == 2) {
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
         // hard
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-    } else if (difficulty.selectedSegmentIndex == 3) {
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
         // insane
         [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
     }
@@ -171,93 +171,83 @@
 - (IBAction)difficultyChanged:(id)sender {
     
     NSString *leaderboard;
-    if (difficulty.selectedSegmentIndex == 0) {
+    if (self.difficulty.selectedSegmentIndex == 0) {
         leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (difficulty.selectedSegmentIndex == 1) {
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
         leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (difficulty.selectedSegmentIndex == 2) {
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
         leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (difficulty.selectedSegmentIndex == 3) {
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
         leaderboard = @"com.fhsjaagshs.blockGameInsane";
     }
     
     [gameCenterManager reloadHighScoresForCategory:leaderboard];
     
-    int diff = difficulty.selectedSegmentIndex;
+    int diff = self.difficulty.selectedSegmentIndex;
 
     NSString *savedPref = [NSString stringWithFormat:@"%d",diff];
     
     [[NSUserDefaults standardUserDefaults]setObject:savedPref forKey:@"difficultyIndex"];
     
     if (diff == 0)  {
-        [difficultyLabel setText:@"Easy"];
-        [blackHoleTwo removeFromSuperview];
-        [blackHole removeFromSuperview];
+        [self.difficultyLabel setText:@"Easy"];
+        [self.blackHoleTwo removeFromSuperview];
+        [self.blackHole removeFromSuperview];
     } else if (diff == 1) {
-        [difficultyLabel setText:@"Medium"];
+        [self.difficultyLabel setText:@"Medium"];
     } else if (diff == 2) {
-        [difficultyLabel setText:@"Hard"];
+        [self.difficultyLabel setText:@"Hard"];
     } else if (diff == 3) {
-        [difficultyLabel setText:@"Insane"];
+        [self.difficultyLabel setText:@"Insane"];
     }
 }
 
 - (void)hideImageViews:(BOOL)hide {
-    [a setHidden:hide];
-    [b setHidden:hide];
-    [c setHidden:hide];
-    [d setHidden:hide];
-    [e setHidden:hide];
-    [f setHidden:hide];
-    [g setHidden:hide];
-    [h setHidden:hide];
-    [i setHidden:hide];
-    [j setHidden:hide];
-    [k setHidden:hide];
-    [l setHidden:hide];
-    [m setHidden:hide];
-    [n setHidden:hide];
-    [o setHidden:hide];
-    [p setHidden:hide];
+    [self.a setHidden:hide];
+    [self.b setHidden:hide];
+    [self.c setHidden:hide];
+    [self.d setHidden:hide];
+    [self.e setHidden:hide];
+    [self.f setHidden:hide];
+    [self.g setHidden:hide];
+    [self.h setHidden:hide];
+    [self.i setHidden:hide];
+    [self.j setHidden:hide];
+    [self.k setHidden:hide];
+    [self.l setHidden:hide];
+    [self.m setHidden:hide];
+    [self.n setHidden:hide];
+    [self.o setHidden:hide];
+    [self.p setHidden:hide];
 }
 
 - (IBAction)themeChanged:(id)sender {
-    int value = theme.selectedSegmentIndex;
+    int value = self.theme.selectedSegmentIndex;
     NSString *savedPref = [NSString stringWithFormat:@"%d",value];
     
     [[NSUserDefaults standardUserDefaults]setObject:savedPref forKey:@"themeIndex"];
     
-    if (targets == nil) {
-        targets = [[NSArray alloc]initWithObjects:one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, nil];
-    }
+    NSArray *targets = [NSArray arrayWithObjects:self.one, self.two, self.three, self.four, self.five, self.six, self.seven, self.eight, self.nine, self.ten, self.eleven, self.twelve, self.thirteen, self.fourteen, self.fifteen, self.sixteen, nil];
     
-    if (theme.selectedSegmentIndex == 1) {
-        [showGameCenterButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [difficultyLabel setTextColor:[UIColor blackColor]];
-        [startButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.score setTextColor:[UIColor blackColor]];
-        [themeLabel setTextColor:[UIColor blackColor]];
-        [pauseButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [ballImage setHidden:YES];
-        [BGImageView setHidden:YES];
-        [self hideImageViews:YES];
-        
+    BOOL isSelectedIndexOne = (self.theme.selectedSegmentIndex == 1);
+    UIColor *titleColor = isSelectedIndexOne?[UIColor blackColor]:[UIColor whiteColor];
+    
+    [self.showGameCenterButton setTitleColor:titleColor forState:UIControlStateNormal];
+    [self.difficultyLabel setTextColor:titleColor];
+    [self.startButton setTitleColor:titleColor forState:UIControlStateNormal];
+    [self.score setTextColor:titleColor];
+    [self.themeLabel setTextColor:titleColor];
+    [self.pauseButton setTitleColor:titleColor forState:UIControlStateNormal];
+    [self.ballImage setHidden:isSelectedIndexOne];
+    [self.BGImageView setHidden:isSelectedIndexOne];
+    [self hideImageViews:isSelectedIndexOne];
+    
+    if (self.theme.selectedSegmentIndex == 1) {
         for (UIView *view in targets) {
             [view setBackgroundColor:[UIColor cyanColor]];
             view.layer.cornerRadius = 5;
         }
-    
     } else {
-        [showGameCenterButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [difficultyLabel setTextColor:[UIColor whiteColor]];
-        [startButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.score setTextColor:[UIColor whiteColor]];
-        [themeLabel setTextColor:[UIColor whiteColor]];
-        [pauseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [ballImage setHidden:NO];
-        [BGImageView setHidden:NO];
-        [self hideImageViews:NO];
-        
         for (UIView *view in targets) {
             [view setBackgroundColor:[UIColor clearColor]];
             view.layer.cornerRadius = 0;
@@ -266,22 +256,22 @@
 }
 
 - (void)hideEmAll {
-    [one setHidden:YES];
-    [two setHidden:YES];
-    [three setHidden:YES];
-    [four setHidden:YES];
-    [five setHidden:YES];
-    [six setHidden:YES];
-    [seven setHidden:YES];
-    [eight setHidden:YES];
-    [nine setHidden:YES];
-    [ten setHidden:YES];
-    [eleven setHidden:YES];
-    [twelve setHidden:YES];
-    [thirteen setHidden:YES];
-    [fourteen setHidden:YES];
-    [fifteen setHidden:YES];
-    [sixteen setHidden:YES];
+    [self.one setHidden:YES];
+    [self.two setHidden:YES];
+    [self.three setHidden:YES];
+    [self.four setHidden:YES];
+    [self.five setHidden:YES];
+    [self.six setHidden:YES];
+    [self.seven setHidden:YES];
+    [self.eight setHidden:YES];
+    [self.nine setHidden:YES];
+    [self.ten setHidden:YES];
+    [self.eleven setHidden:YES];
+    [self.twelve setHidden:YES];
+    [self.thirteen setHidden:YES];
+    [self.fourteen setHidden:YES];
+    [self.fifteen setHidden:YES];
+    [self.sixteen setHidden:YES];
 }
 
 - (void)gameOver {
@@ -289,10 +279,8 @@
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
     
     int64_t gameOverScore = [self submitScore];
-    
-    BOOL connectedToTheNetwork = [networkTest connectedToNetwork];
-    
-    if (connectedToTheNetwork) {
+
+    if ([networkTest connectedToNetwork]) {
         int64_t personalBest = [highscore intValue];
         NSLog(@"HighScore when game ended: %lld",personalBest);
         
@@ -328,15 +316,15 @@
         [[NSUserDefaults standardUserDefaults]setObject:saveString forKey:@"scoretosubmit"];
     }
     
-    [themeLabel setHidden:NO];
-    [difficulty setHidden:NO];
-    [theme setHidden:NO];
+    [self.themeLabel setHidden:NO];
+    [self.difficulty setHidden:NO];
+    [self.theme setHidden:NO];
     [UIAccelerometer sharedAccelerometer].delegate = nil;
-    [startButton setHidden:NO];
-    [gameOverLabel setHidden:NO];
-    [showGameCenterButton setHidden:NO];
-    [pauseButton setHidden:YES];
-    [startButton setTitle:@"Retry" forState:UIControlStateNormal];
+    [self.startButton setHidden:NO];
+    [self.gameOverLabel setHidden:NO];
+    [self.showGameCenterButton setHidden:NO];
+    [self.pauseButton setHidden:YES];
+    [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
     [timer invalidate];
     timer = nil;
 }
@@ -344,15 +332,13 @@
 - (void)randomUnhide {
     int randomNumber = arc4random() % (16);
     
-    if (targets == nil) {
-        targets = [[NSArray alloc]initWithObjects:one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, nil];
-    }
+    NSArray *targets = [NSArray arrayWithObjects:self.one, self.two, self.three, self.four, self.five, self.six, self.seven, self.eight, self.nine, self.ten, self.eleven, self.twelve, self.thirteen, self.fourteen, self.fifteen, self.sixteen, nil];
     
     [[targets objectAtIndex:randomNumber]setHidden:NO];
     
-    if (theme.selectedSegmentIndex == 1) {
+    if (self.theme.selectedSegmentIndex == 1) {
         NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
-        [[targets objectAtIndex:randomNumber] setBackgroundColor:[colors objectAtIndex:arc4random() % (8)]];
+        [[targets objectAtIndex:randomNumber] setBackgroundColor:[colors objectAtIndex:arc4random()%(8)]];
         colors = nil;
     }
     
@@ -363,51 +349,43 @@
 - (IBAction)togglePause:(id)sender {
     if ([UIAccelerometer sharedAccelerometer].delegate == self) {
         [UIAccelerometer sharedAccelerometer].delegate = nil;
-        [pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
-        [theme setHidden:NO];
-        [themeLabel setHidden:NO];
-        [timer invalidate];
-        timer = nil;
-        bhTimerIsRunning = NO;
+        [self.pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
+        [self.theme setHidden:NO];
+        [self.themeLabel setHidden:NO];
+        [self.timer invalidate];
+        self.timer = nil;
+        self.bhTimerIsRunning = NO;
     } else {
         [UIAccelerometer sharedAccelerometer].delegate = self;
-        [pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
-        [themeLabel setHidden:YES];
-        [theme setHidden:YES];
-        if (!bhTimerIsRunning) {
-            
-            // get the rects of the black holes and the bonus block
-            CGRect bhOneRect = blackHole.frame;
-            CGRect bhTwoRect = blackHoleTwo.frame;
-            CGRect bonusHoleRect = bonusHole.frame;
-            
-            int difficultyIndex = difficulty.selectedSegmentIndex;
-            
-            if (difficultyIndex == 0) {
-                timer = nil;
-            } else if (difficultyIndex == 1) {
+        [self.pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
+        [self.themeLabel setHidden:YES];
+        [self.theme setHidden:YES];
+        
+        if (!self.bhTimerIsRunning) {
+
+            if (self.difficulty.selectedSegmentIndex == 1) {
                 timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
-            } else if (difficultyIndex == 2) {
+            } else if (self.difficulty.selectedSegmentIndex == 2) {
                 timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
-            } else if (difficultyIndex == 3) {
+            } else if (self.difficulty.selectedSegmentIndex == 3) {
                 timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
             } else {
                 timer = nil;
             }
             
-            [timer fire];
-            bhTimerIsRunning = YES;
+            [self.timer fire];
+            self.bhTimerIsRunning = YES;
             
-            if (blackHole != nil) {
-                [blackHole redrawRectWithNewFrame:bhOneRect andBallFrame:ball.frame];
+            if (self.blackHole) {
+                [self.blackHole redrawRectWithNewFrame:blackHole.frame andBallFrame:self.ball.frame];
             }
             
-            if (blackHoleTwo != nil) {
-                [blackHoleTwo redrawRectWithNewFrame:bhTwoRect andBallFrame:ball.frame];
+            if (self.blackHoleTwo != nil) {
+                [self.blackHoleTwo redrawRectWithNewFrame:blackHoleTwo.frame andBallFrame:self.ball.frame];
             }
             
-            if (bonusHole != nil) {
-                [bonusHole redrawRectWithNewFrame:bonusHoleRect andBallFrame:ball.frame];
+            if (self.bonusHole != nil) {
+                [self.bonusHole redrawRectWithNewFrame:bonusHole.frame andBallFrame:self.ball.frame];
             }
         }
     }
@@ -418,42 +396,42 @@
     [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"gameOver"];
     
     NSString *leaderboard;
-    if (difficulty.selectedSegmentIndex == 0) {
+    if (self.difficulty.selectedSegmentIndex == 0) {
         leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (difficulty.selectedSegmentIndex == 1) {
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
         leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (difficulty.selectedSegmentIndex == 2) {
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
         leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (difficulty.selectedSegmentIndex == 3) {
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
         leaderboard = @"com.fhsjaagshs.blockGameInsane";
     }
     
     [gameCenterManager reloadHighScoresForCategory:leaderboard];
 
     
-    [difficultyLabel setHidden:NO];
-    [ball setHidden:NO];
+    [self.difficultyLabel setHidden:NO];
+    [self.ball setHidden:NO];
     [score setHidden:NO];
     
     // where the bonus and black holes get hidden...
-    [blackHole removeFromSuperview];
-    [blackHoleTwo removeFromSuperview];
-    [bonusHole removeFromSuperview];
-    blackHoleTwo = nil;
-    blackHole = nil;
-    bonusHole = nil;
+    [self.blackHole removeFromSuperview];
+    [self.blackHoleTwo removeFromSuperview];
+    [self.bonusHole removeFromSuperview];
+    self.blackHoleTwo = nil;
+    self.blackHole = nil;
+    self.bonusHole = nil;
     
     
     // reset titles
-    if (startButton.titleLabel.text == @"Start") {
-        startButton.titleLabel.text = @"Retry";
+    if ([self.startButton.titleLabel.text isEqualToString:@"Start"]) {
+        self.startButton.titleLabel.text = @"Retry";
     }
     
     // hide controls
-    [difficulty setHidden:YES];
-    [theme setHidden:YES];
-    [themeLabel setHidden:YES];
-    [showGameCenterButton setHidden:YES];
+    [self.difficulty setHidden:YES];
+    [self.theme setHidden:YES];
+    [self.themeLabel setHidden:YES];
+    [self.showGameCenterButton setHidden:YES];
     
     // make the ball respond to the accelerotemer
     [UIAccelerometer sharedAccelerometer].delegate = self;
@@ -462,19 +440,19 @@
     if (![gameOverLabel isHidden]) { // if the gameover label is showing
         [self.score setText:@"0"];
         [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"savedScore"];
-        [ball setCenter:theMainView.center];
-        [startButton setTitle:@"Start" forState:UIControlStateNormal];
+        [self.ball setCenter:self.theMainView.center];
+        [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
         [self hideEmAll];
-        bonusHole = nil;
-        blackHole = nil;
-        blackHoleTwo = nil;
+        self.bonusHole = nil;
+        self.blackHole = nil;
+        self.blackHoleTwo = nil;
     } 
 
     [self randomUnhide];
-    [gameOverLabel setHidden:YES];
-    [startButton setHidden:YES];
-    [pauseButton setHidden:NO];
-    bhTimerIsRunning = NO;
+    [self.gameOverLabel setHidden:YES];
+    [self.startButton setHidden:YES];
+    [self.pauseButton setHidden:NO];
+    self.bhTimerIsRunning = NO;
     
     [self submitOfflineScore];
 }
@@ -491,13 +469,13 @@
     [gameCenterManager authenticateLocalUser];
     
     NSString *leaderboard;
-    if (difficulty.selectedSegmentIndex == 0) {
+    if (self.difficulty.selectedSegmentIndex == 0) {
         leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (difficulty.selectedSegmentIndex == 1) {
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
         leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (difficulty.selectedSegmentIndex == 2) {
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
         leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (difficulty.selectedSegmentIndex == 3) {
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
         leaderboard = @"com.fhsjaagshs.blockGameInsane";
     }
     
@@ -506,9 +484,7 @@
     [UIAccelerometer sharedAccelerometer].updateInterval = 1 / 180.0; // original speed: 1/30 
     [UIAccelerometer sharedAccelerometer].delegate = nil;
     
-    if (targets == nil) {
-        targets = [[NSArray alloc]initWithObjects:one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, nil];
-    }
+    NSArray *targets = [NSArray arrayWithObjects:self.one, self.two, self.three, self.four, self.five, self.six, self.seven, self.eight, self.nine, self.ten, self.eleven, self.twelve, self.thirteen, self.fourteen, self.fifteen, self.sixteen, nil];
     
     for (UIView *view in targets) {
         view.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -520,33 +496,31 @@
         view.layer.shadowPath = path.CGPath;
     }
 
-    a.transform = CGAffineTransformRotate(a.transform, 270.0/180*M_PI);
-    b.transform = CGAffineTransformRotate(b.transform, 270.0/180*M_PI);
-    c.transform = CGAffineTransformRotate(c.transform, 270.0/180*M_PI);
-    d.transform = CGAffineTransformRotate(d.transform, 270.0/180*M_PI);
-    e.transform = CGAffineTransformRotate(e.transform, 270.0/180*M_PI);
-    f.transform = CGAffineTransformRotate(f.transform, 270.0/180*M_PI);
-    g.transform = CGAffineTransformRotate(g.transform, 270.0/180*M_PI);
-    h.transform = CGAffineTransformRotate(h.transform, 270.0/180*M_PI);
-    i.transform = CGAffineTransformRotate(i.transform, 270.0/180*M_PI);
-    j.transform = CGAffineTransformRotate(j.transform, 270.0/180*M_PI);
+    self.a.transform = CGAffineTransformRotate(self.a.transform, 270.0/180*M_PI);
+    self.b.transform = CGAffineTransformRotate(self.b.transform, 270.0/180*M_PI);
+    self.c.transform = CGAffineTransformRotate(self.c.transform, 270.0/180*M_PI);
+    self.d.transform = CGAffineTransformRotate(self.d.transform, 270.0/180*M_PI);
+    self.e.transform = CGAffineTransformRotate(self.e.transform, 270.0/180*M_PI);
+    self.f.transform = CGAffineTransformRotate(self.f.transform, 270.0/180*M_PI);
+    self.g.transform = CGAffineTransformRotate(self.g.transform, 270.0/180*M_PI);
+    self.h.transform = CGAffineTransformRotate(self.h.transform, 270.0/180*M_PI);
+    self.i.transform = CGAffineTransformRotate(self.i.transform, 270.0/180*M_PI);
+    self.j.transform = CGAffineTransformRotate(self.j.transform, 270.0/180*M_PI);
     
     
-    ball.layer.shadowColor = [UIColor blackColor].CGColor;
-    ball.layer.shadowOpacity = 0.7f;
-    ball.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    ball.layer.shadowRadius = 5.0f;
-    ball.layer.masksToBounds = NO;
-    UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)];
-    ball.layer.shadowPath = path.CGPath;
+    self.ball.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.ball.layer.shadowOpacity = 0.7f;
+    self.ball.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    self.ball.layer.shadowRadius = 5.0f;
+    self.ball.layer.masksToBounds = NO;
+    self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
 }
 
 - (void)setBoolToNo {
-    isAnimating = NO;
+    self.isAnimating = NO;
 }
 
 - (void)animationDidStopMe {
-    NSLog(@"Animation did Stop");
     [self performSelector:@selector(setBoolToNo) withObject:nil afterDelay:1.0f];
 }
 
@@ -554,23 +528,20 @@
     int x = (arc4random()%264)+26;
     int y = (arc4random()%424)+26;
     CGRect frame = CGRectMake(x, y, 33, 33);
-    
     CGRect adjustedFrame = CGRectMake(x-50, y-50, 133, 133);
     
-    BOOL tooClose = ((CGRectIntersectsRect(adjustedFrame, ball.frame)) || (CGRectContainsRect(adjustedFrame, ball.frame))) || ((CGRectIntersectsRect(adjustedFrame, ball.frame)) && (CGRectContainsRect(adjustedFrame, ball.frame)));
-    
-    if (tooClose) {
+    if (((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) || (CGRectContainsRect(adjustedFrame, self.ball.frame))) || ((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) && (CGRectContainsRect(adjustedFrame, self.ball.frame)))) {
         NSLog(@"Too close one");
         frame = CGRectMake(x-100, y-100, 33, 33);
     }
     
-    isAnimating = YES;
+    self.isAnimating = YES;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.1];
     [UIView setAnimationCurve:UIViewAnimationCurveLinear];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationDidStopSelector:@selector(animationDidStopMe)];
-    [blackHole setFrame:frame];
+    [self.blackHole setFrame:frame];
     [UIView commitAnimations];
 }
 
@@ -578,23 +549,20 @@
     int x = (arc4random()%264)+26;
     int y = (arc4random()%424)+26;
     CGRect frame = CGRectMake(x, y, 33, 33);
-    
     CGRect adjustedFrame = CGRectMake(x-50, y-50, 133, 133);
     
-    BOOL tooClose = ((CGRectIntersectsRect(adjustedFrame, ball.frame)) || (CGRectContainsRect(adjustedFrame, ball.frame))) || ((CGRectIntersectsRect(adjustedFrame, ball.frame)) && (CGRectContainsRect(adjustedFrame, ball.frame)));
-    
-    if (tooClose) {
+    if (((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) || (CGRectContainsRect(adjustedFrame, self.ball.frame))) || ((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) && (CGRectContainsRect(adjustedFrame, self.ball.frame)))) {
         NSLog(@"Too close two");
         frame = CGRectMake(x-100, y-100, 33, 33);
     }
     
-    isAnimating = YES;
+    self.isAnimating = YES;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.1];
     [UIView setAnimationCurve:UIViewAnimationCurveLinear];
     [UIView setAnimationDelegate:self];
     [UIView setAnimationDidStopSelector:@selector(animationDidStopMe)];
-    [blackHoleTwo setFrame:frame];
+    [self.blackHoleTwo setFrame:frame];
     [UIView commitAnimations];
 }
 
@@ -615,7 +583,7 @@
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.1];
     [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-    [bonusHole setFrame:frame];
+    [self.bonusHole setFrame:frame];
     [UIView commitAnimations];
 }
 
@@ -628,75 +596,70 @@
     
     // Bonus hole behavior
     float rounded = [[NSString stringWithFormat:@"%.0f",(float)(newScore/21)]floatValue];
-    
     float diff = (newScore/21)-rounded;
-    
-    BOOL works = (diff != 0) && ((diff*21) == newScore);
-    
-    if (works) {
-        if (bonusHole == nil) {
-            bonusHole = [[BonusHole alloc]initWithBallframe:ball.frame];
-            [self.view addSubview:bonusHole];
-            [self.view bringSubviewToFront:bonusHole];
+
+    if ((diff != 0) && ((diff*21) == newScore)) {
+        if (!self.bonusHole) {
+            self.bonusHole = [[BonusHole alloc]initWithBallframe:self.ball.frame];
+            [self.view addSubview:self.bonusHole];
+            [self.view bringSubviewToFront:self.bonusHole];
         } else {
             [self redrawBonusHole];
         }
     } else {
-        [bonusHole removeFromSuperview];
-        bonusHole = nil;
+        [self.bonusHole removeFromSuperview];
+        self.bonusHole = nil;
     }
     
-    if (difficulty.selectedSegmentIndex != 0) {
+    if (self.difficulty.selectedSegmentIndex != 0) {
     
         if (newScore > 2) {
-            if (blackHole == nil) {
-                blackHole = [[BlackHole alloc]initWithBallframe:ball.frame];
-                [self.view addSubview:blackHole];
-                [self.view bringSubviewToFront:blackHole];
+            if (self.blackHole == nil) {
+                self.blackHole = [[BlackHole alloc]initWithBallframe:self.ball.frame];
+                [self.view addSubview:self.blackHole];
+                [self.view bringSubviewToFront:self.blackHole];
                 if (!bhTimerIsRunning) {
-                    int difficultyIndex = difficulty.selectedSegmentIndex;
+                    int difficultyIndex = self.difficulty.selectedSegmentIndex;
                     
-                    if (difficultyIndex == 0) {
-                        timer = nil;
-                    } else if (difficultyIndex == 1) {
-                        timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
+                    if (difficultyIndex == 1) {
+                        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
                     } else if (difficultyIndex == 2) {
-                        timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
+                        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
                     } else if (difficultyIndex == 3) {
-                        timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
+                        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
                     } else {
-                        timer = nil;
+                        self.timer = nil;
                     }
                     
-                    [timer fire];
-                    bhTimerIsRunning = YES;
+                    [self.timer fire];
+                    self.bhTimerIsRunning = YES;
                 }
             } else {
                 [self redraw];
             }
         
         } else {
-            if (blackHole != nil) {
-                [blackHole removeFromSuperview];
-                blackHole = nil;
+            if (self.blackHole != nil) {
+                [self.blackHole removeFromSuperview];
+                self.blackHole = nil;
             }
-            [timer invalidate];
-            timer = nil;
+            [self.timer invalidate];
+            self.timer = nil;
         }
     
         if (newScore > 8) {
-            if (blackHoleTwo == nil) {
-                blackHoleTwo = [[BlackHole alloc]initWithBallframe:ball.frame];
-                [self.view addSubview:blackHoleTwo];
-                [self.view bringSubviewToFront:blackHoleTwo];
+            if (self.blackHoleTwo == nil) {
+                self.blackHoleTwo = [[BlackHole alloc]initWithBallframe:self.ball.frame];
+                [self.view addSubview:self.blackHoleTwo];
+                [self.view bringSubviewToFront:self.blackHoleTwo];
             } else {
                 [self redrawTwo];
             }
         
         } else {
-            if (blackHoleTwo != nil) {
-                [blackHoleTwo removeFromSuperview];
-                blackHoleTwo = nil;
+            if (self.blackHoleTwo != nil) {
+                [self.blackHoleTwo removeFromSuperview];
+                self.blackHoleTwo = nil;
             }
         }
     }
@@ -708,17 +671,17 @@
     int previousScore = [prevScoreString intValue];
     int newScore = previousScore+5;
     NSString *newScoreString = [NSString stringWithFormat:@"%d",newScore];
-    [score setText:newScoreString];
+    [self.score setText:newScoreString];
 }
 
 - (void)flashScoreLabelToGreen {
-    [score setTextColor:[UIColor greenColor]];
+    [self.score setTextColor:[UIColor greenColor]];
     sleep(0.5);
-    [score setTextColor:[UIColor whiteColor]];
+    [self.score setTextColor:[UIColor whiteColor]];
 }
 
 - (void)setBallNewCenter:(CGPoint)point {
-    [ball setCenter:point];
+    [self.ball setCenter:point];
 }
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
@@ -738,20 +701,20 @@
     double yVal = fabs(yValNonAbs);
     
     CGRect screenBounds = CGRectMake(0, 0, 320, 480);
-    CGRect ballRect = ball.frame;
+    CGRect ballRect = self.ball.frame;
     
     int speed = 7;
     
-    if (difficulty.selectedSegmentIndex == 0) { 
+    if (self.difficulty.selectedSegmentIndex == 0) {
         // easy
         speed = 5;
-    } else if (difficulty.selectedSegmentIndex == 1) {
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
         //medium
         speed = 7;
-    } else if (difficulty.selectedSegmentIndex == 2) {
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
         // hard
         speed = 11;
-    } else if (difficulty.selectedSegmentIndex == 3) {
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
         // insane
         speed = 20;
     } else {
@@ -760,94 +723,44 @@
     
     int rateX = 10*x; // for diagonal movement change to a double and remove the *10
     int rateY = -1*10*y; // for diagonal movement change to a double and remove the *10
-    float currentX = ball.center.x;
-    float currentY = ball.center.y;
+    float currentX = self.ball.center.x;
+    float currentY = self.ball.center.y;
+    
+    CGPoint newCenterPoint = CGPointZero;
     
     if (rateX > 0 && rateY == 0) {
         //positive x movement
-        float newX = currentX+(xVal*speed);
-        CGPoint newCenterPoint = CGPointMake(newX, ball.center.y);
-        
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        newCenterPoint = CGPointMake(currentX+(xVal*speed), self.ball.center.y);
     } else if (rateX == 0 && rateY > 0) {
         //positive y movement
-        float newY = currentY+(yVal*speed);
-        
-        CGPoint newCenterPoint = CGPointMake(ball.center.x, newY);
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        newCenterPoint = CGPointMake(self.ball.center.x, currentY+(yVal*speed));
     } else if (rateX > 0 && rateY > 0) {
         // positive x and y movement
-        float newX = currentX+(xVal*speed);
-        float newY = currentY+(yVal*speed);
-        
-        CGPoint newCenterPoint = CGPointMake(newX, newY);
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY+(yVal*speed));
     } else if (rateX < 0 && rateY == 0) {
-        //negative x movement
-        float newX = currentX-(xVal*speed);
-        CGPoint newCenterPoint = CGPointMake(newX, ball.center.y);
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        // negative x movement
+        newCenterPoint = CGPointMake(currentX-(xVal*speed), self.ball.center.y);
     } else if (rateX == 0 && rateY < 0) {
-        //negative y movement
-        float newY = currentY-(yVal*speed);
-        CGPoint newCenterPoint = CGPointMake(ball.center.x, newY);
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        // negative y movement
+        newCenterPoint = CGPointMake(self.ball.center.x, currentY-(yVal*speed));
     } else if (rateX > 0 && rateY < 0) {
-        //positive x movement and negative y movement
-        float newX = currentX+(xVal*speed);
-        float newY = currentY-(yVal*speed);
-        
-        CGPoint newCenterPoint = CGPointMake(newX, newY);
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        // positive x movement and negative y movement
+        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY-(yVal*speed));
     } else if (rateX < 0 && rateY > 0) {
         // opposite of above
-        float newX = currentX-(xVal*speed);
-        float newY = currentY+(yVal*speed);
-        CGPoint newCenterPoint = CGPointMake(newX, newY);
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY+(yVal*speed));
     } else if (rateX < 0 && rateY < 0) {
         // negative x and y movement
-        float newX = currentX-(xVal*speed);
-        float newY = currentY-(yVal*speed);
-        CGPoint newCenterPoint = CGPointMake(newX, newY);
-        if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-            [self setBallNewCenter:newCenterPoint];
-        } else {
-            [self gameOver];
-        }
+        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY-(yVal*speed));
     }
     
-    if (targets == nil) {
-        targets = [[NSArray alloc]initWithObjects:one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, nil];
+    if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
+        [self setBallNewCenter:newCenterPoint];
+    } else {
+        [self gameOver];
     }
+    
+    NSArray *targets = [NSArray arrayWithObjects:self.one, self.two, self.three, self.four, self.five, self.six, self.seven, self.eight, self.nine, self.ten, self.eleven, self.twelve, self.thirteen, self.fourteen, self.fifteen, self.sixteen, nil];
     
     // Now determine where the ball is
     int theRandomNumber = [[[NSUserDefaults standardUserDefaults]objectForKey:@"randomNumber"]intValue];
@@ -858,62 +771,46 @@
     
     theView = nil;
     
-    BOOL worksFool = CGRectIntersectsRect(ballRect, targetViewBounds);
-    
-    if (worksFool) {
+    if (CGRectIntersectsRect(ballRect, targetViewBounds)) {
         [self hideEmAll];
         [self randomUnhide];
         [self addOneToScore];
     } 
-    
-    BOOL blackHoleHit = CGRectIntersectsRect(ballRect, blackHole.frame) || CGRectIntersectsRect(ballRect, blackHoleTwo.frame);
-    
-    if ((blackHoleHit == YES) && isAnimating == NO) {
+
+    if ((CGRectIntersectsRect(ballRect, self.blackHole.frame) || CGRectIntersectsRect(ballRect, self.blackHoleTwo.frame)) && self.isAnimating == NO) {
         [self gameOver];
     }
     
-    BOOL bonusHoleHit = CGRectIntersectsRect(ballRect, bonusHole.frame);
-    
-    if (bonusHoleHit) {
+    if (CGRectIntersectsRect(ballRect, self.bonusHole.frame)) {
         [self countFive];
-        [bonusHole removeFromSuperview];
-        bonusHole = nil;
+        [self.bonusHole removeFromSuperview];
+        self.bonusHole = nil;
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    targets = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
     
     int diff = [[[NSUserDefaults standardUserDefaults]objectForKey:@"difficultyIndex"]intValue];
     int themey = [[[NSUserDefaults standardUserDefaults]objectForKey:@"themeIndex"]intValue];
     
-    [difficulty setSelectedSegmentIndex:diff];
-    [theme setSelectedSegmentIndex:themey];
+    [self.difficulty setSelectedSegmentIndex:diff];
+    [self.theme setSelectedSegmentIndex:themey];
     
-    [self difficultyChanged:difficulty];
-    [self themeChanged:theme];
+    [self difficultyChanged:self.difficulty];
+    [self themeChanged:self.theme];
     
     [self submitOfflineScore];
     
-    if (targets == nil) {
-         targets = [[NSArray alloc]initWithObjects:one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, nil];
-    }
-    
     NSString *leaderboard = nil;
-    if (difficulty.selectedSegmentIndex == 0) {
+    if (self.difficulty.selectedSegmentIndex == 0) {
         leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (difficulty.selectedSegmentIndex == 1) {
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
         leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (difficulty.selectedSegmentIndex == 2) {
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
         leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (difficulty.selectedSegmentIndex == 3) {
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
         leaderboard = @"com.fhsjaagshs.blockGameInsane";
     }
     
@@ -921,11 +818,6 @@
         [gameCenterManager authenticateLocalUser];
         [gameCenterManager reloadHighScoresForCategory:leaderboard];
     }
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    targets = nil;
-	[super viewWillDisappear:animated];
 }
 
 @end
