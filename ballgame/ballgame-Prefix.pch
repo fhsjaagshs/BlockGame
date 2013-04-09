@@ -11,4 +11,13 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+    #import <GameKit/GameKit.h>
+    #import <AudioToolbox/AudioToolbox.h>
+    #import <QuartzCore/QuartzCore.h>
+
+    #import "NSCustomAlertView.h"
+    #import "networkTest.h"
+    #import "GCManager.h"
+    #import "BlackHole.h"
+    #import "BonusHole.h"
 #endif

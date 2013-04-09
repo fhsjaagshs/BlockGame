@@ -11,53 +11,44 @@
 #import <CFNetwork/CFNetwork.h>
 #import <SystemConfiguration/SCNetworkReachability.h>
 
-
 @implementation networkTest
 
-+ (BOOL)connectedToNetwork {
++ (BOOL)isConnectedToInternet {
     struct sockaddr_in zeroAddress;
     bzero(&zeroAddress, sizeof(zeroAddress));
     zeroAddress.sin_len = sizeof(zeroAddress);
     zeroAddress.sin_family = AF_INET;
-	
-    SCNetworkReachabilityRef defaultRouteReachability = SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&zeroAddress);
-    SCNetworkReachabilityFlags flags;
-	
-    BOOL didRetrieveFlags = SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
-    CFRelease(defaultRouteReachability);
-	
-    if (!didRetrieveFlags) {
-        return NO;
-    }
-	
-    BOOL isReachable = flags & kSCNetworkFlagsReachable;
-    BOOL needsConnection = flags & kSCNetworkFlagsConnectionRequired;
-    BOOL nonWiFi = flags & kSCNetworkReachabilityFlagsTransientConnection;
     
-    return ((isReachable && !needsConnection) || nonWiFi) ? YES : NO;
-}
-
-+ (BOOL)connectedToWifi {
-    struct sockaddr_in zeroAddress;
-    bzero(&zeroAddress, sizeof(zeroAddress));
-    zeroAddress.sin_len = sizeof(zeroAddress);
-    zeroAddress.sin_family = AF_INET;
-	
-    SCNetworkReachabilityRef defaultRouteReachability = SCNetworkReachabilityCreateWithAddress(NULL, (struct sockaddr *)&zeroAddress);
-    SCNetworkReachabilityFlags flags;
-	
-    BOOL didRetrieveFlags = SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags);
-    CFRelease(defaultRouteReachability);
-	
-    if (!didRetrieveFlags) {
-        return NO;
+    SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, (const struct sockaddr *)&zeroAddress);
+    if (reachability) {
+        SCNetworkReachabilityFlags flags;
+        BOOL worked = SCNetworkReachabilityGetFlags(reachability, &flags);
+        CFRelease(reachability);
+        
+        if (worked) {
+            
+            if ((flags & kSCNetworkReachabilityFlagsReachable) == 0) {
+                return NO;
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0) {
+                return YES;
+            }
+            
+            
+            if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand) != 0) || (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0)) {
+                if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0) {
+                    return YES;
+                }
+            }
+            
+            if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN) {
+                return YES;
+            }
+        }
+        
     }
-	
-    BOOL isReachable = flags & kSCNetworkFlagsReachable;
-    BOOL needsConnection = flags & kSCNetworkFlagsConnectionRequired;
-    BOOL nonWiFi = flags & kSCNetworkReachabilityFlagsTransientConnection;
-    
-    return ((isReachable && !needsConnection) && nonWiFi) ? YES : NO;
+    return NO;
 }
 
 @end

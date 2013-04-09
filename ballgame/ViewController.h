@@ -7,15 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GameCenterManager.h"
-#import "BlackHole.h"
-#import "BonusHole.h"
 
-@interface ViewController : UIViewController <UIAccelerometerDelegate, GameCenterManagerDelegate, GKLeaderboardViewControllerDelegate> {
-    
-    
-    GameCenterManager *gameCenterManager;
-}
+@interface ViewController : UIViewController <UIAccelerometerDelegate, GKLeaderboardViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *ball;
 
@@ -88,7 +81,7 @@
 
 - (void)gameOver;
 - (void)hideEmAll;
+- (IBAction)togglePause;
 - (void)setStartButtonTitle:(NSString *)string;
-- (IBAction)togglePause:(id)sender;
 
 @end

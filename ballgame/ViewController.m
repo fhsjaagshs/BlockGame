@@ -7,13 +7,6 @@
 //
 
 #import "ViewController.h"
-#import <AudioToolbox/AudioToolbox.h>
-#import <QuartzCore/QuartzCore.h>
-#import "NSCustomAlertView.h"
-#import "networkTest.h"
-#include <netinet/in.h>
-#import <CFNetwork/CFNetwork.h>
-#import <SystemConfiguration/SCNetworkReachability.h>
 
 @implementation ViewController
 
@@ -29,116 +22,73 @@
     }
 }
 
-- (void)submitOfflineScore {
-    
-    BOOL connectedToANetwork = [networkTest connectedToNetwork];
-    
-    BOOL isThere = ([[NSUserDefaults standardUserDefaults]objectForKey:@"scoretosubmit"] != nil);
-    
-    if (connectedToANetwork && isThere) {
-        int64_t ff = (int64_t)[[[NSUserDefaults standardUserDefaults]objectForKey:@"scoretosubmit"]intValue];
-        
-        if (self.difficulty.selectedSegmentIndex == 0) {
-            /// easy
-            [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgamehs"];
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-        } else if (self.difficulty.selectedSegmentIndex == 1) {
-            //medium
-            [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgameMedium"];
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-        } else if (self.difficulty.selectedSegmentIndex == 2) {
-            // hard
-            [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameHard"];
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-        } else if (self.difficulty.selectedSegmentIndex == 3) {
-            // insane
-            [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameInsane"];
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
+- (NSString *)getCurrentLeaderboard {
+    if (self.difficulty.selectedSegmentIndex == 0) {
+        return @"com.fhsjaagshs.blockgamehs";
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
+        return @"com.fhsjaagshs.blockgameMedium";
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
+        return @"com.fhsjaagshs.blockGameHard";
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
+        return @"com.fhsjaagshs.blockGameInsane";
+    }
+    return nil;
+}
+
+- (void)loginUser {
+    [GCManager authenticateLocalUserWithCompletionHandler:^(NSError *error) {
+        if (!error) {
+            [self reloadHighscoresWithBlock:nil];
+        } else {
+            NSCustomAlertView *av = [[NSCustomAlertView alloc]initWithTitle:@"Login failed" message:@"Is your device associated with GameCenter?" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [av show];
         }
-        
+    }];
+}
+
+- (void)reloadHighscoresWithBlock:(void(^)(NSError *error))block {
+    [GCManager reloadHighScoresForCategory:[self getCurrentLeaderboard] withCompletionHandler:^(NSArray *scores, GKLeaderboard *leaderboard, NSError *error) {
+        if (error == nil) {
+            int64_t personalBest = leaderboard.localPlayerScore.value;
+            self.highscore = [NSString stringWithFormat:@"%lld",personalBest];
+        } else {
+            self.highscore = @"-1";
+        }
+        block(error);
+    }];
+}
+
+- (void)submitScore:(int64_t)aScore {
+    NSString *leaderboardName = [self getCurrentLeaderboard];
+    [GCManager reportScore:aScore forCategory:leaderboardName withCompletionHandler:^(NSError *error) {
+        [self reloadHighscoresWithBlock:nil];
+    }];
+}
+
+- (void)submitOfflineScore {
+    if ([networkTest isConnectedToInternet] && [[NSUserDefaults standardUserDefaults]objectForKey:@"scoretosubmit"]) {
+        int64_t ff = (int64_t)[[[NSUserDefaults standardUserDefaults]objectForKey:@"scoretosubmit"]intValue];
+        [self submitScore:ff];
         [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"scoretosubmit"];
     }
 }
 
-- (void)reloadScoresComplete:(GKLeaderboard *)leaderBoard error:(NSError *)error {
-	if (error == nil) {
-		int64_t personalBest = leaderBoard.localPlayerScore.value;
-		self.highscore = [NSString stringWithFormat:@"%lld",personalBest];
-    } else {
-        highscore = @"-1";
-	}
-}
-
-- (int64_t)submitScore {
-    
-    int64_t ff = [self.score.text intValue];
-    if (self.difficulty.selectedSegmentIndex == 0) {
-        /// easy
-        [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgamehs"];
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        //medium
-        [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockgameMedium"];
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        // hard
-        [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameHard"];
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        // insane
-        [gameCenterManager reportScore:ff forCategory:@"com.fhsjaagshs.blockGameInsane"];
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
-    }
-    return ff;
-}
-
-- (void)processGameCenterAuth:(NSError *)error {
-	if(error == nil) {
-        if (self.difficulty.selectedSegmentIndex == 0) {
-            /// easy
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-        } else if (self.difficulty.selectedSegmentIndex == 1) {
-            //medium
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-        } else if (self.difficulty.selectedSegmentIndex == 2) {
-            // hard
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-        } else if (self.difficulty.selectedSegmentIndex == 3) {
-            // insane
-            [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
-        }
-	}
-}
-
-- (IBAction)showLeaderboard:(id)sender {
-    if ([networkTest connectedToNetwork]) {
+- (IBAction)showLeaderboard {
+    if ([networkTest isConnectedToInternet]) {
         GKLeaderboardViewController *leaderboardController = [[GKLeaderboardViewController alloc]init];
         if (leaderboardController != nil) {
-            if (self.difficulty.selectedSegmentIndex == 0) {
-                /// easy
-                [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-                leaderboardController.category = @"com.fhsjaagshs.blockgamehs";
-            } else if (self.difficulty.selectedSegmentIndex == 1) {
-                //medium
-                [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-                leaderboardController.category = @"com.fhsjaagshs.blockgameMedium";
-            } else if (self.difficulty.selectedSegmentIndex == 2) {
-                // hard
-                [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-                leaderboardController.category = @"com.fhsjaagshs.blockGameHard";
-            } else if (self.difficulty.selectedSegmentIndex == 3) {
-                // insane
-                [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
-                leaderboardController.category = @"com.fhsjaagshs.blockGameInsane";
-            }
+            leaderboardController.category = [self getCurrentLeaderboard];
             leaderboardController.timeScope = GKLeaderboardTimeScopeAllTime;
             leaderboardController.leaderboardDelegate = self;
-            [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
-            [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-            [self presentModalViewController:leaderboardController animated:YES];
+            
+            [self reloadHighscoresWithBlock:^(NSError *error) {
+                [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
+                [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+                [self presentModalViewController:leaderboardController animated:YES];
+            }];
         }
     } else {
-        UIAlertView *av = [[UIAlertView alloc]initWithTitle:@"GameCenter Unavailable" message:@"Connect to 3G or WiFi to view leaderboards" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        NSCustomAlertView *av = [[NSCustomAlertView alloc]initWithTitle:@"GameCenter Unavailable" message:@"Please connect to the internet to view leaderboards" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [av show];
     }
 }
@@ -149,39 +99,16 @@
 }
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-	[gameCenterManager authenticateLocalUser];
+    [self loginUser];
 }
 
 - (void)scoreReported:(NSError *)error {
-    if (self.difficulty.selectedSegmentIndex == 0) {
-        /// easy
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgamehs"];
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        //medium
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockgameMedium"];
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        // hard
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameHard"];
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        // insane
-        [gameCenterManager reloadHighScoresForCategory:@"com.fhsjaagshs.blockGameInsane"];
-    }
+    [self reloadHighscoresWithBlock:nil];
 }
 
-- (IBAction)difficultyChanged:(id)sender {
-    
-    NSString *leaderboard;
-    if (self.difficulty.selectedSegmentIndex == 0) {
-        leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        leaderboard = @"com.fhsjaagshs.blockGameInsane";
-    }
-    
-    [gameCenterManager reloadHighScoresForCategory:leaderboard];
+- (IBAction)difficultyChanged {
+
+    [self reloadHighscoresWithBlock:nil];
     
     int diff = self.difficulty.selectedSegmentIndex;
 
@@ -221,7 +148,7 @@
     [self.p setHidden:hide];
 }
 
-- (IBAction)themeChanged:(id)sender {
+- (IBAction)themeChanged {
     int value = self.theme.selectedSegmentIndex;
     NSString *savedPref = [NSString stringWithFormat:@"%d",value];
     
@@ -278,43 +205,32 @@
     
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
     
-    int64_t gameOverScore = [self submitScore];
+    int64_t gameOverScore = [self.score.text intValue];
+    [self submitScore:gameOverScore];
 
-    if ([networkTest connectedToNetwork]) {
-        int64_t personalBest = [highscore intValue];
-        NSLog(@"HighScore when game ended: %lld",personalBest);
+    NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    NSCustomAlertView *alert = [[NSCustomAlertView alloc]initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+    
+    if ([networkTest isConnectedToInternet]) {
+        int64_t personalBest = [self.highscore intValue];
         
         [self submitOfflineScore];
         
         if (gameOverScore > personalBest && personalBest != -1) {
-            NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
-            NSCustomAlertView *alert = [[NSCustomAlertView alloc]initWithTitle:title message:@"Congrats, you beat your high score!" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-            [alert show];
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-        
+            alert.message = @"Congrats, you beat your high score!";
         } else if (gameOverScore < personalBest && personalBest != -1) {
-            NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
-            NSCustomAlertView *alert = [[NSCustomAlertView alloc]initWithTitle:title message:@"You did not beat your high score :(" delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-            [alert show];
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-            
+            alert.message = @"You did not beat your high score :(";
         } else {
-            NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
-            NSString *message = [NSString stringWithFormat:@"%lli is good, but you can do better :D",gameOverScore];
-            NSCustomAlertView *alert = [[NSCustomAlertView alloc]initWithTitle:title message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-            [alert show];
-            AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+            alert.message = [NSString stringWithFormat:@"%lli is good, but you can do better :D",gameOverScore];
         }
-    } else {
         
-        NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
-        NSString *message = [NSString stringWithFormat:@"%lli is good, but you can do better :D",gameOverScore];
-        NSCustomAlertView *alert = [[NSCustomAlertView alloc]initWithTitle:title message:message delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-        [alert show];
-        AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
-        NSString *saveString = [NSString stringWithFormat:@"%lli",gameOverScore];
-        [[NSUserDefaults standardUserDefaults]setObject:saveString forKey:@"scoretosubmit"];
+    } else {
+        alert.message = [NSString stringWithFormat:@"%lli is good, but you can do better :D",gameOverScore];
+        [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%lli",gameOverScore] forKey:@"scoretosubmit"];
     }
+    
+    [alert show];
     
     [self.themeLabel setHidden:NO];
     [self.difficulty setHidden:NO];
@@ -325,12 +241,12 @@
     [self.showGameCenterButton setHidden:NO];
     [self.pauseButton setHidden:YES];
     [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
-    [timer invalidate];
-    timer = nil;
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 - (void)randomUnhide {
-    int randomNumber = arc4random() % (16);
+    int randomNumber = arc4random()%16;
     
     NSArray *targets = [NSArray arrayWithObjects:self.one, self.two, self.three, self.four, self.five, self.six, self.seven, self.eight, self.nine, self.ten, self.eleven, self.twelve, self.thirteen, self.fourteen, self.fifteen, self.sixteen, nil];
     
@@ -341,12 +257,11 @@
         [[targets objectAtIndex:randomNumber] setBackgroundColor:[colors objectAtIndex:arc4random()%(8)]];
         colors = nil;
     }
-    
-    NSString *randomNumberString = [NSString stringWithFormat:@"%d",randomNumber];
-    [[NSUserDefaults standardUserDefaults]setObject:randomNumberString forKey:@"randomNumber"];
+
+    [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%d",randomNumber] forKey:@"randomNumber"];
 }
 
-- (IBAction)togglePause:(id)sender {
+- (IBAction)togglePause {
     if ([UIAccelerometer sharedAccelerometer].delegate == self) {
         [UIAccelerometer sharedAccelerometer].delegate = nil;
         [self.pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
@@ -391,23 +306,11 @@
     }
 }
 
-- (IBAction)startOrRetry:(id)sender {
+- (IBAction)startOrRetry {
     // Set the gameOver boolean, used for restoring to the previous state after a terminate
     [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"gameOver"];
-    
-    NSString *leaderboard;
-    if (self.difficulty.selectedSegmentIndex == 0) {
-        leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        leaderboard = @"com.fhsjaagshs.blockGameInsane";
-    }
-    
-    [gameCenterManager reloadHighScoresForCategory:leaderboard];
 
+    [self reloadHighscoresWithBlock:nil];
     
     [self.difficultyLabel setHidden:NO];
     [self.ball setHidden:NO];
@@ -420,7 +323,6 @@
     self.blackHoleTwo = nil;
     self.blackHole = nil;
     self.bonusHole = nil;
-    
     
     // reset titles
     if ([self.startButton.titleLabel.text isEqualToString:@"Start"]) {
@@ -437,7 +339,7 @@
     [UIAccelerometer sharedAccelerometer].delegate = self;
     
     // Stuff that should happen to restart the game
-    if (![gameOverLabel isHidden]) { // if the gameover label is showing
+    if (!gameOverLabel.isHidden) { // if the gameover label is showing
         [self.score setText:@"0"];
         [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"savedScore"];
         [self.ball setCenter:self.theMainView.center];
@@ -464,22 +366,7 @@
     self.isAnimating = NO;
     self.bhTimerIsRunning = NO;
     
-    gameCenterManager= [[GameCenterManager alloc]init];
-    [gameCenterManager setDelegate:self];
-    [gameCenterManager authenticateLocalUser];
-    
-    NSString *leaderboard;
-    if (self.difficulty.selectedSegmentIndex == 0) {
-        leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        leaderboard = @"com.fhsjaagshs.blockGameInsane";
-    }
-    
-    [gameCenterManager reloadHighScoresForCategory:leaderboard];
+    [self loginUser];
     
     [UIAccelerometer sharedAccelerometer].updateInterval = 1/180;
     [UIAccelerometer sharedAccelerometer].delegate = nil;
@@ -667,21 +554,18 @@
 }
 
 - (void)countFive {
-    NSString *prevScoreString = self.score.text;
-    int previousScore = [prevScoreString intValue];
-    int newScore = previousScore+5;
-    NSString *newScoreString = [NSString stringWithFormat:@"%d",newScore];
-    [self.score setText:newScoreString];
+    int newScore = self.score.text.intValue+5;
+    self.score.text = [NSString stringWithFormat:@"%d",newScore];
 }
+
+//
+// DAFUQ????
+//
 
 - (void)flashScoreLabelToGreen {
     [self.score setTextColor:[UIColor greenColor]];
     sleep(0.5);
     [self.score setTextColor:[UIColor whiteColor]];
-}
-
-- (void)setBallNewCenter:(CGPoint)point {
-    [self.ball setCenter:point];
 }
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
@@ -755,7 +639,7 @@
     }
     
     if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-        [self setBallNewCenter:newCenterPoint];
+        self.ball.center = newCenterPoint;
     } else {
         [self gameOver];
     }
@@ -764,12 +648,8 @@
     
     // Now determine where the ball is
     int theRandomNumber = [[[NSUserDefaults standardUserDefaults]objectForKey:@"randomNumber"]intValue];
-    
-    UIView *theView = [targets objectAtIndex:theRandomNumber];
-    
-    CGRect targetViewBounds = theView.frame;
-    
-    theView = nil;
+
+    CGRect targetViewBounds = [[targets objectAtIndex:theRandomNumber]frame];
     
     if (CGRectIntersectsRect(ballRect, targetViewBounds)) {
         [self hideEmAll];
@@ -789,7 +669,6 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    
     [super viewWillAppear:animated];
     
     int diff = [[[NSUserDefaults standardUserDefaults]objectForKey:@"difficultyIndex"]intValue];
@@ -798,25 +677,12 @@
     [self.difficulty setSelectedSegmentIndex:diff];
     [self.theme setSelectedSegmentIndex:themey];
     
-    [self difficultyChanged:self.difficulty];
-    [self themeChanged:self.theme];
+    [self difficultyChanged];
+    [self themeChanged];
     
-    [self submitOfflineScore];
-    
-    NSString *leaderboard = nil;
-    if (self.difficulty.selectedSegmentIndex == 0) {
-        leaderboard = @"com.fhsjaagshs.blockgamehs";
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        leaderboard = @"com.fhsjaagshs.blockgameMedium";
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        leaderboard = @"com.fhsjaagshs.blockGameHard";
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        leaderboard = @"com.fhsjaagshs.blockGameInsane";
-    }
-    
-    if (gameCenterManager != nil) {
-        [gameCenterManager authenticateLocalUser];
-        [gameCenterManager reloadHighScoresForCategory:leaderboard];
+    if ([networkTest isConnectedToInternet]) {
+        [self submitOfflineScore];
+        [self loginUser];
     }
 }
 

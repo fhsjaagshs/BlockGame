@@ -10,7 +10,6 @@
 
 @interface networkTest : NSObject
 
-+ (BOOL)connectedToNetwork;
-+ (BOOL)connectedToWifi;
++ (BOOL)isConnectedToInternet;
 
 @end

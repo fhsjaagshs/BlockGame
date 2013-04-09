@@ -31,8 +31,8 @@
 		F124B1361473316300AB022F /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F124B1351473316300AB022F /* icon.png */; };
 		F124B1381473316A00AB022F /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F124B1371473316A00AB022F /* icon@2x.png */; };
 		F12A6B8A147880A700CEF48B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F12A6B89147880A700CEF48B /* GameKit.framework */; };
-		F12A6B8D147886C500CEF48B /* GameCenterManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F12A6B8C147886C500CEF48B /* GameCenterManager.m */; };
 		F1BB0A0D14CF9B7300D132CD /* NSCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */; };
+		F1BE1F401713940000221669 /* GCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BE1F3F1713940000221669 /* GCManager.m */; };
 		F1C2697314CC9C2800ED25B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2697214CC9C2800ED25B8 /* SystemConfiguration.framework */; };
 		F1C2697914CCB88000ED25B8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2697814CCB88000ED25B8 /* AudioToolbox.framework */; };
 		F1C2699514CCF25F00ED25B8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2699414CCF25E00ED25B8 /* QuartzCore.framework */; };
@@ -71,10 +71,10 @@
 		F124B1351473316300AB022F /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../icon.png; sourceTree = "<group>"; };
 		F124B1371473316A00AB022F /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../icon@2x.png"; sourceTree = "<group>"; };
 		F12A6B89147880A700CEF48B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
-		F12A6B8B147886B200CEF48B /* GameCenterManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameCenterManager.h; sourceTree = "<group>"; };
-		F12A6B8C147886C500CEF48B /* GameCenterManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameCenterManager.m; sourceTree = "<group>"; };
 		F1BB0A0B14CF9B7300D132CD /* NSCustomAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCustomAlertView.h; sourceTree = "<group>"; };
 		F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCustomAlertView.m; sourceTree = "<group>"; };
+		F1BE1F3E1713940000221669 /* GCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCManager.h; sourceTree = "<group>"; };
+		F1BE1F3F1713940000221669 /* GCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCManager.m; sourceTree = "<group>"; };
 		F1C2697214CC9C2800ED25B8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F1C2697814CCB88000ED25B8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		F1C2699414CCF25E00ED25B8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -187,8 +187,8 @@
 			children = (
 				9B456C5B151FC66B003E86E4 /* networkTest.h */,
 				9B456C5C151FC66B003E86E4 /* networkTest.m */,
-				F12A6B8B147886B200CEF48B /* GameCenterManager.h */,
-				F12A6B8C147886C500CEF48B /* GameCenterManager.m */,
+				F1BE1F3E1713940000221669 /* GCManager.h */,
+				F1BE1F3F1713940000221669 /* GCManager.m */,
 				F1BB0A0B14CF9B7300D132CD /* NSCustomAlertView.h */,
 				F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */,
 				9B4F7C2A1527B6FF00DD2C44 /* BlackHole.h */,
@@ -276,11 +276,11 @@
 				F1225DCC1468919B005D6793 /* main.m in Sources */,
 				F1225DD01468919B005D6793 /* AppDelegate.m in Sources */,
 				F1225DD31468919B005D6793 /* ViewController.m in Sources */,
-				F12A6B8D147886C500CEF48B /* GameCenterManager.m in Sources */,
 				F1BB0A0D14CF9B7300D132CD /* NSCustomAlertView.m in Sources */,
 				9B456C5D151FC66B003E86E4 /* networkTest.m in Sources */,
 				9B4F7C2C1527B6FF00DD2C44 /* BlackHole.m in Sources */,
 				9BC024AC15291897000CC968 /* BonusHole.m in Sources */,
+				F1BE1F401713940000221669 /* GCManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
