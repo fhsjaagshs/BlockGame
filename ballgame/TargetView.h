@@ -1,0 +1,17 @@
+//
+//  TargetView.h
+//  ballgame
+//
+//  Created by Nathaniel Symer on 4/9/13.
+//
+//
+
+#import <UIKit/UIKit.h>
+
+@interface TargetView : UIView
+
+- (void)redrawWithBackgroundColor:(UIColor *)color;
+- (void)redrawVerticallyWithImage:(UIImage *)image;
+- (void)redrawHorizontallyWithImage:(UIImage *)image;
+
+@end

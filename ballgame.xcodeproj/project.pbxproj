@@ -36,6 +36,7 @@
 		F1C2697314CC9C2800ED25B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2697214CC9C2800ED25B8 /* SystemConfiguration.framework */; };
 		F1C2697914CCB88000ED25B8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2697814CCB88000ED25B8 /* AudioToolbox.framework */; };
 		F1C2699514CCF25F00ED25B8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2699414CCF25E00ED25B8 /* QuartzCore.framework */; };
+		F1C8B53817149F860059B23D /* TargetView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1C8B53717149F860059B23D /* TargetView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,8 @@
 		F1C2697214CC9C2800ED25B8 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F1C2697814CCB88000ED25B8 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		F1C2699414CCF25E00ED25B8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		F1C8B53617149F860059B23D /* TargetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetView.h; sourceTree = "<group>"; };
+		F1C8B53717149F860059B23D /* TargetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TargetView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +194,8 @@
 				F1BE1F3F1713940000221669 /* GCManager.m */,
 				F1BB0A0B14CF9B7300D132CD /* NSCustomAlertView.h */,
 				F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */,
+				F1C8B53617149F860059B23D /* TargetView.h */,
+				F1C8B53717149F860059B23D /* TargetView.m */,
 				9B4F7C2A1527B6FF00DD2C44 /* BlackHole.h */,
 				9B4F7C2B1527B6FF00DD2C44 /* BlackHole.m */,
 				9BC024AA15291897000CC968 /* BonusHole.h */,
@@ -281,6 +286,7 @@
 				9B4F7C2C1527B6FF00DD2C44 /* BlackHole.m in Sources */,
 				9BC024AC15291897000CC968 /* BonusHole.m in Sources */,
 				F1BE1F401713940000221669 /* GCManager.m in Sources */,
+				F1C8B53817149F860059B23D /* TargetView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

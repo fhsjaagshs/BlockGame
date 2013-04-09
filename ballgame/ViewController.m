@@ -12,6 +12,46 @@
 
 @synthesize timer, isAnimating, blackHole, blackHoleTwo, bonusHole, bhTimerIsRunning, score, gameOverLabel, highscore;
 
+- (void)randomizePosition {
+    CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
+    UIView *target = nil;
+    
+    int whichSide = (arc4random()%3)+1;
+    
+    int x = 0;
+    int y = 0;
+    
+    if (whichSide == 1) {
+        // left
+        int limit = (screenBounds.size.height-90);
+        y = arc4random()%limit;
+    } else if (whichSide == 2) {
+        // right
+        int limit = (screenBounds.size.height-90);
+        y = arc4random()%limit;
+        x = screenBounds.size.width-26;
+    } else if (whichSide == 3) {
+        // top
+        int limit = (screenBounds.size.width-26);
+        x = arc4random()%limit;
+    } else if (whichSide == 4) {
+        // bottom
+        int limit = (screenBounds.size.width-26);
+        x = arc4random()%limit;
+        y = screenBounds.size.height-26;
+    }
+    
+    target.frame = CGRectMake(x, y, 26, 90);
+    
+    if (self.theme.selectedSegmentIndex == 0) {
+        if (whichSide > 2) {
+            // draw vertically
+        } else {
+            // draw horizontally
+        }
+    }
+}
+
 - (void)setStartButtonTitle:(NSString *)string {
     [self.startButton setTitle:string forState:UIControlStateNormal];
     
