@@ -20,4 +20,5 @@
     #import "GCManager.h"
     #import "BlackHole.h"
     #import "BonusHole.h"
+    #import "TargetView.h"
 #endif

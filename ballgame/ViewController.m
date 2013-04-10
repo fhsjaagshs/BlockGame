@@ -14,7 +14,7 @@
 
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
-    UIView *target = nil;
+    TargetView *target = nil;
     
     int whichSide = (arc4random()%3)+1;
     
@@ -44,11 +44,19 @@
     target.frame = CGRectMake(x, y, 26, 90);
     
     if (self.theme.selectedSegmentIndex == 0) {
+        
+        NSArray *images = [NSArray arrayWithObjects:@"", nil];
+        int randomColorIndex = (arc4random()%images.count)-1;
+        
+        UIImage *image = [UIImage imageNamed:[images objectAtIndex:randomColorIndex]];
+        
         if (whichSide > 2) {
-            // draw vertically
+            [target redrawHorizontallyWithImage:image];
         } else {
-            // draw horizontally
+            [target redrawVerticallyWithImage:image];
         }
+    } else {
+        [target redrawWithBackgroundColor:nil];
     }
 }
 

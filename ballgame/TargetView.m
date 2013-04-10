@@ -35,16 +35,29 @@
     [self setNeedsDisplay];
 }
 
-- (void)drawRect:(CGRect)rect {
+- (UIImage *)imageRotatedNinety:(UIImage *)image {
+    CGSize rotatedSize = CGSizeMake(image.size.height, image.size.width);
     
+    UIGraphicsBeginImageContext(rotatedSize);
+    
+    CGContextRef bitmap = UIGraphicsGetCurrentContext();
+    CGContextTranslateCTM(bitmap, rotatedSize.width/2, rotatedSize.height/2);
+    CGContextRotateCTM(bitmap, M_PI/2);
+    CGContextScaleCTM(bitmap, 1.0, -1.0);
+    CGContextDrawImage(bitmap, CGRectMake(-image.size.width/2, -image.size.height/2, image.size.width, image.size.height), image.CGImage);
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
+
+- (void)drawRect:(CGRect)rect {
     if (self.image) {
         if (self.redrawVertically) {
-            [self.image drawInRect:self.bounds];
+            [[self imageRotatedNinety:self.image]drawInRect:self.bounds];
         } else {
-            
+            [self.image drawInRect:self.bounds];
         }
-    } else {
-        
     }
 }
 
