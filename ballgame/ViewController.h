@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreMotion/CoreMotion.h>
 
 @interface ViewController : UIViewController <UIAccelerometerDelegate, GKLeaderboardViewControllerDelegate>
 
@@ -15,7 +16,6 @@
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *theme;
 @property (strong, nonatomic) IBOutlet UIImageView *BGImageView;
-@property (strong, nonatomic) IBOutlet UIImageView *ballImage;
 @property (strong, nonatomic) IBOutlet UIView *theMainView;
 @property (strong, nonatomic) IBOutlet UIButton *startButton;
 @property (strong, nonatomic) IBOutlet UIButton *pauseButton;
@@ -32,8 +32,11 @@
 
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSString *highscore;
-@property (assign, nonatomic) BOOL isAnimating;
+@property (assign, nonatomic) BOOL isAnimatingBHOne;
+@property (assign, nonatomic) BOOL isAnimatingBHTwo;
 @property (assign, nonatomic) BOOL bhTimerIsRunning;
+
+@property (strong, nonatomic) CMMotionManager *motionManager;
 
 - (void)gameOver;
 - (IBAction)togglePause;

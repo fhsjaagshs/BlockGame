@@ -8,13 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BonusHole : UIView {
-    CGRect frame;
-    NSTimer *timer;
-}
+@interface BonusHole : UIView
 
 - (id)initWithBallframe:(CGRect)ballframe;
-
-- (void)redrawRectWithNewFrame:(CGRect)rect andBallFrame:(CGRect)ballFrame;
+- (void)redrawRectWithBallFrame:(CGRect)ballFrame;
 
 @end

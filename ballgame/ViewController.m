@@ -10,7 +10,109 @@
 
 @implementation ViewController
 
-@synthesize timer, isAnimating, blackHole, blackHoleTwo, bonusHole, bhTimerIsRunning, score, gameOverLabel, highscore;
+@synthesize timer, blackHole, blackHoleTwo, bonusHole, bhTimerIsRunning, score, gameOverLabel, highscore;
+
+- (void)createMotionManager {
+    self.motionManager = [[CMMotionManager alloc]init];
+    self.motionManager.accelerometerUpdateInterval = 0.2;
+    self.motionManager.gyroUpdateInterval = 0.2;
+}
+
+- (void)setStartPosition:(CMAcceleration)acceleration {
+    NSString *saveString = [NSString stringWithFormat:@"%f,%f,%f", acceleration.x, acceleration.y, acceleration.z];
+    [[NSUserDefaults standardUserDefaults]setObject:saveString forKey:@"saved_position"];
+}
+
+- (CMAcceleration)getStartPosition {
+    NSString *savedString = [[NSUserDefaults standardUserDefaults]objectForKey:@"saved_position"];
+    NSArray *array = [savedString componentsSeparatedByString:@","];
+    CMAcceleration acceleration;
+    acceleration.x = [[array objectAtIndex:0]doubleValue];
+    acceleration.y = [[array objectAtIndex:1]doubleValue];
+    acceleration.x = [[array objectAtIndex:2]doubleValue];
+    return acceleration;
+}
+
+- (void)handleAcceleration:(CMAcceleration)acceleration {
+    double xValNonAbs = acceleration.x;
+    double yValNonAbs = acceleration.y;
+    
+    CMAcceleration positionAcceleration = [self getStartPosition];
+    
+    double xVal = fabs(xValNonAbs)-positionAcceleration.x;
+    double yVal = fabs(yValNonAbs)-positionAcceleration.y;
+    
+    CGRect screenBounds = CGRectMake(0, 0, 320, 480);
+    CGRect ballRect = self.ball.frame;
+    
+    int speed = 7;
+    
+    if (self.difficulty.selectedSegmentIndex == 0) {
+        speed = 5;
+    } else if (self.difficulty.selectedSegmentIndex == 1) {
+        speed = 7;
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
+        speed = 11;
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
+        speed = 20;
+    }
+    
+    int rateX = 10*acceleration.x;
+    int rateY = -1*10*acceleration.y;
+    float currentX = self.ball.center.x;
+    float currentY = self.ball.center.y;
+    
+    CGPoint newCenterPoint = CGPointZero;
+    
+    if (rateX > 0 && rateY == 0) {
+        newCenterPoint = CGPointMake(currentX+(xVal*speed), self.ball.center.y);
+    } else if (rateX == 0 && rateY > 0) {
+        newCenterPoint = CGPointMake(self.ball.center.x, currentY+(yVal*speed));
+    } else if (rateX > 0 && rateY > 0) {
+        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY+(yVal*speed));
+    } else if (rateX < 0 && rateY == 0) {
+        newCenterPoint = CGPointMake(currentX-(xVal*speed), self.ball.center.y);
+    } else if (rateX == 0 && rateY < 0) {
+        newCenterPoint = CGPointMake(self.ball.center.x, currentY-(yVal*speed));
+    } else if (rateX > 0 && rateY < 0) {
+        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY-(yVal*speed));
+    } else if (rateX < 0 && rateY > 0) {
+        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY+(yVal*speed));
+    } else if (rateX < 0 && rateY < 0) {
+        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY-(yVal*speed));
+    }
+    
+    if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
+        self.ball.center = newCenterPoint;
+    } else {
+        [self gameOver];
+    }
+    
+    if (CGRectIntersectsRect(ballRect, self.target.frame)) {
+        [self randomizePosition];
+        [self addOneToScore];
+    }
+    
+    if ((CGRectIntersectsRect(ballRect, self.blackHole.frame) || CGRectIntersectsRect(ballRect, self.blackHoleTwo.frame)) && !self.isAnimating) {
+        [self gameOver];
+    }
+    
+    if (CGRectIntersectsRect(ballRect, self.bonusHole.frame)) {
+        [self countFive];
+        [self.bonusHole removeFromSuperview];
+        self.bonusHole = nil;
+    }
+}
+
+- (void)startMotionManager {
+    [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+        [self handleAcceleration:accelerometerData.acceleration];
+    }];
+}
+
+- (void)stopMotionManager {
+    [self.motionManager stopAccelerometerUpdates];
+}
 
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
@@ -190,7 +292,6 @@
     [self.score setTextColor:titleColor];
     [self.themeLabel setTextColor:titleColor];
     [self.pauseButton setTitleColor:titleColor forState:UIControlStateNormal];
-    [self.ballImage setHidden:isSelectedIndexOne];
     [self.BGImageView setHidden:isSelectedIndexOne];
     [self.target setImageHidden:!isSelectedIndexOne];
 }
@@ -269,15 +370,15 @@
             self.bhTimerIsRunning = YES;
             
             if (self.blackHole.superview) {
-                [self.blackHole redrawRectWithNewFrame:blackHole.frame andBallFrame:self.ball.frame];
+                [self.blackHole redrawRectWithBallFrame:self.ball.frame];
             }
             
             if (self.blackHoleTwo.superview) {
-                [self.blackHoleTwo redrawRectWithNewFrame:blackHoleTwo.frame andBallFrame:self.ball.frame];
+                [self.blackHoleTwo redrawRectWithBallFrame:self.ball.frame];
             }
             
             if (self.bonusHole.superview) {
-                [self.bonusHole redrawRectWithNewFrame:bonusHole.frame andBallFrame:self.ball.frame];
+                [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
             }
         }
     }
@@ -291,15 +392,12 @@
     
     [self.difficultyLabel setHidden:NO];
     [self.ball setHidden:NO];
-    [score setHidden:NO];
+    [self.score setHidden:NO];
     
     // where the bonus and black holes get hidden...
     [self.blackHole removeFromSuperview];
     [self.blackHoleTwo removeFromSuperview];
     [self.bonusHole removeFromSuperview];
-    self.blackHoleTwo = nil;
-    self.blackHole = nil;
-    self.bonusHole = nil;
     
     // reset titles
     if ([self.startButton.titleLabel.text isEqualToString:@"Start"]) {
@@ -322,9 +420,6 @@
         [self.ball setCenter:self.theMainView.center];
         [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
         [self.target setHidden:YES];
-        self.bonusHole = nil;
-        self.blackHole = nil;
-        self.blackHoleTwo = nil;
     } 
 
     [self randomizePosition];
@@ -339,7 +434,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.isAnimating = NO;
+    self.isAnimatingBHOne = NO;
+    self.isAnimatingBHTwo = NO;
     self.bhTimerIsRunning = NO;
     
     [self loginUser];
@@ -367,52 +463,39 @@
     self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
 }
 
-- (void)setBoolToNo {
-    self.isAnimating = NO;
-}
-
-- (void)animationDidStopMe {
-    [self performSelector:@selector(setBoolToNo) withObject:nil afterDelay:1.0f];
+- (BOOL)isAnimating {
+    return (!self.isAnimatingBHOne && !self.isAnimatingBHTwo);
 }
 
 - (void)redraw {
-    int x = (arc4random()%264)+26;
-    int y = (arc4random()%424)+26;
-    CGRect frame = CGRectMake(x, y, 33, 33);
-    CGRect adjustedFrame = CGRectMake(x-50, y-50, 133, 133);
-    
-    if (((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) || (CGRectContainsRect(adjustedFrame, self.ball.frame))) || ((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) && (CGRectContainsRect(adjustedFrame, self.ball.frame)))) {
-        frame = CGRectMake(x-100, y-100, 33, 33);
+    if (!self.blackHole) {
+        self.blackHole = [[BlackHole alloc]init];
+        [self.view addSubview:blackHole];
     }
     
-    self.isAnimating = YES;
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.1];
-    [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(animationDidStopMe)];
-    [self.blackHole setFrame:frame];
-    [UIView commitAnimations];
+    [UIView animateWithDuration:0.1 animations:^{
+        [self.blackHole redrawRectWithBallFrame:self.ball.frame];
+    } completion:^(BOOL finished) {
+        if (finished) {
+            self.isAnimatingBHOne = NO;
+        }
+    }];
 }
 
 - (void)redrawTwo {
-    int x = (arc4random()%264)+26;
-    int y = (arc4random()%424)+26;
-    CGRect frame = CGRectMake(x, y, 33, 33);
-    CGRect adjustedFrame = CGRectMake(x-50, y-50, 133, 133);
     
-    if (((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) || (CGRectContainsRect(adjustedFrame, self.ball.frame))) || ((CGRectIntersectsRect(adjustedFrame, self.ball.frame)) && (CGRectContainsRect(adjustedFrame, self.ball.frame)))) {
-        frame = CGRectMake(x-100, y-100, 33, 33);
+    if (!self.blackHoleTwo) {
+        self.blackHoleTwo = [[BlackHole alloc]init];
+        [self.view addSubview:blackHoleTwo];
     }
     
-    self.isAnimating = YES;
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.1];
-    [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(animationDidStopMe)];
-    [self.blackHoleTwo setFrame:frame];
-    [UIView commitAnimations];
+    [UIView animateWithDuration:0.1 animations:^{
+        [self.blackHoleTwo redrawRectWithBallFrame:self.ball.frame];
+    } completion:^(BOOL finished) {
+        if (finished) {
+            self.isAnimatingBHTwo = NO;
+        }
+    }];
 }
 
 - (void)redrawBoth {
@@ -525,77 +608,6 @@
             });
         }
     });
-}
-
-- (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {
-    // to get the speed, get absolute value and multiply the acceleration by a constant (in this time, its a time)
-    
-    double xValNonAbs = acceleration.x;
-    double yValNonAbs = acceleration.y;
-    
-    double xVal = fabs(xValNonAbs);
-    double yVal = fabs(yValNonAbs);
-    
-    CGRect screenBounds = CGRectMake(0, 0, 320, 480);
-    CGRect ballRect = self.ball.frame;
-    
-    int speed = 7;
-    
-    if (self.difficulty.selectedSegmentIndex == 0) {
-        speed = 5;
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        speed = 7;
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        speed = 11;
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        speed = 20;
-    }
-    
-    int rateX = 10*acceleration.x;
-    int rateY = -1*10*acceleration.y;
-    float currentX = self.ball.center.x;
-    float currentY = self.ball.center.y;
-    
-    CGPoint newCenterPoint = CGPointZero;
-    
-    if (rateX > 0 && rateY == 0) {
-        newCenterPoint = CGPointMake(currentX+(xVal*speed), self.ball.center.y);
-    } else if (rateX == 0 && rateY > 0) {
-        newCenterPoint = CGPointMake(self.ball.center.x, currentY+(yVal*speed));
-    } else if (rateX > 0 && rateY > 0) {
-        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY+(yVal*speed));
-    } else if (rateX < 0 && rateY == 0) {
-        newCenterPoint = CGPointMake(currentX-(xVal*speed), self.ball.center.y);
-    } else if (rateX == 0 && rateY < 0) {
-        newCenterPoint = CGPointMake(self.ball.center.x, currentY-(yVal*speed));
-    } else if (rateX > 0 && rateY < 0) {
-        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY-(yVal*speed));
-    } else if (rateX < 0 && rateY > 0) {
-        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY+(yVal*speed));
-    } else if (rateX < 0 && rateY < 0) {
-        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY-(yVal*speed));
-    }
-    
-    if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
-        self.ball.center = newCenterPoint;
-    } else {
-        [self gameOver];
-    }
-    
-    if (CGRectIntersectsRect(ballRect, self.target.frame)) {
-        [self randomizePosition];
-        [self addOneToScore];
-    } 
-
-    if ((CGRectIntersectsRect(ballRect, self.blackHole.frame) || CGRectIntersectsRect(ballRect, self.blackHoleTwo.frame)) && !self.isAnimating) {
-        [self gameOver];
-    }
-    
-    if (CGRectIntersectsRect(ballRect, self.bonusHole.frame)) {
-        [self countFive];
-        [self.bonusHole removeFromSuperview];
-        self.bonusHole = nil;
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {

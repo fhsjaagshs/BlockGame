@@ -53,7 +53,7 @@
     return self;
 }
 
-- (void)redrawRectWithNewFrame:(CGRect)rect andBallFrame:(CGRect)ballFrame {
+- (void)redrawRectWithBallFrame:(CGRect)ballFrame {
     self.backgroundColor = [UIColor clearColor];
     [self muckWithFrame:ballFrame];
     [self drawRect:self.frame];

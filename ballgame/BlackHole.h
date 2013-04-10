@@ -11,6 +11,6 @@
 @interface BlackHole : UIView
 
 - (id)initWithBallframe:(CGRect)ballframe;
-- (void)redrawRectWithNewFrame:(CGRect)rect andBallFrame:(CGRect)ballFrame;
+- (void)redrawRectWithBallFrame:(CGRect)ballFrame;
 
 @end
