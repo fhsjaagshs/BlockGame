@@ -125,7 +125,7 @@
 - (IBAction)showLeaderboard {
     if ([networkTest isConnectedToInternet]) {
         GKLeaderboardViewController *leaderboardController = [[GKLeaderboardViewController alloc]init];
-        if (leaderboardController != nil) {
+        if (leaderboardController) {
             leaderboardController.category = [self getCurrentLeaderboard];
             leaderboardController.timeScope = GKLeaderboardTimeScopeAllTime;
             leaderboardController.leaderboardDelegate = self;
@@ -268,15 +268,15 @@
             [self.timer fire];
             self.bhTimerIsRunning = YES;
             
-            if (self.blackHole) {
+            if (self.blackHole.superview) {
                 [self.blackHole redrawRectWithNewFrame:blackHole.frame andBallFrame:self.ball.frame];
             }
             
-            if (self.blackHoleTwo != nil) {
+            if (self.blackHoleTwo.superview) {
                 [self.blackHoleTwo redrawRectWithNewFrame:blackHoleTwo.frame andBallFrame:self.ball.frame];
             }
             
-            if (self.bonusHole != nil) {
+            if (self.bonusHole.superview) {
                 [self.bonusHole redrawRectWithNewFrame:bonusHole.frame andBallFrame:self.ball.frame];
             }
         }
@@ -343,6 +343,9 @@
     self.bhTimerIsRunning = NO;
     
     [self loginUser];
+    
+    self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
+    [self.view addSubview:self.ball];
     
     self.target = [[TargetView alloc]init];
     self.target.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -439,7 +442,6 @@
     [self.score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
     
-    // Bonus hole behavior
     float rounded = [[NSString stringWithFormat:@"%.0f",(float)(newScore/21)]floatValue];
     float diff = (newScore/21)-rounded;
 
@@ -459,7 +461,7 @@
     if (self.difficulty.selectedSegmentIndex != 0) {
     
         if (newScore > 2) {
-            if (self.blackHole == nil) {
+            if (!self.blackHole) {
                 self.blackHole = [[BlackHole alloc]initWithBallframe:self.ball.frame];
                 [self.view addSubview:self.blackHole];
                 [self.view bringSubviewToFront:self.blackHole];
@@ -482,16 +484,15 @@
             }
         
         } else {
-            if (self.blackHole != nil) {
+            if (self.blackHole.superview) {
                 [self.blackHole removeFromSuperview];
-                self.blackHole = nil;
             }
             [self.timer invalidate];
             self.timer = nil;
         }
     
         if (newScore > 8) {
-            if (self.blackHoleTwo == nil) {
+            if (!self.blackHoleTwo) {
                 self.blackHoleTwo = [[BlackHole alloc]initWithBallframe:self.ball.frame];
                 [self.view addSubview:self.blackHoleTwo];
                 [self.view bringSubviewToFront:self.blackHoleTwo];
@@ -500,27 +501,30 @@
             }
         
         } else {
-            if (self.blackHoleTwo != nil) {
+            if (self.blackHoleTwo.superview) {
                 [self.blackHoleTwo removeFromSuperview];
-                self.blackHoleTwo = nil;
             }
         }
     }
 }
 
 - (void)countFive {
-    int newScore = self.score.text.intValue+5;
-    self.score.text = [NSString stringWithFormat:@"%d",newScore];
+    self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
 }
-
-//
-// DAFUQ????
-//
 
 - (void)flashScoreLabelToGreen {
     [self.score setTextColor:[UIColor greenColor]];
-    sleep(0.5);
-    [self.score setTextColor:[UIColor whiteColor]];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @autoreleasepool {
+            sleep(0.5);
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                @autoreleasepool {
+                    [self.score setTextColor:[UIColor whiteColor]];
+                }
+            });
+        }
+    });
 }
 
 - (void)accelerometer:(UIAccelerometer *)accelerometer didAccelerate:(UIAcceleration *)acceleration {

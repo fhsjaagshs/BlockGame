@@ -21,4 +21,5 @@
     #import "BlackHole.h"
     #import "BonusHole.h"
     #import "TargetView.h"
+    #import "BallView.h"
 #endif
