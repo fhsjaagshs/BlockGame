@@ -14,7 +14,6 @@
 
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
-    TargetView *target = nil;
     
     int whichSide = (arc4random()%3)+1;
     
@@ -41,22 +40,23 @@
         y = screenBounds.size.height-26;
     }
     
-    target.frame = CGRectMake(x, y, 26, 90);
+    self.target.frame = CGRectMake(x, y, 26, 90);
     
     if (self.theme.selectedSegmentIndex == 0) {
         
-        NSArray *images = [NSArray arrayWithObjects:@"", nil];
+        NSArray *images = [NSArray arrayWithObjects:@"black", @"blue", @"green", @"purple", @"red", @"yellow", nil];
         int randomColorIndex = (arc4random()%images.count)-1;
         
         UIImage *image = [UIImage imageNamed:[images objectAtIndex:randomColorIndex]];
         
         if (whichSide > 2) {
-            [target redrawHorizontallyWithImage:image];
+            [self.target redrawHorizontallyWithImage:image];
         } else {
-            [target redrawVerticallyWithImage:image];
+            [self.target redrawVerticallyWithImage:image];
         }
     } else {
-        [target redrawWithBackgroundColor:nil];
+        NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
+        [self.target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%(8)]];
     }
 }
 
@@ -415,6 +415,9 @@
     self.bhTimerIsRunning = NO;
     
     [self loginUser];
+    
+    self.target = [[TargetView alloc]init];
+    [self.view addSubview:self.target];
     
     [UIAccelerometer sharedAccelerometer].updateInterval = 1/180;
     [UIAccelerometer sharedAccelerometer].delegate = nil;

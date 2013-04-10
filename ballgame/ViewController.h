@@ -11,6 +11,7 @@
 @interface ViewController : UIViewController <UIAccelerometerDelegate, GKLeaderboardViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *ball;
+@property (strong, nonatomic) TargetView *target;
 
 // Targets (16 count)
 @property (strong, nonatomic) IBOutlet UIView *one;

@@ -19,6 +19,7 @@
 - (void)redrawWithBackgroundColor:(UIColor *)color {
     [self setNeedsDisplay];
     self.backgroundColor = color;
+    self.image = nil;
 }
 
 - (void)redrawVerticallyWithImage:(UIImage *)image {
