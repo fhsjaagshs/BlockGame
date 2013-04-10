@@ -10,11 +10,25 @@
 @interface TargetView ()
 
 @property (nonatomic, assign) BOOL redrawVertically;
-@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, assign) BOOL shouldHideImage;
 
 @end
 
 @implementation TargetView
+
+- (void)setImageHidden:(BOOL)shouldHide {
+    self.shouldHideImage = shouldHide;
+    
+    if (!self.shouldHideImage) {
+        [self setBackgroundColor:[UIColor clearColor]];
+        self.layer.cornerRadius = 0;
+    } else {
+        [self setBackgroundColor:[UIColor cyanColor]];
+        self.layer.cornerRadius = 5;
+    }
+    
+    [self setNeedsDisplay];
+}
 
 - (void)redrawWithBackgroundColor:(UIColor *)color {
     [self setNeedsDisplay];
@@ -53,7 +67,7 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    if (self.image) {
+    if (self.image && !self.shouldHideImage) {
         if (self.redrawVertically) {
             [[self imageRotatedNinety:self.image]drawInRect:self.bounds];
         } else {

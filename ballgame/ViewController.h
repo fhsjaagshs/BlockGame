@@ -81,7 +81,6 @@
 @property (assign) BOOL bhTimerIsRunning;
 
 - (void)gameOver;
-- (void)hideEmAll;
 - (IBAction)togglePause;
 - (void)setStartButtonTitle:(NSString *)string;
 

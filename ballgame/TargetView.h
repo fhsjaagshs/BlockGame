@@ -13,5 +13,8 @@
 - (void)redrawWithBackgroundColor:(UIColor *)color;
 - (void)redrawVerticallyWithImage:(UIImage *)image;
 - (void)redrawHorizontallyWithImage:(UIImage *)image;
+- (void)setImageHidden:(BOOL)shouldHide;
+
+@property (nonatomic, strong) UIImage *image;
 
 @end
