@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nathaniel Symer on 11/7/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2011 Nathaniel Symer. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -21,9 +21,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *difficultyLabel;
 @property (strong, nonatomic) IBOutlet UIButton *showGameCenterButton;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *difficulty;
-@property (strong, nonatomic) IBOutlet UILabel *score;
-@property (strong, nonatomic) IBOutlet UILabel *gameOverLabel;
 
+@property (strong, nonatomic) UILabel *score;
+@property (strong, nonatomic) UILabel *gameOverLabel;
 @property (strong, nonatomic) BackgroundView *theMainView;
 @property (strong, nonatomic) UILabel *themeLabel;
 

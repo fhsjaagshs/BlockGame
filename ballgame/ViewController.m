@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nathaniel Symer on 11/7/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2011 Nathaniel Symer. All rights reserved.
 //
 
 #import "ViewController.h"
@@ -14,6 +14,9 @@
 
 - (void)loadView {
     [super loadView];
+    
+    self.view.backgroundColor = [UIColor darkGrayColor];
+    
     self.theMainView = [[BackgroundView alloc]initWithFrame:[UIScreen mainScreen].applicationFrame];
     [self.view addSubview:self.theMainView];
     
@@ -23,9 +26,27 @@
     self.themeLabel.textAlignment = UITextAlignmentCenter;
     self.themeLabel.textColor = [UIColor whiteColor];
     self.themeLabel.backgroundColor = [UIColor clearColor];
+    self.themeLabel.text = @"Theme";
     [self.view addSubview:self.themeLabel];
     
+    self.gameOverLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 150, 320, 80)];
+    self.gameOverLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.gameOverLabel.font = [UIFont boldSystemFontOfSize:34];
+    self.gameOverLabel.textAlignment = UITextAlignmentCenter;
+    self.gameOverLabel.textColor = [UIColor redColor];
+    self.gameOverLabel.backgroundColor = [UIColor clearColor];
+    self.gameOverLabel.text = @"Game Over";
+    [self.view addSubview:self.gameOverLabel];
     
+    self.score = [[UILabel alloc]initWithFrame:CGRectMake(0, 110, 320, 30)];
+    self.score.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.score.font = [UIFont systemFontOfSize:26];
+    self.score.textAlignment = UITextAlignmentCenter;
+    self.score.textColor = [UIColor redColor];
+    self.score.backgroundColor = [UIColor clearColor];
+    self.score.hidden = YES;
+    self.score.text = @"0";
+    [self.view addSubview:self.score];
     // Other shit goes here
     
     self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
