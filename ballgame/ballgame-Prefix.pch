@@ -22,4 +22,5 @@
     #import "BonusHole.h"
     #import "TargetView.h"
     #import "BallView.h"
+    #import "BackgroundView.h"
 #endif

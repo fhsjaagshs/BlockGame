@@ -10,7 +10,12 @@
 
 @implementation ViewController
 
-@synthesize timer, blackHole, blackHoleTwo, bonusHole, bhTimerIsRunning, score, gameOverLabel, highscore;
+@synthesize timer, blackHole, blackHoleTwo, bonusHole, score, gameOverLabel, highscore;
+
+- (void)loadView {
+    self.theMainView = [[BackgroundView alloc]initWithFrame:[UIScreen mainScreen].applicationFrame];
+    [self.view addSubview:self.theMainView];
+}
 
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
@@ -349,7 +354,6 @@
         [self.themeLabel setHidden:NO];
         [self.timer invalidate];
         self.timer = nil;
-        self.bhTimerIsRunning = NO;
     } else {
         [self startMotionManager];
         [self.pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
@@ -369,7 +373,6 @@
             }
             
             [self.timer fire];
-            self.bhTimerIsRunning = YES;
             
             if (self.blackHole.superview) {
                 [self.blackHole redrawRectWithBallFrame:self.ball.frame];
@@ -419,7 +422,7 @@
     if (!gameOverLabel.isHidden) { // if the gameover label is showing
         [self.score setText:@"0"];
         [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"savedScore"];
-        [self.ball setCenter:self.theMainView.center];
+        [self.ball setCenter:self.view.center];
         [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
         [self.target setHidden:YES];
     }
@@ -443,7 +446,6 @@
     
     self.isAnimatingBHOne = NO;
     self.isAnimatingBHTwo = NO;
-    self.bhTimerIsRunning = NO;
     
     [self createMotionManager]; // 1/180 update interval
     

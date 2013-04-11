@@ -629,7 +629,6 @@
 					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="BGImageView">UIImageView</string>
-						<string key="ballImage">UIImageView</string>
 						<string key="difficulty">UISegmentedControl</string>
 						<string key="difficultyLabel">UILabel</string>
 						<string key="gameOverLabel">UILabel</string>
@@ -644,10 +643,6 @@
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="BGImageView">
 							<string key="name">BGImageView</string>
-							<string key="candidateClassName">UIImageView</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="ballImage">
-							<string key="name">ballImage</string>
 							<string key="candidateClassName">UIImageView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="difficulty">
@@ -703,7 +698,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="background.png">{640, 960}</string>
+			<string key="background.png">{320, 480}</string>
 			<string key="leaderboard@2x.png">{268, 102}</string>
 			<string key="startretry@2x.png">{132, 102}</string>
 		</dictionary>

@@ -34,6 +34,8 @@
 		F1532C6217159B0E00FB18A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1532C6117159B0E00FB18A0 /* Default-568h@2x.png */; };
 		F1679DBC1715EEB600334E1B /* BallView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1679DBB1715EEB600334E1B /* BallView.m */; };
 		F1ABC76F17162B3100389EDB /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1ABC76E17162B3100389EDB /* CoreMotion.framework */; };
+		F1ABC77217164ABB00389EDB /* BackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1ABC77117164ABB00389EDB /* BackgroundView.m */; };
+		F1ABC77417164C9C00389EDB /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1ABC77317164C9C00389EDB /* background@2x.png */; };
 		F1BB0A0D14CF9B7300D132CD /* NSCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */; };
 		F1BE1F401713940000221669 /* GCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BE1F3F1713940000221669 /* GCManager.m */; };
 		F1C2697314CC9C2800ED25B8 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2697214CC9C2800ED25B8 /* SystemConfiguration.framework */; };
@@ -79,6 +81,9 @@
 		F1679DBA1715EEB600334E1B /* BallView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BallView.h; sourceTree = "<group>"; };
 		F1679DBB1715EEB600334E1B /* BallView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BallView.m; sourceTree = "<group>"; };
 		F1ABC76E17162B3100389EDB /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		F1ABC77017164ABB00389EDB /* BackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundView.h; sourceTree = "<group>"; };
+		F1ABC77117164ABB00389EDB /* BackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundView.m; sourceTree = "<group>"; };
+		F1ABC77317164C9C00389EDB /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
 		F1BB0A0B14CF9B7300D132CD /* NSCustomAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCustomAlertView.h; sourceTree = "<group>"; };
 		F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCustomAlertView.m; sourceTree = "<group>"; };
 		F1BE1F3E1713940000221669 /* GCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCManager.h; sourceTree = "<group>"; };
@@ -116,6 +121,7 @@
 				F105A14D147EBB8600BDD990 /* leaderboard@2x.png */,
 				F105A150147EBBBC00BDD990 /* startretry@2x.png */,
 				F105A149147EB5EB00BDD990 /* background.png */,
+				F1ABC77317164C9C00389EDB /* background@2x.png */,
 				F124B1351473316300AB022F /* icon.png */,
 				F124B1371473316A00AB022F /* icon@2x.png */,
 				9B0F1C20152D55EE0038FB08 /* ball.png */,
@@ -204,6 +210,8 @@
 				F1BE1F3F1713940000221669 /* GCManager.m */,
 				F1BB0A0B14CF9B7300D132CD /* NSCustomAlertView.h */,
 				F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */,
+				F1ABC77017164ABB00389EDB /* BackgroundView.h */,
+				F1ABC77117164ABB00389EDB /* BackgroundView.m */,
 				F1C8B53617149F860059B23D /* TargetView.h */,
 				F1C8B53717149F860059B23D /* TargetView.m */,
 				F1679DBA1715EEB600334E1B /* BallView.h */,
@@ -281,6 +289,7 @@
 				F105A151147EBBBC00BDD990 /* startretry@2x.png in Resources */,
 				9B0F1C21152D55EE0038FB08 /* ball.png in Resources */,
 				F1532C6217159B0E00FB18A0 /* Default-568h@2x.png in Resources */,
+				F1ABC77417164C9C00389EDB /* background@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -301,6 +310,7 @@
 				F1BE1F401713940000221669 /* GCManager.m in Sources */,
 				F1C8B53817149F860059B23D /* TargetView.m in Sources */,
 				F1679DBC1715EEB600334E1B /* BallView.m in Sources */,
+				F1ABC77217164ABB00389EDB /* BackgroundView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
