@@ -146,7 +146,6 @@
 		F1225DB01468919B005D6793 = {
 			isa = PBXGroup;
 			children = (
-				F1ABC76E17162B3100389EDB /* CoreMotion.framework */,
 				F1225DC51468919B005D6793 /* ballgame */,
 				F1225DBE1468919B005D6793 /* Frameworks */,
 				F1225DBC1468919B005D6793 /* Products */,
@@ -164,6 +163,7 @@
 		F1225DBE1468919B005D6793 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F1ABC76E17162B3100389EDB /* CoreMotion.framework */,
 				F1C2699414CCF25E00ED25B8 /* QuartzCore.framework */,
 				F1C2697814CCB88000ED25B8 /* AudioToolbox.framework */,
 				F1C2697214CC9C2800ED25B8 /* SystemConfiguration.framework */,

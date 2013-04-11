@@ -13,8 +13,45 @@
 @synthesize timer, blackHole, blackHoleTwo, bonusHole, score, gameOverLabel, highscore;
 
 - (void)loadView {
+    [super loadView];
     self.theMainView = [[BackgroundView alloc]initWithFrame:[UIScreen mainScreen].applicationFrame];
     [self.view addSubview:self.theMainView];
+    
+    self.themeLabel = [[UILabel alloc]initWithFrame:CGRectMake(115, 147, 90, 17)];
+    self.themeLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.themeLabel.font = [UIFont boldSystemFontOfSize:17];
+    self.themeLabel.textAlignment = UITextAlignmentCenter;
+    self.themeLabel.textColor = [UIColor whiteColor];
+    self.themeLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.themeLabel];
+    
+    
+    // Other shit goes here
+    
+    self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
+    [self.view addSubview:self.ball];
+    
+    self.target = [[TargetView alloc]init];
+    self.target.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.target.layer.shadowOpacity = 0.9f;
+    self.target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    self.target.layer.shadowRadius = 5.0f;
+    self.target.layer.masksToBounds = NO;
+    self.target.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-2, -2, self.target.frame.size.width+2, self.target.frame.size.height+2)].CGPath;
+    [self.view addSubview:self.target];
+    
+    self.ball.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.ball.layer.shadowOpacity = 0.7f;
+    self.ball.layer.shadowOffset = CGSizeZero;
+    self.ball.layer.shadowRadius = 5.0f;
+    self.ball.layer.masksToBounds = NO;
+    self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
+    
+    self.isAnimatingBHOne = NO;
+    self.isAnimatingBHTwo = NO;
+    
+    [self createMotionManager]; // 1/180 update interval
+    [self loginUser];
 }
 
 - (void)createMotionManager {
@@ -439,36 +476,6 @@
     [self.pauseButton setHidden:NO];
     
     [self submitOfflineScore];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    self.isAnimatingBHOne = NO;
-    self.isAnimatingBHTwo = NO;
-    
-    [self createMotionManager]; // 1/180 update interval
-    
-    [self loginUser];
-    
-    self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
-    [self.view addSubview:self.ball];
-    
-    self.target = [[TargetView alloc]init];
-    self.target.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.target.layer.shadowOpacity = 0.9f;
-    self.target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    self.target.layer.shadowRadius = 5.0f;
-    self.target.layer.masksToBounds = NO;
-    self.target.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-2, -2, self.target.frame.size.width+2, self.target.frame.size.height+2)].CGPath;
-    [self.view addSubview:self.target];
-    
-    self.ball.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.ball.layer.shadowOpacity = 0.7f;
-    self.ball.layer.shadowOffset = CGSizeZero;
-    self.ball.layer.shadowRadius = 5.0f;
-    self.ball.layer.masksToBounds = NO;
-    self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
 }
 
 - (BOOL)isAnimating {
