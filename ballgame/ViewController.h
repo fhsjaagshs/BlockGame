@@ -35,6 +35,7 @@
 @property (assign, nonatomic) BOOL isAnimatingBHOne;
 @property (assign, nonatomic) BOOL isAnimatingBHTwo;
 @property (assign, nonatomic) BOOL bhTimerIsRunning;
+@property (assign, nonatomic) BOOL motionManagerIsRunning;
 
 @property (strong, nonatomic) CMMotionManager *motionManager;
 

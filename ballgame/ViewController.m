@@ -105,12 +105,14 @@
 }
 
 - (void)startMotionManager {
+    self.motionManagerIsRunning = YES;
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
         [self handleAcceleration:accelerometerData.acceleration];
     }];
 }
 
 - (void)stopMotionManager {
+    self.motionManagerIsRunning = NO;
     [self.motionManager stopAccelerometerUpdates];
 }
 
@@ -329,7 +331,7 @@
     [self.themeLabel setHidden:NO];
     [self.difficulty setHidden:NO];
     [self.theme setHidden:NO];
-    [UIAccelerometer sharedAccelerometer].delegate = nil;
+    [self stopMotionManager];
     [self.startButton setHidden:NO];
     [self.gameOverLabel setHidden:NO];
     [self.showGameCenterButton setHidden:NO];
@@ -340,8 +342,8 @@
 }
 
 - (IBAction)togglePause {
-    if ([UIAccelerometer sharedAccelerometer].delegate == self) {
-        [UIAccelerometer sharedAccelerometer].delegate = nil;
+    if (self.motionManagerIsRunning) {
+        [self stopMotionManager];
         [self.pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
         [self.theme setHidden:NO];
         [self.themeLabel setHidden:NO];
@@ -349,12 +351,12 @@
         self.timer = nil;
         self.bhTimerIsRunning = NO;
     } else {
-        [UIAccelerometer sharedAccelerometer].delegate = self;
+        [self startMotionManager];
         [self.pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
         [self.themeLabel setHidden:YES];
         [self.theme setHidden:YES];
         
-        if (!self.bhTimerIsRunning) {
+        if (!self.timer.isValid) {
 
             if (self.difficulty.selectedSegmentIndex == 1) {
                 self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
@@ -411,7 +413,7 @@
     [self.showGameCenterButton setHidden:YES];
     
     // make the ball respond to the accelerotemer
-    [UIAccelerometer sharedAccelerometer].delegate = self;
+    [self startMotionManager];
     
     // Stuff that should happen to restart the game
     if (!gameOverLabel.isHidden) { // if the gameover label is showing
@@ -420,13 +422,18 @@
         [self.ball setCenter:self.theMainView.center];
         [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
         [self.target setHidden:YES];
-    } 
+    }
+    
+    if (self.timer.isValid) {
+        [self.timer invalidate];
+    }
+    
+    self.timer = nil;
 
     [self randomizePosition];
     [self.gameOverLabel setHidden:YES];
     [self.startButton setHidden:YES];
     [self.pauseButton setHidden:NO];
-    self.bhTimerIsRunning = NO;
     
     [self submitOfflineScore];
 }
@@ -437,6 +444,8 @@
     self.isAnimatingBHOne = NO;
     self.isAnimatingBHTwo = NO;
     self.bhTimerIsRunning = NO;
+    
+    [self createMotionManager]; // 1/180 update interval
     
     [self loginUser];
     
@@ -452,9 +461,6 @@
     self.target.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-2, -2, self.target.frame.size.width+2, self.target.frame.size.height+2)].CGPath;
     [self.view addSubview:self.target];
     
-    [UIAccelerometer sharedAccelerometer].updateInterval = 1/180;
-    [UIAccelerometer sharedAccelerometer].delegate = nil;
-    
     self.ball.layer.shadowColor = [UIColor blackColor].CGColor;
     self.ball.layer.shadowOpacity = 0.7f;
     self.ball.layer.shadowOffset = CGSizeZero;
@@ -467,10 +473,13 @@
     return (!self.isAnimatingBHOne && !self.isAnimatingBHTwo);
 }
 
-- (void)redraw {
+- (void)redrawOne {
     if (!self.blackHole) {
         self.blackHole = [[BlackHole alloc]init];
-        [self.view addSubview:blackHole];
+    }
+    
+    if (!self.blackHole.superview) {
+        [self.view addSubview:self.blackHole];
     }
     
     [UIView animateWithDuration:0.1 animations:^{
@@ -489,6 +498,10 @@
         [self.view addSubview:blackHoleTwo];
     }
     
+    if (!self.blackHoleTwo.superview) {
+        [self.view addSubview:self.blackHoleTwo];
+    }
+    
     [UIView animateWithDuration:0.1 animations:^{
         [self.blackHoleTwo redrawRectWithBallFrame:self.ball.frame];
     } completion:^(BOOL finished) {
@@ -498,25 +511,41 @@
     }];
 }
 
-- (void)redrawBoth {
-    [self redraw];
-    NSString *prevScoreString = self.score.text;
-    int scoresdf = [prevScoreString intValue];
-    if (scoresdf > 8) {
+- (void)redraw {
+    if (self.score.text.intValue <= 2) {
+        [self.blackHole removeFromSuperview];
+        [self.blackHoleTwo removeFromSuperview];
+        return;
+    }
+    
+    [self redrawOne];
+    if (self.score.text.intValue > 8) {
         [self redrawTwo];
+    } else {
+        [self.blackHoleTwo removeFromSuperview];
     }
 }
 
 - (void)redrawBonusHole {
-    int x = (arc4random()%264)+26;
-    int y = (arc4random()%424)+26;
-    CGRect frame = CGRectMake(x, y, 33, 33);
-
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.1];
-    [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-    [self.bonusHole setFrame:frame];
-    [UIView commitAnimations];
+    
+    if (!self.bonusHole) {
+        self.bonusHole = [[BonusHole alloc]init];
+    }
+    
+    if (fmod(self.score.text.intValue, 5) != 0) {
+        if (self.bonusHole.superview) {
+            [self.bonusHole removeFromSuperview];
+        }
+        return;
+    }
+    
+    if (!self.bonusHole.superview) {
+        [self.view addSubview:self.bonusHole];
+    }
+    
+    [UIView animateWithDuration:0.1 animations:^{
+        [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
+    }];
 }
 
 - (void)addOneToScore {
@@ -525,68 +554,34 @@
     [self.score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
     
-    float rounded = [[NSString stringWithFormat:@"%.0f",(float)(newScore/21)]floatValue];
-    float diff = (newScore/21)-rounded;
-
-    if ((diff != 0) && (diff*21) == newScore) {
-        if (!self.bonusHole) {
-            self.bonusHole = [[BonusHole alloc]initWithBallframe:self.ball.frame];
-            [self.view addSubview:self.bonusHole];
-            [self.view bringSubviewToFront:self.bonusHole];
-        } else {
-            [self redrawBonusHole];
-        }
-    } else {
-        [self.bonusHole removeFromSuperview];
-        self.bonusHole = nil;
-    }
+    [self redrawBonusHole];
     
-    if (self.difficulty.selectedSegmentIndex != 0) {
-    
+    if (self.difficulty.selectedSegmentIndex > 0) {
         if (newScore > 2) {
-            if (!self.blackHole) {
-                self.blackHole = [[BlackHole alloc]initWithBallframe:self.ball.frame];
-                [self.view addSubview:self.blackHole];
-                [self.view bringSubviewToFront:self.blackHole];
-                if (!bhTimerIsRunning) {
-                    if (self.difficulty.selectedSegmentIndex == 1) {
-                        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
-                    } else if (self.difficulty.selectedSegmentIndex == 2) {
-                        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
-                    } else if (self.difficulty.selectedSegmentIndex == 3) {
-                        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
-                    } else {
-                        self.timer = nil;
-                    }
-                    
-                    [self.timer fire];
-                    self.bhTimerIsRunning = YES;
+            
+            [self redraw];
+            
+            if (!self.timer.isValid) {
+                if (self.difficulty.selectedSegmentIndex == 1) {
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+                } else if (self.difficulty.selectedSegmentIndex == 2) {
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+                } else if (self.difficulty.selectedSegmentIndex == 3) {
+                    self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+                } else {
+                    self.timer = nil;
                 }
-            } else {
-                [self redraw];
+                
+                [self.timer fire];
             }
         
         } else {
-            if (self.blackHole.superview) {
-                [self.blackHole removeFromSuperview];
+            
+            if (self.timer.isValid) {
+                [self.timer invalidate];
             }
-            [self.timer invalidate];
+            
             self.timer = nil;
-        }
-    
-        if (newScore > 8) {
-            if (!self.blackHoleTwo) {
-                self.blackHoleTwo = [[BlackHole alloc]initWithBallframe:self.ball.frame];
-                [self.view addSubview:self.blackHoleTwo];
-                [self.view bringSubviewToFront:self.blackHoleTwo];
-            } else {
-                [self redrawTwo];
-            }
-        
-        } else {
-            if (self.blackHoleTwo.superview) {
-                [self.blackHoleTwo removeFromSuperview];
-            }
         }
     }
 }
