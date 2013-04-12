@@ -49,7 +49,7 @@
     
     NSMutableDictionary *tempCache = [GCManager earnedAcheivementCache];
     
-	if (tempCache == nil) {
+	if (!tempCache) {
 		[GKAchievement loadAchievementsWithCompletionHandler:^(NSArray *scores, NSError *error) {
 			if (!error) {
 				NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithCapacity:scores.count];
@@ -102,8 +102,9 @@
 				break;
 			}
 		}
-
-        block(player, error);
+        if (block) {
+            block(player, error);
+        }
 	}];
 }
 

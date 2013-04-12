@@ -9,15 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
 
-@interface ViewController : UIViewController <UIAccelerometerDelegate, GKLeaderboardViewControllerDelegate>
+@interface ViewController : UIViewController <GKLeaderboardViewControllerDelegate>
 
 @property (strong, nonatomic) BallView *ball;
 @property (strong, nonatomic) TargetView *target;
 
-@property (strong, nonatomic) IBOutlet UISegmentedControl *theme;
-@property (strong, nonatomic) IBOutlet UIButton *showGameCenterButton;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *difficulty;
-
+@property (strong, nonatomic) UISegmentedControl *difficulty;
+@property (strong, nonatomic) UISegmentedControl *theme;
 @property (strong, nonatomic) UILabel *score;
 @property (strong, nonatomic) UILabel *gameOverLabel;
 @property (strong, nonatomic) BackgroundView *theMainView;
@@ -25,6 +23,7 @@
 @property (strong, nonatomic) UIButton *startButton;
 @property (strong, nonatomic) UIButton *pauseButton;
 @property (strong, nonatomic) UILabel *difficultyLabel;
+@property (strong, nonatomic) UIButton *leaderboardButton;
 
 @property (strong, nonatomic) BlackHole *blackHole;
 @property (strong, nonatomic) BlackHole *blackHoleTwo;
@@ -39,7 +38,7 @@
 @property (strong, nonatomic) CMMotionManager *motionManager;
 
 - (void)gameOver;
-- (IBAction)togglePause;
+- (void)togglePause;
 - (void)setStartButtonTitle:(NSString *)string;
 
 @end

@@ -34,6 +34,8 @@
     self.themeLabel.textAlignment = UITextAlignmentCenter;
     self.themeLabel.textColor = [UIColor whiteColor];
     self.themeLabel.backgroundColor = [UIColor clearColor];
+    self.themeLabel.shadowColor = [UIColor lightGrayColor];
+    self.themeLabel.shadowOffset = CGSizeMake(2, 2);
     self.themeLabel.text = @"Theme";
     [self.view addSubview:self.themeLabel];
     
@@ -64,7 +66,7 @@
     self.pauseButton.titleLabel.textColor = [UIColor whiteColor];
     self.pauseButton.titleLabel.textAlignment = UITextAlignmentCenter;
     self.pauseButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-    self.pauseButton.titleLabel.shadowOffset = CGSizeMake(2, 2);
+    self.pauseButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
     [self.pauseButton addTarget:self action:@selector(togglePause) forControlEvents:UIControlEventTouchDown];
     self.pauseButton.hidden = YES;
     [self.view addSubview:self.pauseButton];
@@ -75,10 +77,43 @@
     self.startButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     self.startButton.titleLabel.textColor = [UIColor whiteColor];
     self.startButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    self.startButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    self.startButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
     [self.startButton setBackgroundImage:[UIImage imageNamed:@"startretry"] forState:UIControlStateNormal];
     [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
     [self.startButton addTarget:self action:@selector(startOrRetry) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.startButton];
+    
+    self.leaderboardButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.leaderboardButton.frame = CGRectMake(102, 273, 113, 37);
+    self.leaderboardButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    self.leaderboardButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+    self.leaderboardButton.titleLabel.textColor = [UIColor whiteColor];
+    self.leaderboardButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    self.leaderboardButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    self.leaderboardButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    [self.leaderboardButton setBackgroundImage:[UIImage imageNamed:@"leaderboard"] forState:UIControlStateNormal];
+    [self.leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
+    [self.leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.leaderboardButton];
+    
+    self.theme = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
+    self.theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.theme.frame = CGRectMake(77, 402, 166, 30);
+    self.theme.segmentedControlStyle = UISegmentedControlStyleBar;
+    self.theme.tintColor = [UIColor lightGrayColor];
+    [self.theme setSelectedSegmentIndex:0];
+    [self.theme addTarget:self action:@selector(themeChanged) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:self.theme];
+    
+    self.difficulty = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Easy", @"Medium", @"Hard", @"Insane", nil]];
+    self.difficulty.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.difficulty.frame = CGRectMake(42, 326, 237, 30);
+    self.difficulty.segmentedControlStyle = UISegmentedControlStyleBar;
+    self.difficulty.tintColor = [UIColor lightGrayColor];
+    [self.difficulty setSelectedSegmentIndex:0];
+    [self.difficulty addTarget:self action:@selector(difficultyChanged) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:self.difficulty];
     
     self.target = [[TargetView alloc]init];
     self.target.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -104,6 +139,12 @@
     
     [self createMotionManager]; // 1/180 update interval
     [self loginUser];
+    
+    [self performSelector:@selector(log) withObject:nil afterDelay:3];
+}
+
+- (void)log {
+    [self gameOver];
 }
 
 - (void)createMotionManager {
@@ -192,9 +233,8 @@
     }
     
     if (CGRectIntersectsRect(ballRect, self.bonusHole.frame)) {
-        [self countFive];
+        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
         [self.bonusHole removeFromSuperview];
-        self.bonusHole = nil;
     }
 }
 
@@ -213,7 +253,7 @@
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
     
-    int whichSide = (arc4random()%3)+1;
+    int whichSide = (arc4random()%4)+1;
     
     int x = 0;
     int y = 0;
@@ -244,7 +284,7 @@
     if (self.theme.selectedSegmentIndex == 0) {
         
         NSArray *images = [NSArray arrayWithObjects:@"black", @"blue", @"green", @"purple", @"red", @"yellow", nil];
-        int randomColorIndex = (arc4random()%images.count)-1;
+        int randomColorIndex = (arc4random()%6);
         
         UIImage *image = [UIImage imageNamed:[images objectAtIndex:randomColorIndex]];
         
@@ -263,7 +303,7 @@
     [self.startButton setTitle:string forState:UIControlStateNormal];
     
     if ([string isEqualToString:@"Resume"]) {
-        [score setHidden:NO];
+        [self.score setHidden:NO];
         [self.difficulty setHidden:YES];
         [self.difficultyLabel setHidden:NO];
     }
@@ -355,7 +395,7 @@
     [self reloadHighscoresWithBlock:nil];
 }
 
-- (IBAction)difficultyChanged {
+- (void)difficultyChanged {
 
     [self reloadHighscoresWithBlock:nil];
 
@@ -376,15 +416,14 @@
     }
 }
 
-- (IBAction)themeChanged {
-    int value = self.theme.selectedSegmentIndex;
-    NSString *savedPref = [NSString stringWithFormat:@"%d",value];
+- (void)themeChanged {
+    NSString *savedPref = [NSString stringWithFormat:@"%d",self.theme.selectedSegmentIndex];
     [[NSUserDefaults standardUserDefaults]setObject:savedPref forKey:@"themeIndex"];
     
     BOOL isSelectedIndexOne = (self.theme.selectedSegmentIndex == 1);
-    UIColor *titleColor = isSelectedIndexOne?[UIColor blackColor]:[UIColor whiteColor];
+    UIColor *titleColor = [UIColor whiteColor];
     
-    [self.showGameCenterButton setTitleColor:titleColor forState:UIControlStateNormal];
+    [self.leaderboardButton setTitleColor:titleColor forState:UIControlStateNormal];
     [self.difficultyLabel setTextColor:titleColor];
     [self.startButton setTitleColor:titleColor forState:UIControlStateNormal];
     [self.score setTextColor:titleColor];
@@ -430,14 +469,14 @@
     [self stopMotionManager];
     [self.startButton setHidden:NO];
     [self.gameOverLabel setHidden:NO];
-    [self.showGameCenterButton setHidden:NO];
+    [self.leaderboardButton setHidden:NO];
     [self.pauseButton setHidden:YES];
     [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
     [self.timer invalidate];
     self.timer = nil;
 }
 
-- (IBAction)togglePause {
+- (void)togglePause {
     if (self.motionManagerIsRunning) {
         [self stopMotionManager];
         [self.pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
@@ -480,7 +519,7 @@
     }
 }
 
-- (IBAction)startOrRetry {
+- (void)startOrRetry {
     // Set the gameOver boolean, used for restoring to the previous state after a terminate
     [[NSUserDefaults standardUserDefaults]setBool:NO forKey:@"gameOver"];
 
@@ -504,7 +543,7 @@
     [self.difficulty setHidden:YES];
     [self.theme setHidden:YES];
     [self.themeLabel setHidden:YES];
-    [self.showGameCenterButton setHidden:YES];
+    [self.leaderboardButton setHidden:YES];
     
     // make the ball respond to the accelerotemer
     [self startMotionManager];
@@ -649,23 +688,9 @@
     }
 }
 
-- (void)countFive {
-    self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-}
-
 - (void)flashScoreLabelToGreen {
     [self.score setTextColor:[UIColor greenColor]];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        @autoreleasepool {
-            sleep(0.5);
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                @autoreleasepool {
-                    [self.score setTextColor:[UIColor whiteColor]];
-                }
-            });
-        }
-    });
+    [self.score performSelector:@selector(setTextColor:) withObject:[UIColor whiteColor] afterDelay:0.5];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
