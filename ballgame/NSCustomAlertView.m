@@ -21,7 +21,9 @@ float UIAlertPosition = 0;
         NSLog(@"%@",NSStringFromClass(subview.class));
         
         if ([subview isKindOfClass:NSClassFromString(@"UIAlertButton")]) {
-            UIAlertPosition = 0;
+            UIAlertPosition = subview.frame.size.height+subview.frame.origin.y;
+            
+            NSLog(@"UIAlertPosition %f",UIAlertPosition);
         }
         
         if ([subview isMemberOfClass:[UILabel class]]) {
@@ -68,7 +70,7 @@ float UIAlertPosition = 0;
     CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
     CGColorSpaceRelease(colorSpace);
     CGGradientRelease(gradient);
-    CGFloat buttonOffset = 72.5f; // Where the hatches stop coming from the bottom !!!!!!!!!!!!!!!!!!
+    CGFloat buttonOffset = UIAlertPosition;// 72.5f; // Where the hatches stop coming from the bottom !!!!!!!!!!!!!!!!!!
     CGContextSaveGState(context);
     CGRect hatchFrame = CGRectMake(0.0f, buttonOffset, activeBounds.size.width, (activeBounds.size.height - buttonOffset+1.0f));
     CGContextClipToRect(context, hatchFrame);
