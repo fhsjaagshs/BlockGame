@@ -42,6 +42,7 @@
 		F1C2697914CCB88000ED25B8 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2697814CCB88000ED25B8 /* AudioToolbox.framework */; };
 		F1C2699514CCF25F00ED25B8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1C2699414CCF25E00ED25B8 /* QuartzCore.framework */; };
 		F1C8B53817149F860059B23D /* TargetView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1C8B53717149F860059B23D /* TargetView.m */; };
+		F1D9B6171718396700709832 /* startretry.png in Resources */ = {isa = PBXBuildFile; fileRef = F1D9B6161718396700709832 /* startretry.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -93,6 +94,7 @@
 		F1C2699414CCF25E00ED25B8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F1C8B53617149F860059B23D /* TargetView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetView.h; sourceTree = "<group>"; };
 		F1C8B53717149F860059B23D /* TargetView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TargetView.m; sourceTree = "<group>"; };
+		F1D9B6161718396700709832 /* startretry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startretry.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 			children = (
 				F1532C6117159B0E00FB18A0 /* Default-568h@2x.png */,
 				F105A14D147EBB8600BDD990 /* leaderboard@2x.png */,
+				F1D9B6161718396700709832 /* startretry.png */,
 				F105A150147EBBBC00BDD990 /* startretry@2x.png */,
 				F105A149147EB5EB00BDD990 /* background.png */,
 				F1ABC77317164C9C00389EDB /* background@2x.png */,
@@ -290,6 +293,7 @@
 				9B0F1C21152D55EE0038FB08 /* ball.png in Resources */,
 				F1532C6217159B0E00FB18A0 /* Default-568h@2x.png in Resources */,
 				F1ABC77417164C9C00389EDB /* background@2x.png in Resources */,
+				F1D9B6171718396700709832 /* startretry.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

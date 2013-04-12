@@ -15,10 +15,6 @@
 @property (strong, nonatomic) TargetView *target;
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *theme;
-@property (strong, nonatomic) IBOutlet UIImageView *BGImageView;
-@property (strong, nonatomic) IBOutlet UIButton *startButton;
-@property (strong, nonatomic) IBOutlet UIButton *pauseButton;
-@property (strong, nonatomic) IBOutlet UILabel *difficultyLabel;
 @property (strong, nonatomic) IBOutlet UIButton *showGameCenterButton;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *difficulty;
 
@@ -26,6 +22,9 @@
 @property (strong, nonatomic) UILabel *gameOverLabel;
 @property (strong, nonatomic) BackgroundView *theMainView;
 @property (strong, nonatomic) UILabel *themeLabel;
+@property (strong, nonatomic) UIButton *startButton;
+@property (strong, nonatomic) UIButton *pauseButton;
+@property (strong, nonatomic) UILabel *difficultyLabel;
 
 @property (strong, nonatomic) BlackHole *blackHole;
 @property (strong, nonatomic) BlackHole *blackHoleTwo;

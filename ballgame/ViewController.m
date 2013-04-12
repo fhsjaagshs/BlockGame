@@ -20,9 +20,17 @@
     self.theMainView = [[BackgroundView alloc]initWithFrame:[UIScreen mainScreen].applicationFrame];
     [self.view addSubview:self.theMainView];
     
-    self.themeLabel = [[UILabel alloc]initWithFrame:CGRectMake(115, 147, 90, 17)];
+    self.difficultyLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 150, 320, 17)];
+    self.difficultyLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    self.difficultyLabel.font = [UIFont boldSystemFontOfSize:17];
+    self.difficultyLabel.textAlignment = UITextAlignmentCenter;
+    self.difficultyLabel.textColor = [UIColor whiteColor];
+    self.difficultyLabel.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.difficultyLabel];
+    
+    self.themeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 363, 320, 31)];
     self.themeLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.themeLabel.font = [UIFont boldSystemFontOfSize:17];
+    self.themeLabel.font = [UIFont boldSystemFontOfSize:19];
     self.themeLabel.textAlignment = UITextAlignmentCenter;
     self.themeLabel.textColor = [UIColor whiteColor];
     self.themeLabel.backgroundColor = [UIColor clearColor];
@@ -36,21 +44,41 @@
     self.gameOverLabel.textColor = [UIColor redColor];
     self.gameOverLabel.backgroundColor = [UIColor clearColor];
     self.gameOverLabel.text = @"Game Over";
+    self.gameOverLabel.hidden = YES;
     [self.view addSubview:self.gameOverLabel];
     
     self.score = [[UILabel alloc]initWithFrame:CGRectMake(0, 110, 320, 30)];
     self.score.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     self.score.font = [UIFont systemFontOfSize:26];
     self.score.textAlignment = UITextAlignmentCenter;
-    self.score.textColor = [UIColor redColor];
+    self.score.textColor = [UIColor whiteColor];
     self.score.backgroundColor = [UIColor clearColor];
     self.score.hidden = YES;
     self.score.text = @"0";
     [self.view addSubview:self.score];
-    // Other shit goes here
     
-    self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
-    [self.view addSubview:self.ball];
+    self.pauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.pauseButton.frame = CGRectMake(112, 76, 96, 37);
+    [self.pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
+    self.pauseButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    self.pauseButton.titleLabel.textColor = [UIColor whiteColor];
+    self.pauseButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    self.pauseButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    self.pauseButton.titleLabel.shadowOffset = CGSizeMake(2, 2);
+    [self.pauseButton addTarget:self action:@selector(togglePause) forControlEvents:UIControlEventTouchDown];
+    self.pauseButton.hidden = YES;
+    [self.view addSubview:self.pauseButton];
+    
+    self.startButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.startButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    self.startButton.frame = CGRectMake(124, 228, 72, 37);
+    self.startButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+    self.startButton.titleLabel.textColor = [UIColor whiteColor];
+    self.startButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    [self.startButton setBackgroundImage:[UIImage imageNamed:@"startretry"] forState:UIControlStateNormal];
+    [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
+    [self.startButton addTarget:self action:@selector(startOrRetry) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.startButton];
     
     self.target = [[TargetView alloc]init];
     self.target.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -61,12 +89,15 @@
     self.target.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-2, -2, self.target.frame.size.width+2, self.target.frame.size.height+2)].CGPath;
     [self.view addSubview:self.target];
     
+    self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
+    self.ball.center = self.view.center;
     self.ball.layer.shadowColor = [UIColor blackColor].CGColor;
     self.ball.layer.shadowOpacity = 0.7f;
     self.ball.layer.shadowOffset = CGSizeZero;
     self.ball.layer.shadowRadius = 5.0f;
     self.ball.layer.masksToBounds = NO;
     self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
+    [self.view addSubview:self.ball];
     
     self.isAnimatingBHOne = NO;
     self.isAnimatingBHTwo = NO;
@@ -255,9 +286,6 @@
     [GCManager authenticateLocalUserWithCompletionHandler:^(NSError *error) {
         if (!error) {
             [self reloadHighscoresWithBlock:nil];
-        } else {
-            NSCustomAlertView *av = [[NSCustomAlertView alloc]initWithTitle:@"Login failed" message:@"Is your device associated with GameCenter?" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [av show];
         }
     }];
 }
@@ -267,10 +295,15 @@
         if (error == nil) {
             int64_t personalBest = leaderboard.localPlayerScore.value;
             self.highscore = [NSString stringWithFormat:@"%lld",personalBest];
+            if (block) {
+                block(nil);
+            }
         } else {
             self.highscore = @"-1";
+            if (block) {
+                block(error);
+            }
         }
-        block(error);
     }];
 }
 
@@ -357,7 +390,7 @@
     [self.score setTextColor:titleColor];
     [self.themeLabel setTextColor:titleColor];
     [self.pauseButton setTitleColor:titleColor forState:UIControlStateNormal];
-    [self.BGImageView setHidden:isSelectedIndexOne];
+    [self.theMainView setHidden:isSelectedIndexOne];
     [self.target setImageHidden:!isSelectedIndexOne];
 }
 
