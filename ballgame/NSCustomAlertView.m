@@ -18,12 +18,8 @@ float UIAlertPosition = 0;
             subview.hidden = YES;
         }
         
-        NSLog(@"%@",NSStringFromClass(subview.class));
-        
         if ([subview isKindOfClass:NSClassFromString(@"UIAlertButton")]) {
-            UIAlertPosition = subview.frame.size.height+subview.frame.origin.y;
-            
-            NSLog(@"UIAlertPosition %f",UIAlertPosition);
+            UIAlertPosition = subview.frame.origin.y-10;
         }
         
         if ([subview isMemberOfClass:[UILabel class]]) {

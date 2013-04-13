@@ -17,7 +17,8 @@
     
     self.view.backgroundColor = [UIColor darkGrayColor];
     
-    self.theMainView = [[BackgroundView alloc]initWithFrame:[UIScreen mainScreen].applicationFrame];
+    self.theMainView = [[BackgroundView alloc]initWithFrame:self.view.bounds];
+    self.theMainView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:self.theMainView];
     
     self.difficultyLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 150, 320, 17)];
@@ -26,6 +27,7 @@
     self.difficultyLabel.textAlignment = UITextAlignmentCenter;
     self.difficultyLabel.textColor = [UIColor whiteColor];
     self.difficultyLabel.backgroundColor = [UIColor clearColor];
+    self.difficultyLabel.hidden = YES;
     [self.view addSubview:self.difficultyLabel];
     
     self.themeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 363, 320, 31)];
@@ -139,18 +141,11 @@
     
     [self createMotionManager]; // 1/180 update interval
     [self loginUser];
-    
-    [self performSelector:@selector(log) withObject:nil afterDelay:3];
-}
-
-- (void)log {
-    [self gameOver];
 }
 
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
-    self.motionManager.accelerometerUpdateInterval = 0.2;
-    self.motionManager.gyroUpdateInterval = 0.2;
+    self.motionManager.accelerometerUpdateInterval = 1/180;
 }
 
 - (void)setStartPosition:(CMAcceleration)acceleration {
@@ -169,72 +164,47 @@
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    double xValNonAbs = acceleration.x;
-    double yValNonAbs = acceleration.y;
     
-    CMAcceleration positionAcceleration = [self getStartPosition];
+    if (!self.motionManagerIsRunning) {
+        return;
+    }
     
-    double xVal = fabs(xValNonAbs)-positionAcceleration.x;
-    double yVal = fabs(yValNonAbs)-positionAcceleration.y;
-    
-    CGRect screenBounds = CGRectMake(0, 0, 320, 480);
-    CGRect ballRect = self.ball.frame;
-    
-    int speed = 7;
+    int speed = 1;
     
     if (self.difficulty.selectedSegmentIndex == 0) {
-        speed = 5;
+        speed = 0.5;
     } else if (self.difficulty.selectedSegmentIndex == 1) {
-        speed = 7;
+        speed = 1;
     } else if (self.difficulty.selectedSegmentIndex == 2) {
-        speed = 11;
+        speed = 1.5;
     } else if (self.difficulty.selectedSegmentIndex == 3) {
-        speed = 20;
+        speed = 2;
     }
     
-    int rateX = 10*acceleration.x;
-    int rateY = -1*10*acceleration.y;
-    float currentX = self.ball.center.x;
-    float currentY = self.ball.center.y;
+    int rateX = (10*speed)*acceleration.x;
+    int rateY = -1*(10*speed)*acceleration.y;
     
-    CGPoint newCenterPoint = CGPointZero;
+    CGPoint newCenterPoint = CGPointMake(self.ball.center.x+rateX, self.ball.center.y+rateY);
     
-    if (rateX > 0 && rateY == 0) {
-        newCenterPoint = CGPointMake(currentX+(xVal*speed), self.ball.center.y);
-    } else if (rateX == 0 && rateY > 0) {
-        newCenterPoint = CGPointMake(self.ball.center.x, currentY+(yVal*speed));
-    } else if (rateX > 0 && rateY > 0) {
-        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY+(yVal*speed));
-    } else if (rateX < 0 && rateY == 0) {
-        newCenterPoint = CGPointMake(currentX-(xVal*speed), self.ball.center.y);
-    } else if (rateX == 0 && rateY < 0) {
-        newCenterPoint = CGPointMake(self.ball.center.x, currentY-(yVal*speed));
-    } else if (rateX > 0 && rateY < 0) {
-        newCenterPoint = CGPointMake(currentX+(xVal*speed), currentY-(yVal*speed));
-    } else if (rateX < 0 && rateY > 0) {
-        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY+(yVal*speed));
-    } else if (rateX < 0 && rateY < 0) {
-        newCenterPoint = CGPointMake(currentX-(xVal*speed), currentY-(yVal*speed));
-    }
-    
-    if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
+    if (CGRectContainsPoint([UIScreen mainScreen].bounds, newCenterPoint)) {
         self.ball.center = newCenterPoint;
     } else {
         [self gameOver];
     }
     
-    if (CGRectIntersectsRect(ballRect, self.target.frame)) {
+    if (CGRectIntersectsRect(self.ball.frame, self.target.frame)) {
         [self randomizePosition];
         [self addOneToScore];
     }
     
-    if ((CGRectIntersectsRect(ballRect, self.blackHole.frame) || CGRectIntersectsRect(ballRect, self.blackHoleTwo.frame)) && !self.isAnimating) {
+    if ((CGRectIntersectsRect(self.ball.frame, self.blackHole.frame) || CGRectIntersectsRect(self.ball.frame, self.blackHoleTwo.frame)) && !self.isAnimating) {
         [self gameOver];
     }
     
-    if (CGRectIntersectsRect(ballRect, self.bonusHole.frame)) {
+    if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame)) {
         self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
         [self.bonusHole removeFromSuperview];
+        self.bonusHole.frame = CGRectMake(300, -300, 10, 10);
     }
 }
 
@@ -253,10 +223,14 @@
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
     
+    [self.target setImageHidden:(self.theme.selectedSegmentIndex == 0)];
+    
     int whichSide = (arc4random()%4)+1;
     
     int x = 0;
     int y = 0;
+    int width = 26;
+    int height = 90;
     
     if (whichSide == 1) {
         // left
@@ -269,17 +243,20 @@
         x = screenBounds.size.width-26;
     } else if (whichSide == 3) {
         // top
-        int limit = (screenBounds.size.width-26);
+        int limit = (screenBounds.size.width-90);
         x = arc4random()%limit;
+        width = 90;
+        height = 26;
     } else if (whichSide == 4) {
         // bottom
-        int limit = (screenBounds.size.width-26);
+        int limit = (screenBounds.size.width-90);
         x = arc4random()%limit;
         y = screenBounds.size.height-26;
+        width = 90;
+        height = 26;
     }
     
-    self.target.frame = CGRectMake(x, y, 26, 90);
-    self.target.hidden = NO;
+    self.target.frame = CGRectMake(x, y, width, height);
     
     if (self.theme.selectedSegmentIndex == 0) {
         
@@ -295,8 +272,10 @@
         }
     } else {
         NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
-        [self.target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%(8)]];
+        [self.target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%(8)] vertically:(whichSide < 3)];
     }
+    
+    self.target.hidden = NO;
 }
 
 - (void)setStartButtonTitle:(NSString *)string {
@@ -362,7 +341,7 @@
     }
 }
 
-- (IBAction)showLeaderboard {
+- (void)showLeaderboard {
     if ([networkTest isConnectedToInternet]) {
         GKLeaderboardViewController *leaderboardController = [[GKLeaderboardViewController alloc]init];
         if (leaderboardController) {
@@ -493,11 +472,11 @@
         if (!self.timer.isValid) {
 
             if (self.difficulty.selectedSegmentIndex == 1) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
             } else if (self.difficulty.selectedSegmentIndex == 2) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
             } else if (self.difficulty.selectedSegmentIndex == 3) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redrawBoth) userInfo:nil repeats:YES];
+                self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
             } else {
                 self.timer = nil;
             }

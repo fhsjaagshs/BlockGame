@@ -23,11 +23,9 @@
 		F1225DC01468919B005D6793 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1225DBF1468919B005D6793 /* UIKit.framework */; };
 		F1225DC21468919B005D6793 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1225DC11468919B005D6793 /* Foundation.framework */; };
 		F1225DC41468919B005D6793 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1225DC31468919B005D6793 /* CoreGraphics.framework */; };
-		F1225DCA1468919B005D6793 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F1225DC81468919B005D6793 /* InfoPlist.strings */; };
 		F1225DCC1468919B005D6793 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DCB1468919B005D6793 /* main.m */; };
 		F1225DD01468919B005D6793 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DCF1468919B005D6793 /* AppDelegate.m */; };
 		F1225DD31468919B005D6793 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DD21468919B005D6793 /* ViewController.m */; };
-		F1225DD61468919B005D6793 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F1225DD41468919B005D6793 /* ViewController.xib */; };
 		F124B1361473316300AB022F /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F124B1351473316300AB022F /* icon.png */; };
 		F124B1381473316A00AB022F /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F124B1371473316A00AB022F /* icon@2x.png */; };
 		F12A6B8A147880A700CEF48B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F12A6B89147880A700CEF48B /* GameKit.framework */; };
@@ -68,14 +66,12 @@
 		F1225DC11468919B005D6793 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F1225DC31468919B005D6793 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		F1225DC71468919B005D6793 /* ballgame-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ballgame-Info.plist"; sourceTree = "<group>"; };
-		F1225DC91468919B005D6793 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F1225DCB1468919B005D6793 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		F1225DCD1468919B005D6793 /* ballgame-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ballgame-Prefix.pch"; sourceTree = "<group>"; };
 		F1225DCE1468919B005D6793 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F1225DCF1468919B005D6793 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		F1225DD11468919B005D6793 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F1225DD21468919B005D6793 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		F1225DD51468919B005D6793 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = "<group>"; };
 		F124B1351473316300AB022F /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon.png; path = ../icon.png; sourceTree = "<group>"; };
 		F124B1371473316A00AB022F /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon@2x.png"; path = "../icon@2x.png"; sourceTree = "<group>"; };
 		F12A6B89147880A700CEF48B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
@@ -187,7 +183,6 @@
 				F1225DCF1468919B005D6793 /* AppDelegate.m */,
 				F1225DD11468919B005D6793 /* ViewController.h */,
 				F1225DD21468919B005D6793 /* ViewController.m */,
-				F1225DD41468919B005D6793 /* ViewController.xib */,
 				F1C2697414CCA11600ED25B8 /* Custom Classes */,
 				F1225DC61468919B005D6793 /* Supporting Files */,
 			);
@@ -198,7 +193,6 @@
 			isa = PBXGroup;
 			children = (
 				F1225DC71468919B005D6793 /* ballgame-Info.plist */,
-				F1225DC81468919B005D6793 /* InfoPlist.strings */,
 				F1225DCB1468919B005D6793 /* main.m */,
 				F1225DCD1468919B005D6793 /* ballgame-Prefix.pch */,
 			);
@@ -265,6 +259,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0460;
+				ORGANIZATIONNAME = "Nathaniel Symer";
 			};
 			buildConfigurationList = F1225DB51468919B005D6793 /* Build configuration list for PBXProject "ballgame" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -288,8 +283,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1225DCA1468919B005D6793 /* InfoPlist.strings in Resources */,
-				F1225DD61468919B005D6793 /* ViewController.xib in Resources */,
 				F10CE409146CA74A00DD6FDB /* black.png in Resources */,
 				F10CE40A146CA74A00DD6FDB /* blue.png in Resources */,
 				F10CE40B146CA74A00DD6FDB /* green.png in Resources */,
@@ -331,25 +324,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		F1225DC81468919B005D6793 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F1225DC91468919B005D6793 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		F1225DD41468919B005D6793 /* ViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F1225DD51468919B005D6793 /* en */,
-			);
-			name = ViewController.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F1225DD71468919B005D6793 /* Debug */ = {

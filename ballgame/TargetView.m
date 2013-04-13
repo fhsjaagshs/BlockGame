@@ -30,10 +30,11 @@
     [self setNeedsDisplay];
 }
 
-- (void)redrawWithBackgroundColor:(UIColor *)color {
-    [self setNeedsDisplay];
+- (void)redrawWithBackgroundColor:(UIColor *)color vertically:(BOOL)vertically {
+    self.redrawVertically = vertically;
     self.backgroundColor = color;
     self.image = nil;
+    [self setNeedsDisplay];
 }
 
 - (void)redrawVerticallyWithImage:(UIImage *)image {

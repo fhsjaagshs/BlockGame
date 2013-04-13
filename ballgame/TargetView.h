@@ -10,7 +10,7 @@
 
 @interface TargetView : UIView
 
-- (void)redrawWithBackgroundColor:(UIColor *)color;
+- (void)redrawWithBackgroundColor:(UIColor *)color vertically:(BOOL)vertically;
 - (void)redrawVerticallyWithImage:(UIImage *)image;
 - (void)redrawHorizontallyWithImage:(UIImage *)image;
 - (void)setImageHidden:(BOOL)shouldHide;
