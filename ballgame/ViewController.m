@@ -223,7 +223,7 @@
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
     
-    [self.target setImageHidden:(self.theme.selectedSegmentIndex == 0)];
+    [self.target setImageHidden:!(self.theme.selectedSegmentIndex == 0)];
     
     int whichSide = (arc4random()%4)+1;
     
@@ -551,7 +551,7 @@
 }
 
 - (BOOL)isAnimating {
-    return (!self.isAnimatingBHOne && !self.isAnimatingBHTwo);
+    return (self.isAnimatingBHOne && self.isAnimatingBHTwo);
 }
 
 - (void)redrawOne {
