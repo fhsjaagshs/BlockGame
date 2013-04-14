@@ -11,10 +11,7 @@
 @interface TargetView : UIView
 
 - (void)redrawWithBackgroundColor:(UIColor *)color vertically:(BOOL)vertically;
-- (void)redrawVerticallyWithImage:(UIImage *)image;
-- (void)redrawHorizontallyWithImage:(UIImage *)image;
-- (void)setImageHidden:(BOOL)shouldHide;
-
-@property (nonatomic, strong) UIImage *image;
+- (void)setClassicMode:(BOOL)cm;
+- (void)redrawImageWithIsHorizontal:(BOOL)isH;
 
 @end

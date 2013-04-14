@@ -141,11 +141,6 @@
     
     [self createMotionManager]; // 1/180 update interval
     [self loginUser];
-    
-    CGRect one = CGRectMake(0, 0, 320, 320);
-    CGRect two = CGRectMake(5, 5, 10, 10);
-    
-    NSLog(@"%@",CGRectIntersectsRect(one, two)?@"YES":@"NO");
 }
 
 - (void)createMotionManager {
@@ -228,13 +223,13 @@
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
     
-    [self.target setImageHidden:!(self.theme.selectedSegmentIndex == 0)];
+    [self.target setClassicMode:!(self.theme.selectedSegmentIndex == 0)];
     
     int whichSide = (arc4random()%4)+1;
     
     int x = 0;
     int y = 0;
-    int width = 26;
+    int width = 30;
     int height = 90;
     
     if (whichSide == 1) {
@@ -245,44 +240,26 @@
         // right
         int limit = (screenBounds.size.height-90);
         y = arc4random()%limit;
-        x = screenBounds.size.width-26;
+        x = screenBounds.size.width-30;
     } else if (whichSide == 3) {
         // top
         int limit = (screenBounds.size.width-90);
         x = arc4random()%limit;
         width = 90;
-        height = 26;
+        height = 30;
     } else if (whichSide == 4) {
         // bottom
         int limit = (screenBounds.size.width-90);
         x = arc4random()%limit;
-        y = screenBounds.size.height-26;
+        y = screenBounds.size.height-30;
         width = 90;
-        height = 26;
+        height = 30;
     }
     
     self.target.frame = CGRectMake(x, y, width, height);
     
     if (self.theme.selectedSegmentIndex == 0) {
-        
-     //   NSArray *images = [NSArray arrayWithObjects:@"black", @"blue", @"green", @"purple", @"red", @"yellow", nil];
-     //   int randomColorIndex = (arc4random()%6);
-        
-        //UIImage *image = [UIImage imageNamed:[images objectAtIndex:randomColorIndex]];
-        
-        UIImage *image = nil;
-        
-        if (whichSide > 2) {
-            image = [[UIImage imageNamed:@"target"]stretchableImageWithLeftCapWidth:10 topCapHeight:0];
-        } else {
-            image = [[UIImage imageNamed:@"target"]stretchableImageWithLeftCapWidth:0 topCapHeight:10];
-        }
-        
-        if (whichSide > 2) {
-            [self.target redrawHorizontallyWithImage:image];
-        } else {
-            [self.target redrawHorizontallyWithImage:image];
-        }
+        [self.target redrawImageWithIsHorizontal:(whichSide > 2)];
     } else {
         NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
         [self.target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%(8)] vertically:(whichSide < 3)];
@@ -424,7 +401,7 @@
     [self.themeLabel setTextColor:titleColor];
     [self.pauseButton setTitleColor:titleColor forState:UIControlStateNormal];
     [self.theMainView setHidden:isSelectedIndexOne];
-    [self.target setImageHidden:!isSelectedIndexOne];
+    [self.target setClassicMode:!isSelectedIndexOne];
 }
 
 - (void)gameOver {
