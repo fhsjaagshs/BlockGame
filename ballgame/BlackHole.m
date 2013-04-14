@@ -11,17 +11,28 @@
 @implementation BlackHole
 
 - (void)muckWithFrame:(CGRect)ballframe {
-    int x = (arc4random()%264)+26;
-    int y = (arc4random()%424)+26;
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    int adjustedWidth = (int)floor(screenBounds.size.width-26);
+    int adjustedHeight = (int)floor(screenBounds.size.height-26);
+    int x = (arc4random()%adjustedWidth)+26;
+    int y = (arc4random()%adjustedHeight)+26;
 
     CGRect adjustedFrame = CGRectMake(x-75, y-75, self.frame.size.width+150, self.frame.size.height+150);
     
     if (CGRectIntersectsRect(adjustedFrame, ballframe)) {
         
-        int xSubtracted = x-75;
-        int ySubtracted = y-75;
-
-        if (xSubtracted < 0 && ySubtracted < 0) {
+        CGPoint ballCenter = CGPointMake(ballframe.origin.x+(ballframe.size.width/2), ballframe.origin.y+(ballframe.size.height/2));
+        CGPoint proposedCenter = CGPointMake(x+(33/2), y+(33/2));
+        
+        float xDistFromBall = ballCenter.x-proposedCenter.x;
+        float yDistFromBall = ballCenter.y-proposedCenter.y;
+        
+        // direction of ball
+        float xDirection = xDistFromBall/fabsf(xDistFromBall);
+        float yDirection = yDistFromBall/fabsf(yDistFromBall);
+        
+        if (x-75 < 0 && y-75 < 0) {
+            NSLog(@"modified positive");
             self.frame = CGRectMake(x+75, y+75, 33, 33);
         } else {
             self.frame = CGRectMake(x-75, y-75, 33, 33);
@@ -37,7 +48,6 @@
         self.backgroundColor = [UIColor clearColor];
         [self muckWithFrame:ballframe];
         [self setNeedsDisplay];
-     //   [self drawRect:self.frame];
     }
     return self;
 }
@@ -46,7 +56,6 @@
     self.backgroundColor = [UIColor clearColor];
     [self muckWithFrame:ballFrame];
     [self setNeedsDisplay];
-  //  [self drawRect:self.frame];
 }
 
 - (void)drawRect:(CGRect)rect {
