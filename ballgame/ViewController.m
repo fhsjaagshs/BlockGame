@@ -36,8 +36,8 @@
     self.themeLabel.textAlignment = UITextAlignmentCenter;
     self.themeLabel.textColor = [UIColor whiteColor];
     self.themeLabel.backgroundColor = [UIColor clearColor];
-    self.themeLabel.shadowColor = [UIColor lightGrayColor];
-    self.themeLabel.shadowOffset = CGSizeMake(2, 2);
+    //self.themeLabel.shadowColor = [UIColor darkGrayColor];
+   // self.themeLabel.shadowOffset = CGSizeMake(2, 2);
     self.themeLabel.text = @"Theme";
     [self.view addSubview:self.themeLabel];
     
@@ -141,6 +141,11 @@
     
     [self createMotionManager]; // 1/180 update interval
     [self loginUser];
+    
+    CGRect one = CGRectMake(0, 0, 320, 320);
+    CGRect two = CGRectMake(5, 5, 10, 10);
+    
+    NSLog(@"%@",CGRectIntersectsRect(one, two)?@"YES":@"NO");
 }
 
 - (void)createMotionManager {
@@ -204,7 +209,7 @@
     if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame)) {
         self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
         [self.bonusHole removeFromSuperview];
-        self.bonusHole.frame = CGRectMake(300, -300, 10, 10);
+        self.bonusHole = nil;
     }
 }
 
@@ -260,15 +265,23 @@
     
     if (self.theme.selectedSegmentIndex == 0) {
         
-        NSArray *images = [NSArray arrayWithObjects:@"black", @"blue", @"green", @"purple", @"red", @"yellow", nil];
-        int randomColorIndex = (arc4random()%6);
+     //   NSArray *images = [NSArray arrayWithObjects:@"black", @"blue", @"green", @"purple", @"red", @"yellow", nil];
+     //   int randomColorIndex = (arc4random()%6);
         
-        UIImage *image = [UIImage imageNamed:[images objectAtIndex:randomColorIndex]];
+        //UIImage *image = [UIImage imageNamed:[images objectAtIndex:randomColorIndex]];
+        
+        UIImage *image = nil;
+        
+        if (whichSide > 2) {
+            image = [[UIImage imageNamed:@"target"]stretchableImageWithLeftCapWidth:10 topCapHeight:0];
+        } else {
+            image = [[UIImage imageNamed:@"target"]stretchableImageWithLeftCapWidth:0 topCapHeight:10];
+        }
         
         if (whichSide > 2) {
             [self.target redrawHorizontallyWithImage:image];
         } else {
-            [self.target redrawVerticallyWithImage:image];
+            [self.target redrawHorizontallyWithImage:image];
         }
     } else {
         NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
@@ -386,6 +399,8 @@
         [self.difficultyLabel setText:@"Easy"];
         [self.blackHoleTwo removeFromSuperview];
         [self.blackHole removeFromSuperview];
+        self.blackHole = nil;
+        self.blackHoleTwo = nil;
     } else if (self.difficulty.selectedSegmentIndex == 1) {
         [self.difficultyLabel setText:@"Medium"];
     } else if (self.difficulty.selectedSegmentIndex == 2) {
@@ -512,6 +527,9 @@
     [self.blackHole removeFromSuperview];
     [self.blackHoleTwo removeFromSuperview];
     [self.bonusHole removeFromSuperview];
+    self.blackHole = nil;
+    self.blackHoleTwo = nil;
+    self.bonusHole = nil;
     
     // reset titles
     if ([self.startButton.titleLabel.text isEqualToString:@"Start"]) {
@@ -596,6 +614,8 @@
     if (self.score.text.intValue <= 2) {
         [self.blackHole removeFromSuperview];
         [self.blackHoleTwo removeFromSuperview];
+        self.blackHole = nil;
+        self.blackHoleTwo = nil;
         return;
     }
     
@@ -604,6 +624,7 @@
         [self redrawTwo];
     } else {
         [self.blackHoleTwo removeFromSuperview];
+        self.blackHoleTwo = nil;
     }
 }
 
@@ -616,6 +637,7 @@
     if (fmod(self.score.text.intValue, 5) != 0) {
         if (self.bonusHole.superview) {
             [self.bonusHole removeFromSuperview];
+            self.bonusHole = nil;
         }
         return;
     }

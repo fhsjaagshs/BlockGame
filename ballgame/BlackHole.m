@@ -13,33 +13,21 @@
 - (void)muckWithFrame:(CGRect)ballframe {
     int x = (arc4random()%264)+26;
     int y = (arc4random()%424)+26;
-    
-    self.frame = CGRectMake(x, y, 33, 33);
-    
-    CGRect adjustedFrame = CGRectMake((self.frame.origin.x-50), (self.frame.origin.y-50), (self.frame.size.width+100), (self.frame.size.height+100));
-    
-    CGRect pauseScoreAreaRect = CGRectMake(121, 87, 96, 89);
-    
-    BOOL inScoreArea = ((CGRectIntersectsRect(pauseScoreAreaRect, ballframe)) || (CGRectContainsRect(pauseScoreAreaRect, ballframe))) || ((CGRectIntersectsRect(pauseScoreAreaRect, ballframe)) && (CGRectContainsRect(pauseScoreAreaRect, ballframe)));
-    
-    if (inScoreArea) {
-        self.frame = CGRectMake(x-50, y-50, 33, 33);
-    }
-    
-    BOOL tooClose = ((CGRectIntersectsRect(adjustedFrame, ballframe)) || (CGRectContainsRect(adjustedFrame, ballframe))) || ((CGRectIntersectsRect(adjustedFrame, ballframe)) && (CGRectContainsRect(adjustedFrame, ballframe)));
-    
-    if (tooClose) {
-        
-        int xSubtracted = x-50;
-        int ySubtracted = y-50;
 
-        if (((xSubtracted < 0) && (ySubtracted < 0)) || ((xSubtracted < 0) && (ySubtracted < 0))) {
-            if (CGRectContainsRect([UIScreen mainScreen].applicationFrame, CGRectMake(x+50, y+50, 33, 33))) {
-                self.frame = CGRectMake(x+50, y+50, 33, 33);
-            }
+    CGRect adjustedFrame = CGRectMake(x-75, y-75, self.frame.size.width+150, self.frame.size.height+150);
+    
+    if (CGRectIntersectsRect(adjustedFrame, ballframe)) {
+        
+        int xSubtracted = x-75;
+        int ySubtracted = y-75;
+
+        if (xSubtracted < 0 && ySubtracted < 0) {
+            self.frame = CGRectMake(x+75, y+75, 33, 33);
         } else {
-            self.frame = CGRectMake(x-50, y-50, 33, 33);
+            self.frame = CGRectMake(x-75, y-75, 33, 33);
         }
+    } else {
+        self.frame = CGRectMake(x, y, 33, 33);
     }
 }
 
@@ -48,7 +36,8 @@
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         [self muckWithFrame:ballframe];
-        [self drawRect:self.frame];
+        [self setNeedsDisplay];
+     //   [self drawRect:self.frame];
     }
     return self;
 }
@@ -56,7 +45,8 @@
 - (void)redrawRectWithBallFrame:(CGRect)ballFrame {
     self.backgroundColor = [UIColor clearColor];
     [self muckWithFrame:ballFrame];
-    [self drawRect:self.frame];
+    [self setNeedsDisplay];
+  //  [self drawRect:self.frame];
 }
 
 - (void)drawRect:(CGRect)rect {
