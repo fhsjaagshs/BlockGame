@@ -33,7 +33,7 @@
 	leaderBoard.category = category;
 	leaderBoard.timeScope = GKLeaderboardTimeScopeAllTime;
 	leaderBoard.range = NSMakeRange(1, 1);
-	
+    
 	[leaderBoard loadScoresWithCompletionHandler:^(NSArray *scores, NSError *error) {
 		block(scores, leaderBoard, error);
 	}];

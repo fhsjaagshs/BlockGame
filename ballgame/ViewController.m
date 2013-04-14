@@ -36,8 +36,6 @@
     self.themeLabel.textAlignment = UITextAlignmentCenter;
     self.themeLabel.textColor = [UIColor whiteColor];
     self.themeLabel.backgroundColor = [UIColor clearColor];
-    //self.themeLabel.shadowColor = [UIColor darkGrayColor];
-   // self.themeLabel.shadowOffset = CGSizeMake(2, 2);
     self.themeLabel.text = @"Theme";
     [self.view addSubview:self.themeLabel];
     
@@ -118,12 +116,6 @@
     [self.view addSubview:self.difficulty];
     
     self.target = [[TargetView alloc]init];
-    self.target.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.target.layer.shadowOpacity = 0.9f;
-    self.target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    self.target.layer.shadowRadius = 5.0f;
-    self.target.layer.masksToBounds = NO;
-    self.target.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-2, -2, self.target.frame.size.width+2, self.target.frame.size.height+2)].CGPath;
     [self.view addSubview:self.target];
     
     self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
@@ -139,8 +131,34 @@
     self.isAnimatingBHOne = NO;
     self.isAnimatingBHTwo = NO;
     
-    [self createMotionManager]; // 1/180 update interval
+    [self createMotionManager];
     [self loginUser];
+    
+    if ([networkTest isConnectedToInternet]) {
+        [self submitOfflineScore];
+    }
+    
+    NSString *savedScore = [[NSUserDefaults standardUserDefaults]objectForKey:@"savedScore"];
+    [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"savedScore"];
+    
+    if (![[NSUserDefaults standardUserDefaults]boolForKey:@"gameOver"]) {
+        if (savedScore.length > 0) {
+            [self.score setText:savedScore];
+            [self.score setHidden:NO];
+            [self.difficulty setHidden:YES];
+            [self.difficultyLabel setHidden:NO];
+            [self.startButton setTitle:@"Resume" forState:UIControlStateNormal];
+        }
+    }
+    
+    int diff = [[[NSUserDefaults standardUserDefaults]objectForKey:@"difficultyIndex"]intValue];
+    int themey = [[[NSUserDefaults standardUserDefaults]objectForKey:@"themeIndex"]intValue];
+    
+    [self.difficulty setSelectedSegmentIndex:diff];
+    [self.theme setSelectedSegmentIndex:themey];
+    
+    [self difficultyChanged];
+    [self themeChanged];
 }
 
 - (void)createMotionManager {
@@ -164,12 +182,12 @@
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    
+
     if (!self.motionManagerIsRunning) {
         return;
     }
     
-    int speed = 1;
+    float speed = 1;
     
     if (self.difficulty.selectedSegmentIndex == 0) {
         speed = 0.5;
@@ -210,7 +228,7 @@
 
 - (void)startMotionManager {
     self.motionManagerIsRunning = YES;
-    [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData  *accelerometerData, NSError *error) {
+    [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         [self handleAcceleration:accelerometerData.acceleration];
     }];
 }
@@ -258,6 +276,13 @@
     
     self.target.frame = CGRectMake(x, y, width, height);
     
+    self.target.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.target.layer.shadowOpacity = 0.9f;
+    self.target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    self.target.layer.shadowRadius = 5.0f;
+    self.target.layer.masksToBounds = NO;
+    self.target.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, self.target.frame.size.width+3, self.target.frame.size.height+3)].CGPath;
+    
     if (self.theme.selectedSegmentIndex == 0) {
         [self.target redrawImageWithIsHorizontal:(whichSide > 2)];
     } else {
@@ -266,16 +291,6 @@
     }
     
     self.target.hidden = NO;
-}
-
-- (void)setStartButtonTitle:(NSString *)string {
-    [self.startButton setTitle:string forState:UIControlStateNormal];
-    
-    if ([string isEqualToString:@"Resume"]) {
-        [self.score setHidden:NO];
-        [self.difficulty setHidden:YES];
-        [self.difficultyLabel setHidden:NO];
-    }
 }
 
 - (NSString *)getCurrentLeaderboard {
@@ -301,9 +316,8 @@
 
 - (void)reloadHighscoresWithBlock:(void(^)(NSError *error))block {
     [GCManager reloadHighScoresForCategory:[self getCurrentLeaderboard] withCompletionHandler:^(NSArray *scores, GKLeaderboard *leaderboard, NSError *error) {
-        if (error == nil) {
-            int64_t personalBest = leaderboard.localPlayerScore.value;
-            self.highscore = [NSString stringWithFormat:@"%lld",personalBest];
+        if (!error) {
+            self.highscore = [NSString stringWithFormat:@"%lld",leaderboard.localPlayerScore.value];
             if (block) {
                 block(nil);
             }
@@ -354,14 +368,7 @@
 - (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController {
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 	[self dismissModalViewControllerAnimated:YES];
-}
-
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    [self loginUser];
-}
-
-- (void)scoreReported:(NSError *)error {
-    [self reloadHighscoresWithBlock:nil];
+    [self startMotionManager];
 }
 
 - (void)difficultyChanged {
@@ -401,7 +408,7 @@
     [self.themeLabel setTextColor:titleColor];
     [self.pauseButton setTitleColor:titleColor forState:UIControlStateNormal];
     [self.theMainView setHidden:isSelectedIndexOne];
-    [self.target setClassicMode:!isSelectedIndexOne];
+    [self.target setClassicMode:isSelectedIndexOne];
 }
 
 - (void)gameOver {
@@ -409,7 +416,7 @@
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
     
     int64_t gameOverScore = [self.score.text intValue];
-    [self submitScore:gameOverScore];
+    
 
     NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
@@ -417,6 +424,7 @@
     
     if ([networkTest isConnectedToInternet]) {
         int64_t personalBest = self.highscore.intValue;
+        [self submitScore:gameOverScore];
         [self submitOfflineScore];
         
         if (gameOverScore > personalBest && personalBest != -1) {
@@ -542,7 +550,9 @@
     [self.startButton setHidden:YES];
     [self.pauseButton setHidden:NO];
     
-    [self submitOfflineScore];
+    if ([networkTest isConnectedToInternet]) {
+        [self submitOfflineScore];
+    }
 }
 
 - (BOOL)isAnimating {
@@ -611,7 +621,7 @@
         self.bonusHole = [[BonusHole alloc]init];
     }
     
-    if (fmod(self.score.text.intValue, 5) != 0) {
+    if (fmod(self.score.text.intValue, 20) != 0) {
         if (self.bonusHole.superview) {
             [self.bonusHole removeFromSuperview];
             self.bonusHole = nil;
@@ -669,24 +679,6 @@
 - (void)flashScoreLabelToGreen {
     [self.score setTextColor:[UIColor greenColor]];
     [self.score performSelector:@selector(setTextColor:) withObject:[UIColor whiteColor] afterDelay:0.5];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    int diff = [[[NSUserDefaults standardUserDefaults]objectForKey:@"difficultyIndex"]intValue];
-    int themey = [[[NSUserDefaults standardUserDefaults]objectForKey:@"themeIndex"]intValue];
-    
-    [self.difficulty setSelectedSegmentIndex:diff];
-    [self.theme setSelectedSegmentIndex:themey];
-    
-    [self difficultyChanged];
-    [self themeChanged];
-    
-    if ([networkTest isConnectedToInternet]) {
-        [self submitOfflineScore];
-        [self loginUser];
-    }
 }
 
 @end

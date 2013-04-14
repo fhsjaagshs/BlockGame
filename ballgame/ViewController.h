@@ -39,6 +39,5 @@
 
 - (void)gameOver;
 - (void)togglePause;
-- (void)setStartButtonTitle:(NSString *)string;
 
 @end

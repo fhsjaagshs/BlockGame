@@ -17,15 +17,6 @@
     self.viewController = [[ViewController alloc]init];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
-    
-    NSString *savedScore = [[NSUserDefaults standardUserDefaults]objectForKey:@"savedScore"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"savedScore"];
-
-    if (![[NSUserDefaults standardUserDefaults]boolForKey:@"gameOver"]) {
-        [self.viewController.score setText:savedScore];
-        [self.viewController setStartButtonTitle:@"Resume"];
-    }
-    
     return YES;
 }
 
