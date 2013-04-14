@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nate Symer on 3/25/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Nathaniel Symer. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

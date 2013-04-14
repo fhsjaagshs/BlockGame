@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nate Symer on 4/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Nathaniel Symer. All rights reserved.
 //
 
 #import "BonusHole.h"
@@ -13,42 +13,36 @@
 @implementation BonusHole
 
 - (void)muckWithFrame:(CGRect)ballframe {
-    int x = (arc4random()%264)+26;
-    int y = (arc4random()%424)+26;
+    CGRect screenBounds = [UIScreen mainScreen].bounds;
+    int adjustedWidth = (int)floor(screenBounds.size.width-26);
+    int adjustedHeight = (int)floor(screenBounds.size.height-26);
+    int x = (arc4random()%adjustedWidth)+26;
+    int y = (arc4random()%adjustedHeight)+26;
     
-    self.frame = CGRectMake(x, y, 33, 33);
+    CGRect adjustedFrame = CGRectMake(x-75, y-75, self.frame.size.width+150, self.frame.size.height+150);
     
-    CGRect adjustedFrame = CGRectMake((self.frame.origin.x-50), (self.frame.origin.y-50), (self.frame.size.width+100), (self.frame.size.height+100));
-    
-    CGRect pauseScoreAreaRect = CGRectMake(121, 87, 96, 89);
-    
-    BOOL inScoreArea = ((CGRectIntersectsRect(pauseScoreAreaRect, ballframe)) || (CGRectContainsRect(pauseScoreAreaRect, ballframe))) || ((CGRectIntersectsRect(pauseScoreAreaRect, ballframe)) && (CGRectContainsRect(pauseScoreAreaRect, ballframe)));
-    
-    if (inScoreArea) {
-        self.frame = CGRectMake(x-50, y-50, 33, 33);
-    }
-    
-    BOOL tooClose = ((CGRectIntersectsRect(adjustedFrame, ballframe)) || (CGRectContainsRect(adjustedFrame, ballframe))) || ((CGRectIntersectsRect(adjustedFrame, ballframe)) && (CGRectContainsRect(adjustedFrame, ballframe)));
-    
-    if (tooClose) {
+    if (CGRectIntersectsRect(adjustedFrame, ballframe)) {
         
-        int xSubtracted = x-50;
-        int ySubtracted = y-50;
+        CGPoint ballCenter = CGPointMake(ballframe.origin.x+(ballframe.size.width/2), ballframe.origin.y+(ballframe.size.height/2));
+        CGPoint proposedCenter = CGPointMake(x+(33/2), y+(33/2));
         
-        if (((xSubtracted < 0) && (ySubtracted < 0)) || ((xSubtracted < 0) && (ySubtracted < 0))) {
-            if (CGRectContainsRect([UIScreen mainScreen].applicationFrame, CGRectMake(x+50, y+50, 33, 33))) {
-                self.frame = CGRectMake(x+50, y+50, 33, 33);
-            }
-        } else {
-            self.frame = CGRectMake(x-50, y-50, 33, 33);
-        }
+        float xDistFromBall = ballCenter.x-proposedCenter.x;
+        float yDistFromBall = ballCenter.y-proposedCenter.y;
+        
+        // direction of ball
+        float xDirection = xDistFromBall/fabsf(xDistFromBall);
+        float yDirection = yDistFromBall/fabsf(yDistFromBall);
+        
+        self.frame = CGRectMake(x+(75*xDirection*-1), y+(75*yDirection*-1), 33, 33);
+    } else {
+        self.frame = CGRectMake(x, y, 33, 33);
     }
 }
 
 - (void)redrawRectWithBallFrame:(CGRect)ballFrame {
     self.backgroundColor = [UIColor clearColor];
     [self muckWithFrame:ballFrame];
-    [self drawRect:self.frame];
+    [self setNeedsDisplay];
 }
 
 - (id)initWithBallframe:(CGRect)ballframe {
@@ -56,65 +50,53 @@
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         [self muckWithFrame:ballframe];
-        [self drawRect:self.frame];
+        [self setNeedsDisplay];
     }
     return self;
 }
 
 - (void)drawRect:(CGRect)rect {
     
-    CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
-    CGFloat colorsOne[] = { 
-        0.0, 1.0, 0.0, 1.0, 
-        0.0, 0.0, 0.0, 1.0
-    };
-    
-    CGColorSpaceRef baseSpace = rgb;
-    CGGradientRef gradientZ = CGGradientCreateWithColorComponents(baseSpace, colorsOne, NULL, 2);
-    CGColorSpaceRelease(baseSpace), baseSpace = NULL;
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
+    CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
+    CGFloat colorsOne[] = { 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
+    CGFloat colorsTwo[] = { 0, 0, 0, 1.0, 0.65625, 0.8046875, 0.9453125, 1.00 };
+
+    CGGradientRef gradientOne = CGGradientCreateWithColorComponents(rgb, colorsOne, nil, 2);
+    CGGradientRef gradientTwo = CGGradientCreateWithColorComponents(rgb, colorsTwo, nil, sizeof(colorsTwo)/(sizeof(colorsTwo[0])*4));
+    
+    CGPoint startPointOne = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
+    CGPoint endPointOne = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
+    CGPoint startPointTwo = CGPointMake(0.5, 0);
+    CGPoint endPointTwo = CGPointMake(0.5, 1);
+    
+    CGAffineTransform myTransform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
+    
     CGContextSaveGState(context);
+    
     CGContextAddEllipseInRect(context, rect);
     CGContextClip(context);
-    
-    CGPoint startPointS = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
-    CGPoint endPointS = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
-    
-    CGContextDrawLinearGradient(context, gradientZ, startPointS, endPointS, 0);
-    CGGradientRelease(gradientZ), gradientZ = NULL;
+    CGContextDrawLinearGradient(context, gradientOne, startPointOne, endPointOne, 0);
     
     CGContextRestoreGState(context);
+    
+    CGContextSaveGState(context);
     
     CGContextAddEllipseInRect(context, rect);
     CGContextDrawPath(context, kCGPathStroke);
-    
-    // first three are RGB, fourth is alpha
-    CGFloat colors[] = {
-        0, 0, 0, 1.0,
-        0.65625, 0.8046875, 0.9453125, 1.00,
-    };
-    
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(rgb, colors, NULL, sizeof(colors)/(sizeof(colors[0])*4));
-//    CGColorSpaceRelease(rgb);
-    
-    float width = self.bounds.size.width;
-    float height = self.bounds.size.height;
-    
-    
-    CGPoint startPoint = CGPointMake(0.5,0);
-    CGPoint endPoint = CGPointMake(0.5,1);
-    CGAffineTransform myTransform = CGAffineTransformMakeScale (width, height);
-    CGContextConcatCTM (context, myTransform);
-    CGContextSaveGState (context);
-    CGContextBeginPath (context); 
-    CGContextAddArc (context, 0.5, 0.5, 0.3, 0, 6.28318531, 0);
-    CGContextClosePath (context);  
+    CGContextConcatCTM(context, myTransform);
+    CGContextBeginPath(context);
+    CGContextAddArc(context, 0.5, 0.5, 0.3, 0, 6.28318531, 0);
+    CGContextClosePath(context);  
     CGContextClip(context);
-    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
+    CGContextDrawLinearGradient(context, gradientTwo, startPointTwo, endPointTwo, 0);
+    
     CGContextRestoreGState(context);
-    CGGradientRelease(gradient);
+    
+    CGGradientRelease(gradientTwo);
+    CGGradientRelease(gradientOne);
+    CGColorSpaceRelease(rgb);
     
     self.layer.shadowColor = [UIColor blackColor].CGColor;
     self.layer.shadowOpacity = 0.7f;
@@ -123,6 +105,5 @@
     self.layer.masksToBounds = NO;
     self.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(-5, -5, 44, 44)].CGPath;
 }
-
 
 @end

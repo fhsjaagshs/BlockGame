@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nate Symer on 3/31/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Nathaniel Symer. All rights reserved.
 //
 
 #import "BlackHole.h"
@@ -31,12 +31,7 @@
         float xDirection = xDistFromBall/fabsf(xDistFromBall);
         float yDirection = yDistFromBall/fabsf(yDistFromBall);
         
-        if (x-75 < 0 && y-75 < 0) {
-            NSLog(@"modified positive");
-            self.frame = CGRectMake(x+75, y+75, 33, 33);
-        } else {
-            self.frame = CGRectMake(x-75, y-75, 33, 33);
-        }
+        self.frame = CGRectMake(x+(75*xDirection*-1), y+(75*yDirection*-1), 33, 33);
     } else {
         self.frame = CGRectMake(x, y, 33, 33);
     }
@@ -60,43 +55,40 @@
 
 - (void)drawRect:(CGRect)rect {
     
-    CGFloat colorsOne[] = { 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0 };
-
-    CGColorSpaceRef rgbOne = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradientZ = CGGradientCreateWithColorComponents(rgbOne, colorsOne, nil, 2);
-    CGColorSpaceRelease(rgbOne);
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGContextSaveGState(context);
-    CGContextAddEllipseInRect(context, rect);
-    CGContextClip(context);
-    
-    CGContextDrawLinearGradient(context, gradientZ, CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect)), CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect)), 0);
-    CGGradientRelease(gradientZ);
-    
-    CGContextRestoreGState(context);
-    
-    CGContextAddEllipseInRect(context, rect);
-    CGContextDrawPath(context, kCGPathStroke);
-     
-    CGFloat colors[] = { 0, 0, 0, 1.00, 0.65625, 0.8046875, 0.9453125, 1.00 };
+    CGFloat colorsOne[] = { 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0 };
+    CGFloat colorsTwo[] = { 0, 0, 0, 1.00, 0.65625, 0.8046875, 0.9453125, 1.00 };
     
     CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
-    CGGradientRef gradient = CGGradientCreateWithColorComponents(rgb, colors, nil, sizeof(colors)/(sizeof(colors[0])*4));
-    CGColorSpaceRelease(rgb);
+    CGGradientRef gradientOne = CGGradientCreateWithColorComponents(rgb, colorsOne, nil, 2);
+    CGGradientRef gradientTwo = CGGradientCreateWithColorComponents(rgb, colorsTwo, nil, sizeof(colorsTwo)/(sizeof(colorsTwo[0])*4));
     
     CGAffineTransform myTransform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
     
     CGContextSaveGState(context);
+    CGContextAddEllipseInRect(context, rect);
+    CGContextClip(context);
+    CGContextDrawLinearGradient(context, gradientOne, CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect)), CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect)), 0);
+    
+    CGContextRestoreGState(context);
+    
+    CGContextSaveGState(context);
+    
+    CGContextAddEllipseInRect(context, rect);
+    CGContextDrawPath(context, kCGPathStroke);
     CGContextConcatCTM(context, myTransform);
     CGContextBeginPath(context);
     CGContextAddArc(context, 0.5, 0.5, 0.3, 0, 6.28318531, 0);
     CGContextClosePath(context);
     CGContextClip(context);
-    CGContextDrawLinearGradient(context, gradient, CGPointMake(0.5, 0), CGPointMake(0.5, 1), 0);
+    CGContextDrawLinearGradient(context, gradientTwo, CGPointMake(0.5, 0), CGPointMake(0.5, 1), 0);
+    
     CGContextRestoreGState(context);
-    CGGradientRelease(gradient);
+    
+    CGGradientRelease(gradientOne);
+    CGGradientRelease(gradientTwo);
+    CGColorSpaceRelease(rgb);
     
     self.layer.shadowColor = [UIColor blackColor].CGColor;
     self.layer.shadowOpacity = 0.7f;

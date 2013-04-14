@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nathaniel Symer on 1/24/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 Nathaniel Symer. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
