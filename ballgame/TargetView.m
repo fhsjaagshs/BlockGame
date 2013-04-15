@@ -46,6 +46,8 @@
             image = [UIImage imageNamed:@"target-ver"];
         }
         [image drawInRect:self.bounds];
+    } else {
+        [super drawRect:rect];
     }
 }
 

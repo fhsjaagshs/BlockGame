@@ -52,6 +52,16 @@
     return self;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowOpacity = 0.7f;
+    self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    self.layer.shadowRadius = 5.0f;
+    self.layer.masksToBounds = NO;
+    self.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(-5, -5, 44, 44)].CGPath;
+}
+
 - (void)drawRect:(CGRect)rect {
     
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -94,13 +104,6 @@
     CGGradientRelease(gradientTwo);
     CGGradientRelease(gradientOne);
     CGColorSpaceRelease(rgb);
-    
-    self.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.layer.shadowOpacity = 0.7f;
-    self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    self.layer.shadowRadius = 5.0f;
-    self.layer.masksToBounds = NO;
-    self.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(-5, -5, 44, 44)].CGPath;
 }
 
 @end

@@ -24,6 +24,7 @@
 @property (strong, nonatomic) UIButton *pauseButton;
 @property (strong, nonatomic) UILabel *difficultyLabel;
 @property (strong, nonatomic) UIButton *leaderboardButton;
+@property (strong, nonatomic) UIButton *tareButton;
 
 @property (strong, nonatomic) BlackHole *blackHole;
 @property (strong, nonatomic) BlackHole *blackHoleTwo;

@@ -85,7 +85,7 @@
     [self.view addSubview:self.startButton];
     
     self.leaderboardButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.leaderboardButton.frame = CGRectMake(102, 273, 113, 37);
+    self.leaderboardButton.frame = CGRectMake(75, 273, 113, 37); // CGRectMake(102, 273, 113, 37);
     self.leaderboardButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     self.leaderboardButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     self.leaderboardButton.titleLabel.textColor = [UIColor whiteColor];
@@ -96,6 +96,19 @@
     [self.leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
     [self.leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.leaderboardButton];
+    
+    self.tareButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.tareButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    self.tareButton.frame = CGRectMake(188, 273, 72, 37);
+    self.tareButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+    self.tareButton.titleLabel.textColor = [UIColor whiteColor];
+    self.tareButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    self.tareButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    self.tareButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    [self.tareButton setBackgroundImage:[UIImage imageNamed:@"startretry"] forState:UIControlStateNormal];
+    [self.tareButton setTitle:@"Tare" forState:UIControlStateNormal];
+    [self.tareButton addTarget:self action:@selector(tareButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.tareButton];
     
     self.theme = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
     self.theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -160,6 +173,10 @@
     
     [self difficultyChanged];
     [self themeChanged];
+}
+
+- (void)tareButtonPressed {
+    
 }
 
 - (void)createMotionManager {
@@ -277,7 +294,6 @@
     }
     
     self.target.frame = CGRectMake(x, y, width, height);
-    
     self.target.layer.shadowColor = [UIColor blackColor].CGColor;
     self.target.layer.shadowOpacity = 0.9f;
     self.target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
