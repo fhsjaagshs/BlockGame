@@ -39,9 +39,11 @@
     if (!self.isClassicMode) {
         UIImage *image = nil;
         if (self.isHorizontal) {
-            image = [[UIImage imageNamed:@"target"]stretchableImageWithLeftCapWidth:15 topCapHeight:0];
+            // caps -> left: 15 Right: 0
+            image = [UIImage imageNamed:@"target-hor"];
         } else {
-            image = [[UIImage imageNamed:@"target"]stretchableImageWithLeftCapWidth:0 topCapHeight:15];
+            // caps -> left: 0 Right: 15
+            image = [UIImage imageNamed:@"target-ver"];
         }
         [image drawInRect:self.bounds];
     }
