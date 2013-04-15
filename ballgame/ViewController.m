@@ -126,6 +126,7 @@
     self.ball.layer.shadowRadius = 5.0f;
     self.ball.layer.masksToBounds = NO;
     self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
+    self.ball.hidden = YES;
     [self.view addSubview:self.ball];
     
     self.isAnimatingBHOne = NO;
@@ -235,6 +236,7 @@
 
 - (void)stopMotionManager {
     self.motionManagerIsRunning = NO;
+    [self.motionManager startAccelerometerUpdatesToQueue:nil withHandler:nil];
     [self.motionManager stopAccelerometerUpdates];
 }
 
