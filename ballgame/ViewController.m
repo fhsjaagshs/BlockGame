@@ -639,8 +639,6 @@
     if (self.difficulty.selectedSegmentIndex > 0) {
         if (newScore > 2) {
             
-            [self redraw];
-            
             if (!self.timer.isValid) {
                 if (self.difficulty.selectedSegmentIndex == 1) {
                     self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
