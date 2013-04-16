@@ -85,7 +85,7 @@
     [self.view addSubview:self.startButton];
     
     self.leaderboardButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.leaderboardButton.frame = CGRectMake(75, 273, 113, 37); // CGRectMake(102, 273, 113, 37);
+    self.leaderboardButton.frame = CGRectMake(102, 273, 113, 37);
     self.leaderboardButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     self.leaderboardButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     self.leaderboardButton.titleLabel.textColor = [UIColor whiteColor];
@@ -96,19 +96,6 @@
     [self.leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
     [self.leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.leaderboardButton];
-    
-    self.tareButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.tareButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-    self.tareButton.frame = CGRectMake(188, 273, 72, 37);
-    self.tareButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-    self.tareButton.titleLabel.textColor = [UIColor whiteColor];
-    self.tareButton.titleLabel.textAlignment = UITextAlignmentCenter;
-    self.tareButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-    self.tareButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [self.tareButton setBackgroundImage:[UIImage imageNamed:@"startretry"] forState:UIControlStateNormal];
-    [self.tareButton setTitle:@"Tare" forState:UIControlStateNormal];
-    [self.tareButton addTarget:self action:@selector(tareButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.tareButton];
     
     self.theme = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
     self.theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -171,32 +158,20 @@
     [self.difficulty setSelectedSegmentIndex:diff];
     [self.theme setSelectedSegmentIndex:themey];
     
+    [self.leaderboardButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.difficultyLabel setTextColor:[UIColor whiteColor]];
+    [self.startButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.score setTextColor:[UIColor whiteColor]];
+    [self.themeLabel setTextColor:[UIColor whiteColor]];
+    [self.pauseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    
     [self difficultyChanged];
     [self themeChanged];
-}
-
-- (void)tareButtonPressed {
-    
 }
 
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
     self.motionManager.accelerometerUpdateInterval = 1/180;
-}
-
-- (void)setStartPosition:(CMAcceleration)acceleration {
-    NSString *saveString = [NSString stringWithFormat:@"%f,%f,%f", acceleration.x, acceleration.y, acceleration.z];
-    [[NSUserDefaults standardUserDefaults]setObject:saveString forKey:@"saved_position"];
-}
-
-- (CMAcceleration)getStartPosition {
-    NSString *savedString = [[NSUserDefaults standardUserDefaults]objectForKey:@"saved_position"];
-    NSArray *array = [savedString componentsSeparatedByString:@","];
-    CMAcceleration acceleration;
-    acceleration.x = [[array objectAtIndex:0]doubleValue];
-    acceleration.y = [[array objectAtIndex:1]doubleValue];
-    acceleration.x = [[array objectAtIndex:2]doubleValue];
-    return acceleration;
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
@@ -246,6 +221,8 @@
 
 - (void)startMotionManager {
     self.motionManagerIsRunning = YES;
+    [self.blackHole startMoving];
+    [self.blackHoleTwo startMoving];
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         [self handleAcceleration:accelerometerData.acceleration];
     }];
@@ -253,6 +230,8 @@
 
 - (void)stopMotionManager {
     self.motionManagerIsRunning = NO;
+    [self.blackHole stopMoving];
+    [self.blackHoleTwo stopMoving];
     [self.motionManager startAccelerometerUpdatesToQueue:nil withHandler:nil];
     [self.motionManager stopAccelerometerUpdates];
 }
@@ -417,14 +396,6 @@
     [[NSUserDefaults standardUserDefaults]setObject:savedPref forKey:@"themeIndex"];
     
     BOOL isSelectedIndexOne = (self.theme.selectedSegmentIndex == 1);
-    UIColor *titleColor = [UIColor whiteColor];
-    
-    [self.leaderboardButton setTitleColor:titleColor forState:UIControlStateNormal];
-    [self.difficultyLabel setTextColor:titleColor];
-    [self.startButton setTitleColor:titleColor forState:UIControlStateNormal];
-    [self.score setTextColor:titleColor];
-    [self.themeLabel setTextColor:titleColor];
-    [self.pauseButton setTitleColor:titleColor forState:UIControlStateNormal];
     [self.theMainView setHidden:isSelectedIndexOne];
     [self.target setClassicMode:isSelectedIndexOne];
 }
@@ -590,6 +561,7 @@
         [self.blackHole redrawRectWithBallFrame:self.ball.frame];
     } completion:^(BOOL finished) {
         if (finished) {
+            [self.blackHole startMoving];
             self.isAnimatingBHOne = NO;
         }
     }];
@@ -599,7 +571,6 @@
     
     if (!self.blackHoleTwo) {
         self.blackHoleTwo = [[BlackHole alloc]init];
-        [self.view addSubview:blackHoleTwo];
     }
     
     if (!self.blackHoleTwo.superview) {
@@ -610,6 +581,7 @@
         [self.blackHoleTwo redrawRectWithBallFrame:self.ball.frame];
     } completion:^(BOOL finished) {
         if (finished) {
+            [self.blackHoleTwo startMoving];
             self.isAnimatingBHTwo = NO;
         }
     }];

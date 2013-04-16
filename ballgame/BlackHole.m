@@ -8,12 +8,19 @@
 
 #import "BlackHole.h"
 
+@interface BlackHole ()
+
+@property (assign, nonatomic) CGSize directionVector;
+@property (assign, nonatomic) BOOL isMoving;
+
+@end
+
 @implementation BlackHole
 
 - (void)muckWithFrame:(CGRect)ballframe {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
-    int adjustedWidth = (int)floor(screenBounds.size.width-30);
-    int adjustedHeight = (int)floor(screenBounds.size.height-30);
+    int adjustedWidth = (int)floor(screenBounds.size.width-60);
+    int adjustedHeight = (int)floor(screenBounds.size.height-60);
     int x = (arc4random()%adjustedWidth)+30;
     int y = (arc4random()%adjustedHeight)+30;
 
@@ -30,10 +37,74 @@
         float xDirection = xDistFromBall/fabsf(xDistFromBall);
         float yDirection = yDistFromBall/fabsf(yDistFromBall);
         
-        self.frame = CGRectMake(x+(50*xDirection*-1), y+(50*yDirection*-1), 33, 33);
+        CGRect potentialFrame = CGRectMake(x+(50*xDirection*-1), y+(50*yDirection*-1), 33, 33);
+        
+        CGPoint pfcenter = CGPointMake(potentialFrame.origin.x+33/2, potentialFrame.origin.y+33/2);
+        
+        CGRect testRect = [UIScreen mainScreen].bounds;
+        testRect.size.height += 60;
+        testRect.size.width += 60;
+        testRect.origin.x -= 30;
+        testRect.origin.y -= 30;
+        
+        if (CGRectContainsPoint(testRect, pfcenter)) {
+            self.frame = potentialFrame;
+        } else {
+            
+            x = screenBounds.size.width-potentialFrame.origin.x;
+            y = screenBounds.size.height-potentialFrame.origin.y;
+            
+            proposedCenter = CGPointMake(x+(33/2), y+(33/2));
+            
+            xDistFromBall = ballCenter.x-proposedCenter.x;
+            yDistFromBall = ballCenter.y-proposedCenter.y;
+            
+            xDirection = xDistFromBall/fabsf(xDistFromBall);
+            yDirection = yDistFromBall/fabsf(yDistFromBall);
+            
+            self.frame = CGRectMake(x+(50*xDirection*-1), y+(50*yDirection*-1), 33, 33);
+        }
+        
     } else {
         self.frame = CGRectMake(x, y, 33, 33);
     }
+}
+
+- (CGPoint)generateCenter {
+    return CGPointMake(self.center.x+(self.directionVector.width/50), self.center.y+self.directionVector.height/50);
+}
+
+- (void)move {
+    CGPoint perspectiveCenter = [self generateCenter];
+    
+    if (!CGRectContainsPoint([UIScreen mainScreen].bounds, perspectiveCenter)) {
+        CGRect testRect = [UIScreen mainScreen].bounds;
+        testRect.size.height += 1/12.5;
+        testRect.size.width += 1/12.5;
+        testRect.origin.x -= 1/25;
+        testRect.origin.y -= 1/25;
+        
+        BOOL xTooHigh = (perspectiveCenter.x >= [UIScreen mainScreen].bounds.size.width || perspectiveCenter.x <= 0) && !CGRectContainsPoint(testRect, perspectiveCenter);
+        BOOL yTooHigh = (perspectiveCenter.y >= [UIScreen mainScreen].bounds.size.height || perspectiveCenter.y <= 0) && !CGRectContainsPoint(testRect, perspectiveCenter);
+        self.directionVector = CGSizeMake(xTooHigh?-1*self.directionVector.width:self.directionVector.width, yTooHigh?-1*self.directionVector.height:self.directionVector.height);
+        perspectiveCenter = [self generateCenter];
+    }
+    
+    self.center = perspectiveCenter;
+    
+    if (self.isMoving) {
+        [self performSelector:@selector(move) withObject:nil afterDelay:1/180];
+    }
+}
+
+- (void)startMoving {
+    self.directionVector = CGSizeMake(1, 1);
+    self.isMoving = YES;
+    [self move];
+}
+
+- (void)stopMoving {
+    self.isMoving = NO;
 }
 
 - (id)initWithBallframe:(CGRect)ballframe {

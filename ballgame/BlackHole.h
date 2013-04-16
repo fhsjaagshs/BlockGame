@@ -12,5 +12,7 @@
 
 - (id)initWithBallframe:(CGRect)ballframe;
 - (void)redrawRectWithBallFrame:(CGRect)ballFrame;
+- (void)startMoving;
+- (void)stopMoving;
 
 @end
