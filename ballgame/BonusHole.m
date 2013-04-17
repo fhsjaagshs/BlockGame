@@ -12,8 +12,8 @@
 
 - (void)muckWithFrame:(CGRect)ballframe {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
-    int adjustedWidth = (int)floor(screenBounds.size.width-30);
-    int adjustedHeight = (int)floor(screenBounds.size.height-30);
+    int adjustedWidth = (int)floor(screenBounds.size.width-60);
+    int adjustedHeight = (int)floor(screenBounds.size.height-60);
     int x = (arc4random()%adjustedWidth)+30;
     int y = (arc4random()%adjustedHeight)+30;
     
@@ -21,16 +21,17 @@
     
     if (CGRectIntersectsRect(adjustedFrame, ballframe)) {
         
-        CGPoint ballCenter = CGPointMake(ballframe.origin.x+(ballframe.size.width/2), ballframe.origin.y+(ballframe.size.height/2));
-        CGPoint proposedCenter = CGPointMake(x+(33/2), y+(33/2));
-        
-        float xDistFromBall = ballCenter.x-proposedCenter.x;
-        float yDistFromBall = ballCenter.y-proposedCenter.y;
-        
-        float xDirection = xDistFromBall/fabsf(xDistFromBall);
-        float yDirection = yDistFromBall/fabsf(yDistFromBall);
-        
-        self.frame = CGRectMake(x+(50*xDirection*-1), y+(50*yDirection*-1), 33, 33);
+        /* CGPoint ballCenter = CGPointMake(ballframe.origin.x+(ballframe.size.width/2), ballframe.origin.y+(ballframe.size.height/2));
+         CGPoint proposedCenter = CGPointMake(x+(33/2), y+(33/2));
+         
+         float xDistFromBall = ballCenter.x-proposedCenter.x;
+         float yDistFromBall = ballCenter.y-proposedCenter.y;
+         
+         float xDirection = xDistFromBall/fabsf(xDistFromBall);
+         float yDirection = yDistFromBall/fabsf(yDistFromBall);
+         
+         self.frame = CGRectMake(x+(50*xDirection*-1), y+(50*yDirection*-1), 33, 33);*/
+        [self muckWithFrame:ballframe];
     } else {
         self.frame = CGRectMake(x, y, 33, 33);
     }
