@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nathaniel Symer on 4/8/13.
-//
+//  Copyright (c) 2013 Nathaniel Symer. All rights reserved.
 //
 
 #import "GCManager.h"

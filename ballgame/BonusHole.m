@@ -22,6 +22,7 @@ int numberOfTimes = 0;
             if (numberOfTimes < 20) {
                 [self animateImageView:imageView];
             } else {
+                numberOfTimes = 0;
                 [imageView removeFromSuperview];
             }
         }

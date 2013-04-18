@@ -3,7 +3,7 @@
 //  ballgame
 //
 //  Created by Nathaniel Symer on 11/7/11.
-//  Copyright (c) 2011 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2011 Nathaniel Symer. All rights reserved.
 //
 
 #import "AppDelegate.h"
@@ -21,14 +21,13 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    if ([UIAccelerometer sharedAccelerometer].delegate != nil) {
+    if (self.viewController.motionManagerIsRunning) {
         [self.viewController togglePause];
     }
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    NSString *savedScore = self.viewController.score.text;
-    [[NSUserDefaults standardUserDefaults]setObject:savedScore forKey:@"savedScore"];
+    
+    if (![self.viewController.score.text isEqualToString:@"0"]) {
+        [[NSUserDefaults standardUserDefaults]setObject:self.viewController.score.text forKey:@"savedScore"];
+    }
 }
 
 @end
