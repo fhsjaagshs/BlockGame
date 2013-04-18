@@ -25,15 +25,13 @@
 @property (strong, nonatomic) UILabel *difficultyLabel;
 @property (strong, nonatomic) UIButton *leaderboardButton;
 
-@property (strong, nonatomic) BlackHole *blackHole;
-@property (strong, nonatomic) BlackHole *blackHoleTwo;
 @property (strong, nonatomic) BonusHole *bonusHole;
 
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSString *highscore;
-@property (assign, nonatomic) BOOL isAnimatingBHOne;
-@property (assign, nonatomic) BOOL isAnimatingBHTwo;
+@property (strong, nonatomic) NSMutableArray *blackholes;
 @property (assign, nonatomic) BOOL motionManagerIsRunning;
+@property (assign, nonatomic) BOOL isAnimatingBlackHoles;
 
 @property (strong, nonatomic) CMMotionManager *motionManager;
 
