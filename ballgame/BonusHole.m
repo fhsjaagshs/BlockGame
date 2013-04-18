@@ -8,7 +8,55 @@
 
 #import "BonusHole.h"
 
+int numberOfTimes = 0;
+
 @implementation BonusHole
+
+- (void)animateImageView:(UIImageView *)imageView {
+    [UIView animateWithDuration:0.08 animations:^{
+        imageView.frame = CGRectMake(-12.5, -12.5, self.frame.size.width+5+20, self.frame.size.width+5+20);
+    } completion:^(BOOL finished) {
+        if (finished) {
+            imageView.frame = self.bounds;
+            numberOfTimes += 1;
+            if (numberOfTimes < 20) {
+                [self animateImageView:imageView];
+            } else {
+                [imageView removeFromSuperview];
+            }
+        }
+    }];
+}
+
+- (void)animateCircles {
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.frame.size.width+5+20, self.frame.size.width+5+20), NO, [[UIScreen mainScreen]scale]);
+
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    UIGraphicsPushContext(context);
+    
+    CGContextSaveGState(context);
+    
+    for (int i = 0; i < 5; i++) {
+        float width = self.frame.size.width+5+3*(i+1);
+        float x = (self.frame.size.width+25-width)/2;
+        float y = (self.frame.size.height+25-width)/2;
+        CGContextSetLineWidth(context, 2.5);
+        CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
+        CGContextStrokeEllipseInRect(context, CGRectMake(x, y, width, width));
+    }
+    
+    CGContextRestoreGState(context);
+    
+    UIGraphicsPopContext();
+    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:self.bounds];
+    self.backgroundColor = [UIColor clearColor];
+    [self addSubview:imageView];
+    imageView.image = outputImage;
+    [self animateImageView:imageView];
+}
 
 - (void)muckWithFrame:(CGRect)ballframe {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
@@ -20,17 +68,6 @@
     CGRect adjustedFrame = CGRectMake(x-75, y-75, self.frame.size.width+150, self.frame.size.height+150);
     
     if (CGRectIntersectsRect(adjustedFrame, ballframe)) {
-        
-        /* CGPoint ballCenter = CGPointMake(ballframe.origin.x+(ballframe.size.width/2), ballframe.origin.y+(ballframe.size.height/2));
-         CGPoint proposedCenter = CGPointMake(x+(33/2), y+(33/2));
-         
-         float xDistFromBall = ballCenter.x-proposedCenter.x;
-         float yDistFromBall = ballCenter.y-proposedCenter.y;
-         
-         float xDirection = xDistFromBall/fabsf(xDistFromBall);
-         float yDirection = yDistFromBall/fabsf(yDistFromBall);
-         
-         self.frame = CGRectMake(x+(50*xDirection*-1), y+(50*yDirection*-1), 33, 33);*/
         [self muckWithFrame:ballframe];
     } else {
         self.frame = CGRectMake(x, y, 33, 33);
@@ -41,6 +78,7 @@
     self.backgroundColor = [UIColor clearColor];
     [self muckWithFrame:ballFrame];
     [self setNeedsDisplay];
+    [self animateCircles];
 }
 
 - (id)initWithBallframe:(CGRect)ballframe {

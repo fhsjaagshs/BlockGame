@@ -405,7 +405,6 @@
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
     
     int64_t gameOverScore = [self.score.text intValue];
-    
 
     NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
@@ -444,6 +443,18 @@
     self.timer = nil;
 }
 
+- (void)createTimer {
+    if (self.difficulty.selectedSegmentIndex == 1) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+    } else if (self.difficulty.selectedSegmentIndex == 2) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+    } else if (self.difficulty.selectedSegmentIndex == 3) {
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+    } else {
+        self.timer = nil;
+    }
+}
+
 - (void)togglePause {
     if (self.motionManagerIsRunning) {
         [self stopMotionManager];
@@ -459,17 +470,7 @@
         [self.theme setHidden:YES];
         
         if (!self.timer.isValid) {
-
-            if (self.difficulty.selectedSegmentIndex == 1) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-            } else if (self.difficulty.selectedSegmentIndex == 2) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-            } else if (self.difficulty.selectedSegmentIndex == 3) {
-                self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-            } else {
-                self.timer = nil;
-            }
-            
+            [self createTimer];
             [self.timer fire];
             
             if (self.blackHole.superview) {
@@ -640,16 +641,7 @@
         if (newScore > 2) {
             
             if (!self.timer.isValid) {
-                if (self.difficulty.selectedSegmentIndex == 1) {
-                    self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-                } else if (self.difficulty.selectedSegmentIndex == 2) {
-                    self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-                } else if (self.difficulty.selectedSegmentIndex == 3) {
-                    self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-                } else {
-                    self.timer = nil;
-                }
-                
+                [self createTimer];
                 [self.timer fire];
             }
         

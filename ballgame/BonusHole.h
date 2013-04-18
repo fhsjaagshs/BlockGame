@@ -12,5 +12,6 @@
 
 - (id)initWithBallframe:(CGRect)ballframe;
 - (void)redrawRectWithBallFrame:(CGRect)ballFrame;
+- (void)animateCircles;
 
 @end
