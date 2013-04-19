@@ -13,13 +13,13 @@ int numberOfTimes = 0;
 @implementation BonusHole
 
 - (void)animateImageView:(UIImageView *)imageView {
-    [UIView animateWithDuration:0.08 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         imageView.frame = CGRectMake(-12.5, -12.5, self.frame.size.width+5+20, self.frame.size.width+5+20);
     } completion:^(BOOL finished) {
         if (finished) {
             imageView.frame = self.bounds;
             numberOfTimes += 1;
-            if (numberOfTimes < 20) {
+            if (numberOfTimes < 10) {
                 [self animateImageView:imageView];
             } else {
                 numberOfTimes = 0;
@@ -30,19 +30,20 @@ int numberOfTimes = 0;
 }
 
 - (void)animateCircles {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.frame.size.width+5+20, self.frame.size.width+5+20), NO, [[UIScreen mainScreen]scale]);
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.frame.size.width+25, self.frame.size.width+25), NO, [[UIScreen mainScreen]scale]);
 
     CGContextRef context = UIGraphicsGetCurrentContext();
     UIGraphicsPushContext(context);
     
     CGContextSaveGState(context);
     
+    CGContextSetLineWidth(context, 2.5);
+    CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
+    
     for (int i = 0; i < 5; i++) {
-        float width = self.frame.size.width+5+3*(i+1);
+        float width = self.frame.size.width+5+1.5*(i+1);
         float x = (self.frame.size.width+25-width)/2;
         float y = (self.frame.size.height+25-width)/2;
-        CGContextSetLineWidth(context, 2.5);
-        CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
         CGContextStrokeEllipseInRect(context, CGRectMake(x, y, width, width));
     }
     
@@ -87,7 +88,6 @@ int numberOfTimes = 0;
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         [self muckWithFrame:ballframe];
-        [self setNeedsDisplay];
     }
     return self;
 }
@@ -106,19 +106,21 @@ int numberOfTimes = 0;
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
-    CGFloat colorsOne[] = { 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0 };
-    CGFloat colorsTwo[] = { 0, 0, 0, 1.0, 0.65625, 0.8046875, 0.9453125, 1.00 };
+    CGFloat colorsOne[] = { 0, 1, 0, 1, 0, 0, 0, 1 };
+    CGFloat colorsTwo[] = { 0, 0, 0, 1, 0.65625, 0.8046875, 0.9453125, 1 };
 
+    CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
+    
     CGGradientRef gradientOne = CGGradientCreateWithColorComponents(rgb, colorsOne, nil, 2);
     CGGradientRef gradientTwo = CGGradientCreateWithColorComponents(rgb, colorsTwo, nil, sizeof(colorsTwo)/(sizeof(colorsTwo[0])*4));
+    CGColorSpaceRelease(rgb);
     
     CGPoint startPointOne = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
     CGPoint endPointOne = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
     CGPoint startPointTwo = CGPointMake(0.5, 0);
     CGPoint endPointTwo = CGPointMake(0.5, 1);
     
-    CGAffineTransform myTransform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
+    CGAffineTransform transform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
     
     CGContextSaveGState(context);
     
@@ -132,7 +134,7 @@ int numberOfTimes = 0;
     
     CGContextAddEllipseInRect(context, rect);
     CGContextDrawPath(context, kCGPathStroke);
-    CGContextConcatCTM(context, myTransform);
+    CGContextConcatCTM(context, transform);
     CGContextBeginPath(context);
     CGContextAddArc(context, 0.5, 0.5, 0.3, 0, 6.28318531, 0);
     CGContextClosePath(context);  
@@ -143,7 +145,7 @@ int numberOfTimes = 0;
     
     CGGradientRelease(gradientTwo);
     CGGradientRelease(gradientOne);
-    CGColorSpaceRelease(rgb);
+    
 }
 
 @end

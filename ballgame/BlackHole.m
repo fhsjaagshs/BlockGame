@@ -34,7 +34,7 @@
 }
 
 - (CGPoint)generateCenter {
-    return CGPointMake(self.center.x+(self.directionVector.width/50), self.center.y+self.directionVector.height/50);
+    return CGPointMake(self.center.x+(self.directionVector.width/45), self.center.y+self.directionVector.height/45);
 }
 
 - (void)move {
@@ -61,6 +61,11 @@
 }
 
 - (void)startMoving {
+    
+    if (self.isMoving) {
+        return;
+    }
+    
     self.directionVector = CGSizeMake(1, 1);
     self.isMoving = YES;
     [self move];
@@ -70,18 +75,24 @@
     self.isMoving = NO;
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+    }
+    return self;
+}
+
 - (id)initWithBallframe:(CGRect)ballframe {
     self = [super initWithFrame:self.frame];
     if (self) {
         self.backgroundColor = [UIColor clearColor];
         [self muckWithFrame:ballframe];
-        [self setNeedsDisplay];
     }
     return self;
 }
 
 - (void)redrawRectWithBallFrame:(CGRect)ballFrame {
-    self.backgroundColor = [UIColor clearColor];
     [self muckWithFrame:ballFrame];
     [self setNeedsDisplay];
 }
@@ -100,19 +111,23 @@
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGFloat colorsOne[] = { 1.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0 };
-    CGFloat colorsTwo[] = { 0, 0, 0, 1.00, 0.65625, 0.8046875, 0.9453125, 1.00 };
+    CGRect rectb = self.bounds;
+    
+    CGFloat colorsOne[] = { 1, 1, 1, 1, 1, 0, 0, 1 };
+    CGFloat colorsTwo[] = { 0, 0, 0, 1, 0.65625, 0.8046875, 0.9453125, 1 };
     
     CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
     CGGradientRef gradientOne = CGGradientCreateWithColorComponents(rgb, colorsOne, nil, 2);
     CGGradientRef gradientTwo = CGGradientCreateWithColorComponents(rgb, colorsTwo, nil, sizeof(colorsTwo)/(sizeof(colorsTwo[0])*4));
+    CGColorSpaceRelease(rgb);
     
-    CGAffineTransform myTransform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
+    CGAffineTransform transform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
     
     CGContextSaveGState(context);
-    CGContextAddEllipseInRect(context, rect);
+    
+    CGContextAddEllipseInRect(context, rectb);
     CGContextClip(context);
-    CGContextDrawLinearGradient(context, gradientOne, CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect)), CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect)), 0);
+    CGContextDrawLinearGradient(context, gradientOne, CGPointMake(CGRectGetMidX(rectb), CGRectGetMinY(rectb)), CGPointMake(CGRectGetMidX(rectb), CGRectGetMaxY(rectb)), 0);
     
     CGContextRestoreGState(context);
     
@@ -120,7 +135,7 @@
     
     CGContextAddEllipseInRect(context, rect);
     CGContextDrawPath(context, kCGPathStroke);
-    CGContextConcatCTM(context, myTransform);
+    CGContextConcatCTM(context, transform);
     CGContextBeginPath(context);
     CGContextAddArc(context, 0.5, 0.5, 0.3, 0, 6.28318531, 0);
     CGContextClosePath(context);
@@ -131,7 +146,6 @@
     
     CGGradientRelease(gradientOne);
     CGGradientRelease(gradientTwo);
-    CGColorSpaceRelease(rgb);
 }
 
 @end

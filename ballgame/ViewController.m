@@ -176,7 +176,6 @@
 - (void)handleAcceleration:(CMAcceleration)acceleration {
     
     if (!self.motionManagerIsRunning) {
-        NSLog(@"Motion Manager is: %@",self.motionManager.accelerometerActive?@"running":@"not running");
         return;
     }
     
@@ -224,13 +223,13 @@
 
 - (void)stopMovingBlackHolemans {
     for (BlackHole *blackHoleman in self.blackholes) {
-        [blackHoleman startMoving];
+        [blackHoleman stopMoving];
     }
 }
 
 - (void)startMovingBlackHolmans {
     for (BlackHole *blackHoleman in self.blackholes) {
-        [blackHoleman stopMoving];
+        [blackHoleman startMoving];
     }
 }
 
@@ -259,23 +258,38 @@
     }
 }
 
-- (void)updateBlackHolesArray {
-    
+- (int)getNumberHolesToCreate {
     if (self.blackholes.count == 0) {
         self.blackholes = [NSMutableArray array];
     }
     
-    int max = (self.difficulty.selectedSegmentIndex > 0)?5+(self.difficulty.selectedSegmentIndex):0;
+    int max = (self.difficulty.selectedSegmentIndex > 0)?2+(self.difficulty.selectedSegmentIndex):0;
     
-    int numberOfBlackHoles = floorf(self.score.text.intValue/10);
+    int blackHolesC = floorf(self.score.text.intValue/10);
     
-    if (numberOfBlackHoles > max) {
-        numberOfBlackHoles = max;
+    if (blackHolesC > max) {
+        blackHolesC = max;
     }
     
-    int remainder = numberOfBlackHoles-self.blackholes.count;
+    return blackHolesC-self.blackholes.count;
+}
+
+- (void)updateBlackHolesArrayWithRedrawing {
+    int remainder = [self getNumberHolesToCreate];
     
-    for (int i = (remainder-1); i < max; i++) {
+    for (int i = 0; i < remainder; i++) {
+        BlackHole *blackHoleman = [[BlackHole alloc]init];
+        [self.view addSubview:blackHoleman];
+        [self.blackholes addObject:blackHoleman];
+        [blackHoleman redrawRectWithBallFrame:self.ball.frame];
+        [blackHoleman startMoving];
+    }
+}
+
+- (void)updateBlackHolesArray {
+    int remainder = [self getNumberHolesToCreate];
+    
+    for (int i = 0; i < remainder; i++) {
         BlackHole *blackHoleman = [[BlackHole alloc]init];
         [self.view addSubview:blackHoleman];
         [self.blackholes addObject:blackHoleman];
@@ -467,6 +481,8 @@
     
     int64_t gameOverScore = [self.score.text intValue];
 
+    [self stopMovingBlackHolemans];
+    
     NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     NSCustomAlertView *alert = [[NSCustomAlertView alloc]initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
@@ -553,7 +569,6 @@
     [self.ball setHidden:NO];
     [self.score setHidden:NO];
     
-
     [self destroyBlackHolemans];
     [self.bonusHole removeFromSuperview];
     self.bonusHole = nil;
@@ -625,8 +640,8 @@
     NSString *newScoreString = [NSString stringWithFormat:@"%d",newScore];
     [self.score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
-    
-    [self updateBlackHolesArray];
+
+    [self updateBlackHolesArrayWithRedrawing];
     [self redrawBonusHole];
     
     if (self.difficulty.selectedSegmentIndex > 0) {
