@@ -549,12 +549,12 @@
         if (!self.timer.isValid) {
             [self createTimer];
             [self.timer fire];
-            
-            [self updateBlackHolesArray];
-            
-            if (self.bonusHole.superview) {
-                [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
-            }
+        }
+        
+        [self updateBlackHolesArray];
+        
+        if (self.bonusHole.superview) {
+            [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
         }
     }
 }
