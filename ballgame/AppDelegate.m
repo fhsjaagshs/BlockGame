@@ -25,6 +25,8 @@
         [self.viewController togglePause];
     }
     
+    [[NSUserDefaults standardUserDefaults]setFloat:self.viewController.currentNumber forKey:@"bonusholecurrentnumber"];
+    
     if (![self.viewController.score.text isEqualToString:@"0"]) {
         [[NSUserDefaults standardUserDefaults]setObject:self.viewController.score.text forKey:@"savedScore"];
     }

@@ -10,7 +10,7 @@
 
 @implementation ViewController
 
-@synthesize ball, target, difficulty, theme, score, gameOverLabel, theMainView, themeLabel, startButton, pauseButton, difficultyLabel, leaderboardButton, bonusHole, timer, highscore, blackholes, motionManagerIsRunning, isAnimatingBlackHoles, motionManager;
+@synthesize ball, target, difficulty, theme, score, gameOverLabel, theMainView, themeLabel, startButton, pauseButton, difficultyLabel, leaderboardButton, bonusHole, timer, highscore, blackholes, motionManagerIsRunning, isAnimatingBlackHoles, motionManager, currentNumber;
 
 - (void)loadView {
     [super loadView];
@@ -166,6 +166,23 @@
     
     [self difficultyChanged];
     [self themeChanged];
+    
+    self.currentNumber = 5;
+}
+
+- (BOOL)shouldShowBonusHole {
+    self.currentNumber = [[NSUserDefaults standardUserDefaults]floatForKey:@"bonusholecurrentnumber"];
+    
+    float numb = self.currentNumber;
+    
+    float additionFactorialThingy = 0;
+    
+    while (numb > 0) {
+        additionFactorialThingy += numb;
+        numb -= 1;
+    }
+    
+    return fmod(self.score.text.intValue, additionFactorialThingy);
 }
 
 - (void)createMotionManager {
@@ -618,11 +635,11 @@
         self.bonusHole = [[BonusHole alloc]init];
     }
     
-    if (fmod(self.score.text.intValue, 20) != 0) {
+    if ([self shouldShowBonusHole]) {
         if (self.bonusHole.superview) {
             [self.bonusHole removeFromSuperview];
-            self.bonusHole = nil;
         }
+        self.bonusHole = nil;
         return;
     }
     
