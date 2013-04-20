@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
+#import <GameKit/GameKit.h>
 
 @interface ViewController : UIViewController <GKLeaderboardViewControllerDelegate>
 

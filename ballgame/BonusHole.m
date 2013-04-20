@@ -110,15 +110,9 @@ int numberOfTimes = 0;
     CGFloat colorsTwo[] = { 0, 0, 0, 1, 0.65625, 0.8046875, 0.9453125, 1 };
 
     CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
-    
     CGGradientRef gradientOne = CGGradientCreateWithColorComponents(rgb, colorsOne, nil, 2);
     CGGradientRef gradientTwo = CGGradientCreateWithColorComponents(rgb, colorsTwo, nil, sizeof(colorsTwo)/(sizeof(colorsTwo[0])*4));
     CGColorSpaceRelease(rgb);
-    
-    CGPoint startPointOne = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
-    CGPoint endPointOne = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
-    CGPoint startPointTwo = CGPointMake(0.5, 0);
-    CGPoint endPointTwo = CGPointMake(0.5, 1);
     
     CGAffineTransform transform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
     
@@ -126,7 +120,7 @@ int numberOfTimes = 0;
     
     CGContextAddEllipseInRect(context, rect);
     CGContextClip(context);
-    CGContextDrawLinearGradient(context, gradientOne, startPointOne, endPointOne, 0);
+    CGContextDrawLinearGradient(context, gradientOne, CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect)), CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect)), 0);
     
     CGContextRestoreGState(context);
     
@@ -139,13 +133,12 @@ int numberOfTimes = 0;
     CGContextAddArc(context, 0.5, 0.5, 0.3, 0, 6.28318531, 0);
     CGContextClosePath(context);  
     CGContextClip(context);
-    CGContextDrawLinearGradient(context, gradientTwo, startPointTwo, endPointTwo, 0);
+    CGContextDrawLinearGradient(context, gradientTwo, CGPointMake(0.5, 0), CGPointMake(0.5, 1), 0);
     
     CGContextRestoreGState(context);
     
     CGGradientRelease(gradientTwo);
     CGGradientRelease(gradientOne);
-    
 }
 
 @end

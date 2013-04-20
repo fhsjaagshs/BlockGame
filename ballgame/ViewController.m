@@ -170,8 +170,15 @@
     self.currentNumber = 5;
 }
 
+- (void)updateNumber {
+    self.currentNumber += 2;
+    [[NSUserDefaults standardUserDefaults]setFloat:self.currentNumber forKey:@"bonusholecurrentnumber"];
+}
+
 - (BOOL)shouldShowBonusHole {
-    self.currentNumber = [[NSUserDefaults standardUserDefaults]floatForKey:@"bonusholecurrentnumber"];
+    if (self.currentNumber == 0) {
+        self.currentNumber = [[NSUserDefaults standardUserDefaults]floatForKey:@"bonusholecurrentnumber"];
+    }
     
     float numb = self.currentNumber;
     
@@ -233,6 +240,7 @@
     
     if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame)) {
         self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
+        [self flashScoreLabelToGreen];
         [self.bonusHole removeFromSuperview];
         self.bonusHole = nil;
     }
@@ -495,6 +503,7 @@
 - (void)gameOver {
     
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"bonusholecurrentnumber"];
     
     int64_t gameOverScore = [self.score.text intValue];
 
@@ -658,6 +667,8 @@
     [self.score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
 
+    [self updateNumber];
+    
     [self updateBlackHolesArrayWithRedrawing];
     [self redrawBonusHole];
     
