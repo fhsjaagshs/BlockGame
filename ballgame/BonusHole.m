@@ -19,7 +19,7 @@ int numberOfTimes = 0;
         if (finished) {
             imageView.frame = self.bounds;
             numberOfTimes += 1;
-            if (numberOfTimes < 10) {
+            if (numberOfTimes < 3) {
                 [self animateImageView:imageView];
             } else {
                 numberOfTimes = 0;

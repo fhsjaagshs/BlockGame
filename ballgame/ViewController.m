@@ -176,20 +176,7 @@
 }
 
 - (BOOL)shouldShowBonusHole {
-    if (self.currentNumber == 0) {
-        self.currentNumber = [[NSUserDefaults standardUserDefaults]floatForKey:@"bonusholecurrentnumber"];
-    }
-    
-    float numb = self.currentNumber;
-    
-    float additionFactorialThingy = 0;
-    
-    while (numb > 0) {
-        additionFactorialThingy += numb;
-        numb -= 1;
-    }
-    
-    return fmod(self.score.text.intValue, additionFactorialThingy);
+    return (fmod(self.score.text.intValue+17, 20) == 0);
 }
 
 - (void)createMotionManager {
@@ -238,11 +225,10 @@
         }
     }
     
-    if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame)) {
+    if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame) && !self.bonusHole.hidden) {
         self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
         [self flashScoreLabelToGreen];
-        [self.bonusHole removeFromSuperview];
-        self.bonusHole = nil;
+        [self.bonusHole setHidden:YES];
     }
 }
 
@@ -259,7 +245,7 @@
 }
 
 - (void)destroyBlackHolemans {
-    for (BlackHole *blackHoleman in [self.blackholes copy]) {
+    for (BlackHole *blackHoleman in self.blackholes) {
         [blackHoleman removeFromSuperview];
     }
     [self.blackholes removeAllObjects];
@@ -478,10 +464,7 @@
     
     if (self.difficulty.selectedSegmentIndex == 0)  {
         [self.difficultyLabel setText:@"Easy"];
-        for (BlackHole *blackHoleman in [self.blackholes copy]) {
-            [blackHoleman removeFromSuperview];
-        }
-        [self.blackholes removeAllObjects];
+        [self destroyBlackHolemans];
     } else if (self.difficulty.selectedSegmentIndex == 1) {
         [self.difficultyLabel setText:@"Medium"];
     } else if (self.difficulty.selectedSegmentIndex == 2) {
@@ -596,8 +579,7 @@
     [self.score setHidden:NO];
     
     [self destroyBlackHolemans];
-    [self.bonusHole removeFromSuperview];
-    self.bonusHole = nil;
+    [self.bonusHole setHidden:YES];
     
     // reset titles
     if ([self.startButton.titleLabel.text isEqualToString:@"Start"]) {
@@ -642,19 +624,10 @@
     
     if (!self.bonusHole) {
         self.bonusHole = [[BonusHole alloc]init];
-    }
-    
-    if ([self shouldShowBonusHole]) {
-        if (self.bonusHole.superview) {
-            [self.bonusHole removeFromSuperview];
-        }
-        self.bonusHole = nil;
-        return;
-    }
-    
-    if (!self.bonusHole.superview) {
         [self.view addSubview:self.bonusHole];
     }
+    
+    self.bonusHole.hidden = ![self shouldShowBonusHole];
     
     [UIView animateWithDuration:0.1 animations:^{
         [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
@@ -662,8 +635,7 @@
 }
 
 - (void)addOneToScore {
-    int newScore = self.score.text.intValue+1;
-    NSString *newScoreString = [NSString stringWithFormat:@"%d",newScore];
+    NSString *newScoreString = [NSString stringWithFormat:@"%d",self.score.text.intValue+1];
     [self.score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
 
@@ -673,15 +645,12 @@
     [self redrawBonusHole];
     
     if (self.difficulty.selectedSegmentIndex > 0) {
-        if (newScore > 2) {
-            
+        if (self.blackholes.count > 0) {
             if (!self.timer.isValid) {
                 [self createTimer];
                 [self.timer fire];
             }
-        
         } else {
-            
             if (self.timer.isValid) {
                 [self.timer invalidate];
             }
