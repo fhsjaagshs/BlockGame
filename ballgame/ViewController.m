@@ -528,6 +528,7 @@
     [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
     [self.timer invalidate];
     self.timer = nil;
+    [self startMovingBlackHolmans];
 }
 
 - (void)createTimer {
