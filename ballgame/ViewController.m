@@ -220,6 +220,7 @@
     
     for (BlackHole *blackHoleman in self.blackholes) {
         if (CGRectIntersectsRect(self.ball.frame, blackHoleman.frame) && !self.isAnimatingBlackHoles) {
+            [self stopMovingBlackHolemans];
             [self gameOver];
             break;
         }
@@ -490,7 +491,7 @@
     
     int64_t gameOverScore = [self.score.text intValue];
 
-    [self stopMovingBlackHolemans];
+   // [self stopMovingBlackHolemans];
     
     NSString *title = [NSString stringWithFormat:@"You scored %lli!",gameOverScore];
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
