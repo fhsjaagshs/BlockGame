@@ -21,7 +21,7 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    if (self.viewController.motionManagerIsRunning) {
+    if (self.viewController.motionManager.isAccelerometerActive) {
         [self.viewController togglePause];
     }
     
