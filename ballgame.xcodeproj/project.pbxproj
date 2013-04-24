@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		9B456C5D151FC66B003E86E4 /* networkTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B456C5C151FC66B003E86E4 /* networkTest.m */; };
 		9B4F7C2C1527B6FF00DD2C44 /* BlackHole.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B4F7C2B1527B6FF00DD2C44 /* BlackHole.m */; };
-		9BC024AC15291897000CC968 /* BonusHole.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BC024AB15291897000CC968 /* BonusHole.m */; };
+		9BC024AC15291897000CC968 /* BonusHole.m in Sources */ = {isa = PBXBuildFile; fileRef = 9BC024AB15291897000CC968 /* BonusHole.m */; settings = {COMPILER_FLAGS = "-funroll-loops"; }; };
 		F1225DC01468919B005D6793 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1225DBF1468919B005D6793 /* UIKit.framework */; };
 		F1225DC21468919B005D6793 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1225DC11468919B005D6793 /* Foundation.framework */; };
 		F1225DC41468919B005D6793 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1225DC31468919B005D6793 /* CoreGraphics.framework */; };

@@ -21,7 +21,7 @@
 }
 
 + (void)authenticateLocalUserWithCompletionHandler:(void(^)(NSError *error))block {
-	if([GKLocalPlayer localPlayer].authenticated == NO) {
+	if (![GKLocalPlayer localPlayer].authenticated) {
 		[[GKLocalPlayer localPlayer]authenticateWithCompletionHandler:^(NSError *error) {
 			block(error);
 		}];
@@ -54,7 +54,7 @@
 			if (!error) {
 				NSMutableDictionary *temp = [NSMutableDictionary dictionaryWithCapacity:scores.count];
 				for (GKAchievement *score in scores) {
-                    [temp setObject: score forKey: score.identifier];
+                    [temp setObject:score forKey:score.identifier];
 				}
                 [GCManager setEarnedArcheivementCache:temp];
                 [self submitAchievement:identifier percentComplete:percentComplete andCompletionHandler:block];
@@ -65,8 +65,8 @@
 	} else {
 		GKAchievement *achievement = [tempCache objectForKey:identifier];
         
-		if (achievement != nil) {
-			if((achievement.percentComplete >= 100.0) || (achievement.percentComplete >= percentComplete)) {
+		if (achievement) {
+			if ((achievement.percentComplete >= 100.0) || (achievement.percentComplete >= percentComplete)) {
 				achievement = nil;
 			}
 			achievement.percentComplete = percentComplete;
@@ -74,7 +74,6 @@
 			achievement = [[GKAchievement alloc]initWithIdentifier:identifier];
 			achievement.percentComplete = percentComplete;
             
-           
 			[tempCache setObject:achievement forKey:achievement.identifier];
             [GCManager setEarnedArcheivementCache:tempCache];
 		}
@@ -93,7 +92,6 @@
 }
 
 + (void)mapPlayerIDtoPlayer:(NSString *)playerID withCompletionBlock:(void(^)(GKPlayer *player, NSError *error))block {
-    
 	[GKPlayer loadPlayersForIdentifiers:[NSArray arrayWithObjects:playerID, nil] withCompletionHandler:^(NSArray *playerArray, NSError *error) {
 		GKPlayer *player = nil;
 		for (GKPlayer *tempPlayer in playerArray) {

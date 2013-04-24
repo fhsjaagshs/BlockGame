@@ -15,10 +15,11 @@
 
 @end
 
+CGRect screenBounds;
+
 @implementation BlackHole
 
 - (void)muckWithFrame:(CGRect)ballframe {
-    CGRect screenBounds = [UIScreen mainScreen].bounds;
     int adjustedWidth = (int)floor(screenBounds.size.width-60);
     int adjustedHeight = (int)floor(screenBounds.size.height-60);
     int x = (arc4random()%adjustedWidth)+30;
@@ -33,24 +34,14 @@
     }
 }
 
-- (CGPoint)generateCenter {
-    return CGPointMake(self.center.x+(self.directionVector.width/45), self.center.y+self.directionVector.height/45);
-}
-
 - (void)move {
-    CGPoint perspectiveCenter = [self generateCenter];
+    CGPoint perspectiveCenter = CGPointMake(self.center.x+(self.directionVector.width/45), self.center.y+self.directionVector.height/45);
     
-    if (!CGRectContainsPoint([UIScreen mainScreen].bounds, perspectiveCenter)) {
-        CGRect testRect = [UIScreen mainScreen].bounds;
-        testRect.size.height += 1/12.5;
-        testRect.size.width += 1/12.5;
-        testRect.origin.x -= 1/25;
-        testRect.origin.y -= 1/25;
-        
-        BOOL xTooHigh = (perspectiveCenter.x > [UIScreen mainScreen].bounds.size.width || perspectiveCenter.x <= 0) && !CGRectContainsPoint(testRect, perspectiveCenter);
-        BOOL yTooHigh = (perspectiveCenter.y > [UIScreen mainScreen].bounds.size.height || perspectiveCenter.y <= 0) && !CGRectContainsPoint(testRect, perspectiveCenter);
+    if (!CGRectContainsPoint(screenBounds, perspectiveCenter)) {
+        BOOL xTooHigh = (perspectiveCenter.x > screenBounds.size.width || perspectiveCenter.x <= 0);
+        BOOL yTooHigh = (perspectiveCenter.y > screenBounds.size.height || perspectiveCenter.y <= 0);
         self.directionVector = CGSizeMake(xTooHigh?-1*self.directionVector.width:self.directionVector.width, yTooHigh?-1*self.directionVector.height:self.directionVector.height);
-        perspectiveCenter = [self generateCenter];
+        perspectiveCenter = CGPointMake(self.center.x+(self.directionVector.width/45), self.center.y+self.directionVector.height/45);;
     }
     
     self.center = perspectiveCenter;
@@ -78,6 +69,7 @@
 - (id)init {
     self = [super init];
     if (self) {
+        screenBounds = [UIScreen mainScreen].bounds;
         self.backgroundColor = [UIColor clearColor];
     }
     return self;
@@ -86,6 +78,7 @@
 - (id)initWithBallframe:(CGRect)ballframe {
     self = [super initWithFrame:self.frame];
     if (self) {
+        screenBounds = [UIScreen mainScreen].bounds;
         self.backgroundColor = [UIColor clearColor];
         [self muckWithFrame:ballframe];
     }

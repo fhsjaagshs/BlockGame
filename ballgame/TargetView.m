@@ -8,7 +8,7 @@
 
 #import "TargetView.h"
 
-@interface TargetView ()
+@interface TargetView()
 
 @property (nonatomic, assign) BOOL isHorizontal;
 @property (nonatomic, assign) BOOL isClassicMode;

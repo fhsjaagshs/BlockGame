@@ -218,12 +218,6 @@
         [self addOneToScore];
     }
     
-    //
-    // This is an issue
-    //
-    
-    
-    
     if (!self.isAnimatingBlackHoles) {
         CGRect frame = self.ball.frame;
         
