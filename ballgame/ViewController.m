@@ -452,7 +452,7 @@
     [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
     
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
-     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"savedScore"];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"savedScore"];
     
     int64_t gameOverScore = self.score.text.intValue;
     

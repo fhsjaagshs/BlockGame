@@ -25,8 +25,10 @@
         [self.viewController togglePause];
     }
     
-    if (![self.viewController.score.text isEqualToString:@"0"]) {
-        [[NSUserDefaults standardUserDefaults]setObject:self.viewController.score.text forKey:@"savedScore"];
+    if (![[NSUserDefaults standardUserDefaults]objectForKey:@"gameOver"]) {
+        if (![self.viewController.score.text isEqualToString:@"0"]) {
+            [[NSUserDefaults standardUserDefaults]setObject:self.viewController.score.text forKey:@"savedScore"];
+        }
     }
 }
 
