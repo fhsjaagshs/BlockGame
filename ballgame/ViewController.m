@@ -10,7 +10,7 @@
 
 @implementation ViewController
 
-@synthesize ball, target, difficulty, theme, score, gameOverLabel, theMainView, themeLabel, startButton, pauseButton, difficultyLabel, leaderboardButton, bonusHole, timer, highscore, blackholes, isAnimatingBlackHoles, motionManager, currentNumber;
+@synthesize ball, target, difficulty, theme, score, gameOverLabel, theMainView, themeLabel, startButton, pauseButton, difficultyLabel, leaderboardButton, bonusHole, timer, highscore, blackholes, motionManager;
 
 - (void)loadView {
     [super loadView];
@@ -129,8 +129,6 @@
     self.ball.hidden = YES;
     [self.view addSubview:self.ball];
     
-    self.isAnimatingBlackHoles = NO;
-    
     [self createMotionManager];
     [self loginUser];
     
@@ -138,16 +136,17 @@
         [self submitOfflineScore];
     }
     
-    NSString *savedScore = [[NSUserDefaults standardUserDefaults]objectForKey:@"savedScore"];
-    [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"savedScore"];
-    
     if (![[NSUserDefaults standardUserDefaults]boolForKey:@"gameOver"]) {
+        NSString *savedScore = [[NSUserDefaults standardUserDefaults]objectForKey:@"savedScore"];
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"savedScore"];
         if (savedScore.length > 0) {
             [self.score setText:savedScore];
             [self.score setHidden:NO];
             [self.difficulty setHidden:YES];
             [self.difficultyLabel setHidden:NO];
             [self.startButton setTitle:@"Resume" forState:UIControlStateNormal];
+        } else {
+            [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
         }
     }
     
@@ -166,22 +165,11 @@
     
     [self difficultyChanged];
     [self themeChanged];
-    
-    self.currentNumber = 5;
-}
-
-- (void)updateNumber {
-    self.currentNumber += 2;
-    [[NSUserDefaults standardUserDefaults]setFloat:self.currentNumber forKey:@"bonusholecurrentnumber"];
-}
-
-- (BOOL)shouldShowBonusHole {
-    return (fmod(self.score.text.intValue+17, 20) == 0);
 }
 
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
-    self.motionManager.accelerometerUpdateInterval = 1/180;
+    self.motionManager.accelerometerUpdateInterval = 1/60; // used to be 1/180
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
@@ -218,50 +206,58 @@
         [self addOneToScore];
     }
     
-    if (!self.isAnimatingBlackHoles) {
-        CGRect frame = self.ball.frame;
-        
-        UIView *origin = [self.view hitTest:frame.origin withEvent:nil];
-        UIView *maxX = [self.view hitTest:CGPointMake(frame.origin.x+frame.size.width, frame.origin.y) withEvent:nil];
-        UIView *maxY = [self.view hitTest:CGPointMake(frame.origin.x, frame.origin.y+frame.size.height) withEvent:nil];
-        UIView *maxXY = [self.view hitTest:CGPointMake(frame.origin.x+frame.size.width, frame.origin.y+frame.size.height) withEvent:nil];
-        
-        Class bhC = [BlackHole class];
-        Class bonusHC = [BonusHole class];
-        
-        if ([origin isKindOfClass:bhC]) {
-            [self gameOver];
-        } else if ([maxX isKindOfClass:bhC]) {
-            [self gameOver];
-        } else if ([maxY isKindOfClass:bhC]) {
-            [self gameOver];
-        } else if ([maxXY isKindOfClass:bhC]) {
-            [self gameOver];
+    CGRect frame = self.ball.frame;
+    
+    /* UIView *origin = [self.view hitTest:frame.origin withEvent:nil];
+     UIView *maxX = [self.view hitTest:CGPointMake(frame.origin.x+frame.size.width, frame.origin.y) withEvent:nil];
+     UIView *maxY = [self.view hitTest:CGPointMake(frame.origin.x, frame.origin.y+frame.size.height) withEvent:nil];
+     UIView *maxXY = [self.view hitTest:CGPointMake(frame.origin.x+frame.size.width, frame.origin.y+frame.size.height) withEvent:nil];
+     
+     Class bhC = [BlackHole class];
+     Class bonusHC = [BonusHole class];
+     
+     if ([origin isKindOfClass:bhC]) {
+        [self gameOver];
+     } else if ([maxX isKindOfClass:bhC]) {
+        [self gameOver];
+     } else if ([maxY isKindOfClass:bhC]) {
+        [self gameOver];
+     } else if ([maxXY isKindOfClass:bhC]) {
+        [self gameOver];
+     }
+     
+     if ([origin isKindOfClass:bonusHC]) {
+        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
+        [self flashScoreLabelToGreen];
+        [self.bonusHole setHidden:YES];
+     } else if ([maxX isKindOfClass:bonusHC]) {
+        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
+        [self flashScoreLabelToGreen];
+        [self.bonusHole setHidden:YES];
+     } else if ([maxY isKindOfClass:bonusHC]) {
+        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
+        [self flashScoreLabelToGreen];
+        [self.bonusHole setHidden:YES];
+     } else if ([maxXY isKindOfClass:bonusHC]) {
+        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
+        [self flashScoreLabelToGreen];
+        [self.bonusHole setHidden:YES];
+     }*/
+    
+    SEL sel = @selector(gameOver);
+    IMP gameOver = [self methodForSelector:sel];
+    
+    for (BlackHole *blackHoleman in self.blackholes) {
+        if (CGRectIntersectsRect(blackHoleman.frame, frame)) {
+            gameOver(self, sel);
+            break;
         }
-        
-        if ([origin isKindOfClass:bonusHC]) {
-            self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-            [self flashScoreLabelToGreen];
-            [self.bonusHole setHidden:YES];
-        } else if ([maxX isKindOfClass:bonusHC]) {
-            self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-            [self flashScoreLabelToGreen];
-            [self.bonusHole setHidden:YES];
-        } else if ([maxY isKindOfClass:bonusHC]) {
-            self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-            [self flashScoreLabelToGreen];
-            [self.bonusHole setHidden:YES];
-        } else if ([maxXY isKindOfClass:bonusHC]) {
-            self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-            [self flashScoreLabelToGreen];
-            [self.bonusHole setHidden:YES];
-        }
-    } else {
-        if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame) && !self.bonusHole.hidden) {
-            self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-            [self flashScoreLabelToGreen];
-            [self.bonusHole setHidden:YES];
-        }
+    }
+    
+    if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame) && !self.bonusHole.hidden) {
+        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
+        [self flashScoreLabelToGreen];
+        [self.bonusHole setHidden:YES];
     }
 }
 
@@ -278,27 +274,10 @@
     [self.blackholes removeAllObjects];
 }
 
-- (void)redraw {
-    [self updateBlackHolesArray];
-    self.isAnimatingBlackHoles = YES;
-    for (BlackHole *blackHoleman in self.blackholes) {
-        [UIView animateWithDuration:0.1 animations:^{
-            [blackHoleman redrawRectWithBallFrame:self.ball.frame];
-        } completion:^(BOOL finished) {
-            if (finished) {
-                [blackHoleman startMoving];
-                
-                if ([self.blackholes indexOfObject:blackHoleman] == self.blackholes.count-1) {
-                    self.isAnimatingBlackHoles = NO;
-                }
-            }
-        }];
-    }
-}
-
-- (int)getNumberHolesToCreate {
+- (void)updateBlackHolesArray {
+    
     if (self.blackholes.count == 0) {
-        self.blackholes = [NSMutableArray arrayWithCapacity:7];
+        self.blackholes = [NSMutableArray arrayWithCapacity:5];
     }
     
     int max = (self.difficulty.selectedSegmentIndex > 0)?2+(self.difficulty.selectedSegmentIndex):0;
@@ -309,11 +288,7 @@
         blackHolesC = max;
     }
     
-    return blackHolesC-self.blackholes.count;
-}
-
-- (void)updateBlackHolesArrayWithRedrawing {
-    int remainder = [self getNumberHolesToCreate];
+    int remainder = blackHolesC-self.blackholes.count;
     
     for (int i = 0; i < remainder; i++) {
         BlackHole *blackHoleman = [[BlackHole alloc]init];
@@ -321,16 +296,6 @@
         [self.blackholes addObject:blackHoleman];
         [blackHoleman redrawRectWithBallFrame:self.ball.frame];
         [blackHoleman startMoving];
-    }
-}
-
-- (void)updateBlackHolesArray {
-    int remainder = [self getNumberHolesToCreate];
-    
-    for (int i = 0; i < remainder; i++) {
-        BlackHole *blackHoleman = [[BlackHole alloc]init];
-        [self.view addSubview:blackHoleman];
-        [self.blackholes addObject:blackHoleman];
     }
 }
 
@@ -475,16 +440,13 @@
 - (void)leaderboardViewControllerDidFinish:(GKLeaderboardViewController *)viewController {
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
 	[self dismissModalViewControllerAnimated:YES];
-    [self startMotionManager];
 }
 
 - (void)difficultyChanged {
 
     [self reloadHighscoresWithBlock:nil];
 
-    NSString *savedPref = [NSString stringWithFormat:@"%d",self.difficulty.selectedSegmentIndex];
-    
-    [[NSUserDefaults standardUserDefaults]setObject:savedPref forKey:@"difficultyIndex"];
+    [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%d",self.difficulty.selectedSegmentIndex] forKey:@"difficultyIndex"];
     
     if (self.difficulty.selectedSegmentIndex == 0)  {
         [self.difficultyLabel setText:@"Easy"];
@@ -513,8 +475,25 @@
 }
 
 - (void)gameOverWithoutBlackholeStoppage {
+    
+    [self stopMotionManager];
+    
+    if (self.timer.isValid) {
+        [self.timer invalidate];
+    }
+    
+    self.timer = nil;
+    
+    [self.themeLabel setHidden:NO];
+    [self.difficulty setHidden:NO];
+    [self.theme setHidden:NO];
+    [self.startButton setHidden:NO];
+    [self.gameOverLabel setHidden:NO];
+    [self.leaderboardButton setHidden:NO];
+    [self.pauseButton setHidden:YES];
+    [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
+    
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
-    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"bonusholecurrentnumber"];
     
     int64_t gameOverScore = self.score.text.intValue;
     
@@ -541,18 +520,6 @@
     }
     
     [alert show];
-    
-    [self.themeLabel setHidden:NO];
-    [self.difficulty setHidden:NO];
-    [self.theme setHidden:NO];
-    [self stopMotionManager];
-    [self.startButton setHidden:NO];
-    [self.gameOverLabel setHidden:NO];
-    [self.leaderboardButton setHidden:NO];
-    [self.pauseButton setHidden:YES];
-    [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
-    [self.timer invalidate];
-    self.timer = nil;
 }
 
 - (void)createTimer {
@@ -581,8 +548,7 @@
 
         self.timer = nil;
     } else {
-        [self startMotionManager];
-        [self startMovingBlackHolmans];
+        
         [self.pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
         [self.themeLabel setHidden:YES];
         [self.theme setHidden:YES];
@@ -592,6 +558,7 @@
             [self.timer fire];
         }
         
+        [self startMotionManager];
         [self updateBlackHolesArray];
         
         if (self.bonusHole.superview) {
@@ -605,32 +572,23 @@
 
     [self reloadHighscoresWithBlock:nil];
     
-    [self.difficultyLabel setHidden:NO];
-    [self.ball setHidden:NO];
-    [self.score setHidden:NO];
-    
     [self destroyBlackHolemans];
     [self.bonusHole setHidden:YES];
     
-    // reset titles
-    if ([self.startButton.titleLabel.text isEqualToString:@"Start"]) {
-        self.startButton.titleLabel.text = @"Retry";
-    }
+    [self startMotionManager];
     
-    // hide controls
+    [self.difficultyLabel setHidden:NO];
+    [self.ball setHidden:NO];
+    [self.score setHidden:NO];
+
     [self.difficulty setHidden:YES];
     [self.theme setHidden:YES];
     [self.themeLabel setHidden:YES];
     [self.leaderboardButton setHidden:YES];
-
-    [self startMotionManager];
-
-    if (!self.gameOverLabel.isHidden) {
-        [self.score setText:@"0"];
-        [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"savedScore"];
-        [self.ball setCenter:self.view.center];
-        [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
-    }
+    
+    [self.score setText:@"0"];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"savedScore"];
+    [self.ball setCenter:self.view.center];
     
     if (self.timer.isValid) {
         [self.timer invalidate];
@@ -655,21 +613,21 @@
         [self.view addSubview:self.bonusHole];
     }
     
-    self.bonusHole.hidden = ![self shouldShowBonusHole];
+    self.bonusHole.hidden = (fmod(self.score.text.intValue+17, 20) > 0);
     
-    [UIView animateWithDuration:0.1 animations:^{
-        [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
-    }];
+    if (!self.bonusHole.hidden) {
+        [UIView animateWithDuration:0.1 animations:^{
+            [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
+        }];
+    }
 }
 
 - (void)addOneToScore {
     NSString *newScoreString = [NSString stringWithFormat:@"%d",self.score.text.intValue+1];
     [self.score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
-
-    [self updateNumber];
     
-    [self updateBlackHolesArrayWithRedrawing];
+    [self updateBlackHolesArray];
     [self redrawBonusHole];
     
     if (self.difficulty.selectedSegmentIndex > 0) {

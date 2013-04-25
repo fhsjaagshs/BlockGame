@@ -8,14 +8,9 @@
 
 #import "BlackHole.h"
 
-@interface BlackHole ()
-
-@property (assign, nonatomic) CGSize directionVector;
-@property (assign, nonatomic) BOOL isMoving;
-
-@end
-
 CGRect screenBounds;
+CGSize directionVector;
+BOOL isMoving;
 
 @implementation BlackHole
 
@@ -35,35 +30,36 @@ CGRect screenBounds;
 }
 
 - (void)move {
-    CGPoint perspectiveCenter = CGPointMake(self.center.x+(self.directionVector.width/45), self.center.y+self.directionVector.height/45);
+    CGPoint center = self.center;
+    CGPoint perspectiveCenter = CGPointMake(center.x+(directionVector.width/35), center.y+directionVector.height/35);
     
     if (!CGRectContainsPoint(screenBounds, perspectiveCenter)) {
         BOOL xTooHigh = (perspectiveCenter.x > screenBounds.size.width || perspectiveCenter.x <= 0);
         BOOL yTooHigh = (perspectiveCenter.y > screenBounds.size.height || perspectiveCenter.y <= 0);
-        self.directionVector = CGSizeMake(xTooHigh?-1*self.directionVector.width:self.directionVector.width, yTooHigh?-1*self.directionVector.height:self.directionVector.height);
-        perspectiveCenter = CGPointMake(self.center.x+(self.directionVector.width/45), self.center.y+self.directionVector.height/45);;
+        directionVector = CGSizeMake(xTooHigh?-1*directionVector.width:directionVector.width, yTooHigh?-1*directionVector.height:directionVector.height);
+        perspectiveCenter = CGPointMake(center.x+(directionVector.width/35), center.y+(directionVector.height/35));
     }
     
     self.center = perspectiveCenter;
     
-    if (self.isMoving) {
-        [self performSelector:@selector(move) withObject:nil afterDelay:1/180];
+    if (isMoving) {
+        [self performSelector:@selector(move) withObject:nil afterDelay:1/60];
     }
 }
 
 - (void)startMoving {
     
-    if (self.isMoving) {
+    if (isMoving) {
         return;
     }
     
-    self.directionVector = CGSizeMake(1, 1);
-    self.isMoving = YES;
+    directionVector = CGSizeMake(1, 1);
+    isMoving = YES;
     [self move];
 }
 
 - (void)stopMoving {
-    self.isMoving = NO;
+    isMoving = NO;
 }
 
 - (id)init {

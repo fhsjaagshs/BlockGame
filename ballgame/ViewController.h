@@ -31,8 +31,6 @@
 @property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) NSString *highscore;
 @property (strong, nonatomic) NSMutableArray *blackholes;
-@property (assign, nonatomic) BOOL isAnimatingBlackHoles;
-@property (assign, nonatomic) float currentNumber;
 
 @property (strong, nonatomic) CMMotionManager *motionManager;
 
