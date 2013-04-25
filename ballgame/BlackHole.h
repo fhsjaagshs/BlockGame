@@ -16,4 +16,7 @@
 - (void)startMoving;
 - (void)stopMoving;
 
+@property (nonatomic) BOOL isMoving;
+@property (nonatomic) CGSize directionVector;
+
 @end

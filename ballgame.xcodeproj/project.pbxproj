@@ -15,7 +15,7 @@
 		F1225DC41468919B005D6793 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1225DC31468919B005D6793 /* CoreGraphics.framework */; };
 		F1225DCC1468919B005D6793 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DCB1468919B005D6793 /* main.m */; };
 		F1225DD01468919B005D6793 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DCF1468919B005D6793 /* AppDelegate.m */; };
-		F1225DD31468919B005D6793 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DD21468919B005D6793 /* ViewController.m */; settings = {COMPILER_FLAGS = "-funroll-loops"; }; };
+		F1225DD31468919B005D6793 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DD21468919B005D6793 /* ViewController.m */; };
 		F126568A171B3E5500B0ED95 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F126567D171B3E5500B0ED95 /* background.png */; };
 		F126568B171B3E5500B0ED95 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F126567E171B3E5500B0ED95 /* background@2x.png */; };
 		F126568C171B3E5500B0ED95 /* background~586@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F126567F171B3E5500B0ED95 /* background~586@2x.png */; };

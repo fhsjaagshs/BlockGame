@@ -9,13 +9,11 @@
 #import "BlackHole.h"
 
 CGRect screenBounds;
-CGSize directionVector;
-BOOL isMoving;
 
 @implementation BlackHole
 
 - (void)redrawRectWithBallFrameNSValue:(NSValue *)value {
-    [self redrawRectWithBallFrame:value.CGRectValue];
+    [self muckWithFrame:value.CGRectValue];
 }
 
 - (void)muckWithFrame:(CGRect)ballframe {
@@ -35,35 +33,36 @@ BOOL isMoving;
 
 - (void)move {
     CGPoint center = self.center;
-    CGPoint perspectiveCenter = CGPointMake(center.x+(directionVector.width/35), center.y+directionVector.height/35);
+    CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+_directionVector.height/35);
     
     if (!CGRectContainsPoint(screenBounds, perspectiveCenter)) {
         BOOL xTooHigh = (perspectiveCenter.x > screenBounds.size.width || perspectiveCenter.x <= 0);
         BOOL yTooHigh = (perspectiveCenter.y > screenBounds.size.height || perspectiveCenter.y <= 0);
-        directionVector = CGSizeMake(xTooHigh?-1*directionVector.width:directionVector.width, yTooHigh?-1*directionVector.height:directionVector.height);
-        perspectiveCenter = CGPointMake(center.x+(directionVector.width/35), center.y+(directionVector.height/35));
+        _directionVector = CGSizeMake(xTooHigh?-1*_directionVector.width:_directionVector.width, yTooHigh?-1*_directionVector.height:_directionVector.height);
+        perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
     }
     
     self.center = perspectiveCenter;
     
-    if (isMoving) {
+    if (_isMoving) {
         [self performSelector:@selector(move) withObject:nil afterDelay:1/60];
     }
 }
 
 - (void)startMoving {
     
-    if (isMoving) {
+    if (_isMoving) {
         return;
     }
     
-    directionVector = CGSizeMake(1, 1);
-    isMoving = YES;
+    _directionVector = CGSizeMake(1, 1);
+    _isMoving = YES;
     [self move];
 }
 
 - (void)stopMoving {
-    isMoving = NO;
+    _isMoving = NO;
+    _directionVector = CGSizeMake(1, 1);
 }
 
 - (id)init {
@@ -87,7 +86,6 @@ BOOL isMoving;
 
 - (void)redrawRectWithBallFrame:(CGRect)ballFrame {
     [self muckWithFrame:ballFrame];
-    [self setNeedsDisplay];
 }
 
 - (void)layoutSubviews {

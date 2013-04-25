@@ -174,24 +174,21 @@
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
     
-    if (!self.motionManager.isAccelerometerActive) {
-        return;
-    }
-    
     float speed = 1;
+    int index = self.difficulty.selectedSegmentIndex;
     
-    if (self.difficulty.selectedSegmentIndex == 0) {
+    if (index == 0) {
         speed = 0.5;
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
+    } else if (index == 1) {
         speed = 1;
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
+    } else if (index == 2) {
         speed = 1.5;
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
+    } else if (index == 3) {
         speed = 2;
     }
     
-    int rateX = (10*speed)*acceleration.x;
-    int rateY = -1*(10*speed)*acceleration.y;
+    float rateX = (10*speed)*acceleration.x;
+    float rateY = -1*(10*speed)*acceleration.y;
     
     CGPoint newCenterPoint = CGPointMake(self.ball.center.x+rateX, self.ball.center.y+rateY);
     
@@ -208,12 +205,9 @@
     
     CGRect frame = self.ball.frame;
     
-    SEL sel = @selector(gameOver);
-    IMP gameOver = [self methodForSelector:sel];
-    
     for (BlackHole *blackHoleman in self.blackholes) {
         if (CGRectIntersectsRect(blackHoleman.frame, frame)) {
-            gameOver(self, sel);
+            [self gameOver];
             break;
         }
     }
@@ -254,7 +248,7 @@
     
     int remainder = blackHolesC-self.blackholes.count;
     
-    for (int i = 0; i < remainder; i++) {
+    for (int i = 0; i < remainder; ++i) {
         BlackHole *blackHoleman = [[BlackHole alloc]init];
         [self.view addSubview:blackHoleman];
         [self.blackholes addObject:blackHoleman];
@@ -458,6 +452,7 @@
     [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
     
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:@"gameOver"];
+     [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"savedScore"];
     
     int64_t gameOverScore = self.score.text.intValue;
     
@@ -488,9 +483,9 @@
 
 - (void)createTimer {
     if (self.difficulty.selectedSegmentIndex == 1) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.5f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:4.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
     } else if (self.difficulty.selectedSegmentIndex == 2) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.75f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
+        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
     } else if (self.difficulty.selectedSegmentIndex == 3) {
         self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
     } else {
@@ -597,6 +592,7 @@
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
     
     [self updateBlackHolesArray];
+    [self startMovingBlackHolmans];
     [self redrawBonusHole];
     
     if (self.difficulty.selectedSegmentIndex > 0) {
