@@ -8,9 +8,17 @@
 
 #import "ViewController.h"
 
-@implementation ViewController
+/*@interface ViewController()
 
-@synthesize ball, target, difficulty, theme, score, gameOverLabel, theMainView, themeLabel, startButton, pauseButton, difficultyLabel, leaderboardButton, bonusHole, timer, highscore, blackholes, motionManager;
+@property (nonatomic, strong) BlackHole *blackHoleOne;
+@property (nonatomic, strong) BlackHole *blackHoleTwo;
+@property (nonatomic, strong) BlackHole *blackHoleThree;
+@property (nonatomic, strong) BlackHole *blackHoleFour;
+@property (nonatomic, strong) BlackHole *blackHoleFive;
+
+@end*/
+
+@implementation ViewController
 
 - (void)loadView {
     [super loadView];
@@ -175,7 +183,7 @@
 - (void)handleAcceleration:(CMAcceleration)acceleration {
     
     float speed = 1;
-    int index = self.difficulty.selectedSegmentIndex;
+    int index = _difficulty.selectedSegmentIndex;
     
     if (index == 0) {
         speed = 0.5;
@@ -190,10 +198,10 @@
     float rateX = (10*speed)*acceleration.x;
     float rateY = -1*(10*speed)*acceleration.y;
     
-    CGPoint newCenterPoint = CGPointMake(self.ball.center.x+rateX, self.ball.center.y+rateY);
+    CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
     
     if (CGRectContainsPoint([UIScreen mainScreen].bounds, newCenterPoint)) {
-        self.ball.center = newCenterPoint;
+        _ball.center = newCenterPoint;
     } else {
         [self gameOverWithoutBlackholeStoppage];
     }
