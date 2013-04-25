@@ -208,42 +208,6 @@
     
     CGRect frame = self.ball.frame;
     
-    /* UIView *origin = [self.view hitTest:frame.origin withEvent:nil];
-     UIView *maxX = [self.view hitTest:CGPointMake(frame.origin.x+frame.size.width, frame.origin.y) withEvent:nil];
-     UIView *maxY = [self.view hitTest:CGPointMake(frame.origin.x, frame.origin.y+frame.size.height) withEvent:nil];
-     UIView *maxXY = [self.view hitTest:CGPointMake(frame.origin.x+frame.size.width, frame.origin.y+frame.size.height) withEvent:nil];
-     
-     Class bhC = [BlackHole class];
-     Class bonusHC = [BonusHole class];
-     
-     if ([origin isKindOfClass:bhC]) {
-        [self gameOver];
-     } else if ([maxX isKindOfClass:bhC]) {
-        [self gameOver];
-     } else if ([maxY isKindOfClass:bhC]) {
-        [self gameOver];
-     } else if ([maxXY isKindOfClass:bhC]) {
-        [self gameOver];
-     }
-     
-     if ([origin isKindOfClass:bonusHC]) {
-        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-        [self flashScoreLabelToGreen];
-        [self.bonusHole setHidden:YES];
-     } else if ([maxX isKindOfClass:bonusHC]) {
-        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-        [self flashScoreLabelToGreen];
-        [self.bonusHole setHidden:YES];
-     } else if ([maxY isKindOfClass:bonusHC]) {
-        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-        [self flashScoreLabelToGreen];
-        [self.bonusHole setHidden:YES];
-     } else if ([maxXY isKindOfClass:bonusHC]) {
-        self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
-        [self flashScoreLabelToGreen];
-        [self.bonusHole setHidden:YES];
-     }*/
-    
     SEL sel = @selector(gameOver);
     IMP gameOver = [self methodForSelector:sel];
     
@@ -620,6 +584,11 @@
             [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
         }];
     }
+}
+
+- (void)redraw {
+    [self updateBlackHolesArray];
+    [self.blackholes makeObjectsPerformSelector:@selector(redrawRectWithBallFrameNSValue:) withObject:[NSValue valueWithCGRect:self.ball.frame]];
 }
 
 - (void)addOneToScore {

@@ -14,6 +14,10 @@ BOOL isMoving;
 
 @implementation BlackHole
 
+- (void)redrawRectWithBallFrameNSValue:(NSValue *)value {
+    [self redrawRectWithBallFrame:value.CGRectValue];
+}
+
 - (void)muckWithFrame:(CGRect)ballframe {
     int adjustedWidth = (int)floor(screenBounds.size.width-60);
     int adjustedHeight = (int)floor(screenBounds.size.height-60);
