@@ -693,7 +693,6 @@
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
     
     [self updateBlackHoles];
-    [self startMovingBlackHoles];
     [self redrawBonusHole];
     
     if (self.difficulty.selectedSegmentIndex > 0) {
