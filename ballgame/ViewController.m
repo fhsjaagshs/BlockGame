@@ -8,16 +8,6 @@
 
 #import "ViewController.h"
 
-/*@interface ViewController()
-
-@property (nonatomic, strong) BlackHole *blackHoleOne;
-@property (nonatomic, strong) BlackHole *blackHoleTwo;
-@property (nonatomic, strong) BlackHole *blackHoleThree;
-@property (nonatomic, strong) BlackHole *blackHoleFour;
-@property (nonatomic, strong) BlackHole *blackHoleFive;
-
-@end*/
-
 @implementation ViewController
 
 - (void)loadView {
@@ -140,9 +130,7 @@
     [self createMotionManager];
     [self loginUser];
     
-    if ([networkTest isConnectedToInternet]) {
-        [self submitOfflineScore];
-    }
+    [self submitOfflineScore];
     
     if (![[NSUserDefaults standardUserDefaults]boolForKey:@"gameOver"]) {
         NSString *savedScore = [[NSUserDefaults standardUserDefaults]objectForKey:@"savedScore"];
@@ -211,62 +199,150 @@
         [self addOneToScore];
     }
     
-    CGRect frame = self.ball.frame;
-    
-    for (BlackHole *blackHoleman in self.blackholes) {
-        if (CGRectIntersectsRect(blackHoleman.frame, frame)) {
-            [self gameOver];
-            break;
-        }
-    }
-    
     if (CGRectIntersectsRect(self.ball.frame, self.bonusHole.frame) && !self.bonusHole.hidden) {
         self.score.text = [NSString stringWithFormat:@"%d",self.score.text.intValue+5];
         [self flashScoreLabelToGreen];
         [self.bonusHole setHidden:YES];
     }
-}
-
-- (void)stopMovingBlackHolemans {
-    [self.blackholes makeObjectsPerformSelector:@selector(stopMoving) withObject:nil];
-}
-
-- (void)startMovingBlackHolmans {
-    [self.blackholes makeObjectsPerformSelector:@selector(startMoving) withObject:nil];
-}
-
-- (void)destroyBlackHolemans {
-    [self.blackholes makeObjectsPerformSelector:@selector(removeFromSuperview) withObject:nil];
-    [self.blackholes removeAllObjects];
-}
-
-- (void)updateBlackHolesArray {
     
-    if (self.blackholes.count == 0) {
-        self.blackholes = [NSMutableArray arrayWithCapacity:5];
+    if ([self checkIfHitBlackHole]) {
+        [self gameOver];
+    }
+}
+
+- (void)stopMovingBlackHoles {
+    [self.blackHoleOne stopMoving];
+    [self.blackHoleTwo stopMoving];
+    [self.blackHoleThree stopMoving];
+    [self.blackHoleFour stopMoving];
+    [self.blackHoleFive stopMoving];
+}
+
+- (void)startMovingBlackHoles {
+    [self.blackHoleOne startMoving];
+    [self.blackHoleTwo startMoving];
+    [self.blackHoleThree startMoving];
+    [self.blackHoleFour startMoving];
+    [self.blackHoleFive startMoving];
+}
+
+- (void)hideBlackHoles {
+    self.blackHoleOne.hidden = YES;
+    self.blackHoleTwo.hidden = YES;
+    self.blackHoleThree.hidden = YES;
+    self.blackHoleFour.hidden = YES;
+    self.blackHoleFive.hidden = YES;
+}
+
+- (BOOL)checkIfHitBlackHole {
+    CGRect frame = self.ball.frame;
+    
+    if (CGRectIntersectsRect(frame, self.blackHoleOne.frame) && !self.blackHoleOne.hidden) {
+        return YES;
     }
     
-    int max = (self.difficulty.selectedSegmentIndex > 0)?2+(self.difficulty.selectedSegmentIndex):0;
+    if (CGRectIntersectsRect(frame, self.blackHoleTwo.frame) && !self.blackHoleTwo.hidden) {
+        return YES;
+    }
     
+    if (CGRectIntersectsRect(frame, self.blackHoleThree.frame) && !self.blackHoleThree.hidden) {
+        return YES;
+    }
+    
+    if (CGRectIntersectsRect(frame, self.blackHoleFour.frame) && !self.blackHoleFour.hidden) {
+        return YES;
+    }
+    
+    if (CGRectIntersectsRect(frame, self.blackHoleFive.frame) && !self.blackHoleFive.hidden) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (int)numberOfBlackHoles {
+    int max = (self.difficulty.selectedSegmentIndex > 0)?2+(self.difficulty.selectedSegmentIndex):0;
     int blackHolesC = floorf(self.score.text.intValue/10);
     
     if (blackHolesC > max) {
-        blackHolesC = max;
+        return max;
     }
     
-    int remainder = blackHolesC-self.blackholes.count;
+    return blackHolesC;
+}
+
+- (void)updateBlackHoles {
     
-    for (int i = 0; i < remainder; ++i) {
-        BlackHole *blackHoleman = [[BlackHole alloc]init];
-        [self.view addSubview:blackHoleman];
-        [self.blackholes addObject:blackHoleman];
-        [blackHoleman redrawRectWithBallFrame:self.ball.frame];
-        [blackHoleman startMoving];
+    if (!self.blackHoleOne) {
+        self.blackHoleOne = [[BlackHole alloc]init];
+        [self.view addSubview:self.blackHoleOne];
+        [self.blackHoleOne redrawRectWithBallFrame:self.ball.frame];
+    }
+    
+    self.blackHoleOne.hidden = YES;
+    
+    if (!self.blackHoleTwo) {
+        self.blackHoleTwo = [[BlackHole alloc]init];
+        [self.view addSubview:self.blackHoleTwo];
+        [self.blackHoleTwo redrawRectWithBallFrame:self.ball.frame];
+    }
+    
+    self.blackHoleTwo.hidden = YES;
+    
+    
+    if (!self.blackHoleThree) {
+        self.blackHoleThree = [[BlackHole alloc]init];
+        [self.view addSubview:self.blackHoleThree];
+        [self.blackHoleThree redrawRectWithBallFrame:self.ball.frame];
+    }
+    
+    self.blackHoleThree.hidden = YES;
+    
+    if (!self.blackHoleFour) {
+        self.blackHoleFour = [[BlackHole alloc]init];
+        [self.view addSubview:self.blackHoleFour];
+        [self.blackHoleFour redrawRectWithBallFrame:self.ball.frame];
+    }
+    
+    self.blackHoleFour.hidden = YES;
+    
+    if (!self.blackHoleFive) {
+        self.blackHoleFive = [[BlackHole alloc]init];
+        [self.view addSubview:self.blackHoleFive];
+        [self.blackHoleFive redrawRectWithBallFrame:self.ball.frame];
+    }
+    
+    self.blackHoleFive.hidden = YES;
+    
+    int blackHolesC = [self numberOfBlackHoles];
+
+    if (blackHolesC > 0) {
+        self.blackHoleOne.hidden = NO;
+        [self.blackHoleOne startMoving];
+    }
+    
+    if (blackHolesC > 1) {
+        self.blackHoleTwo.hidden = NO;
+        [self.blackHoleTwo startMoving];
+    }
+    
+    if (blackHolesC > 2) {
+        self.blackHoleThree.hidden = NO;
+        [self.blackHoleThree startMoving];
+    }
+    
+    if (blackHolesC > 3) {
+        self.blackHoleFour.hidden = NO;
+        [self.blackHoleFour startMoving];
+    }
+
+    if (blackHolesC > 4) {
+        self.blackHoleFive.hidden = NO;
+        [self.blackHoleFive startMoving];
     }
 }
 
 - (void)startMotionManager {
-    [self startMovingBlackHolmans];
     [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
         [self handleAcceleration:accelerometerData.acceleration];
     }];
@@ -376,10 +452,10 @@
 }
 
 - (void)submitOfflineScore {
-    if ([networkTest isConnectedToInternet] && [[NSUserDefaults standardUserDefaults]objectForKey:@"scoretosubmit"]) {
-        int64_t ff = (int64_t)[[[NSUserDefaults standardUserDefaults]objectForKey:@"scoretosubmit"]intValue];
+    if ([networkTest isConnectedToInternet] && ([[NSUserDefaults standardUserDefaults]floatForKey:@"offlineScore"] > 0)) {
+        int64_t ff = (int64_t)[[NSUserDefaults standardUserDefaults]floatForKey:@"offlineScore"];
         [self submitScore:ff];
-        [[NSUserDefaults standardUserDefaults]removeObjectForKey:@"scoretosubmit"];
+        [[NSUserDefaults standardUserDefaults]setFloat:-1 forKey:@"offlineScore"];
     }
 }
 
@@ -416,7 +492,8 @@
     
     if (self.difficulty.selectedSegmentIndex == 0)  {
         [self.difficultyLabel setText:@"Easy"];
-        [self destroyBlackHolemans];
+        [self stopMovingBlackHoles];
+        [self hideBlackHoles];
     } else if (self.difficulty.selectedSegmentIndex == 1) {
         [self.difficultyLabel setText:@"Medium"];
     } else if (self.difficulty.selectedSegmentIndex == 2) {
@@ -436,11 +513,15 @@
 }
 
 - (void)gameOver {
-    [self stopMovingBlackHolemans];
+    [self stopMovingBlackHoles];
     [self gameOverWithoutBlackholeStoppage];
 }
 
 - (void)gameOverWithoutBlackholeStoppage {
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"gameOver"]) {
+        return;
+    }
     
     [self stopMotionManager];
     
@@ -482,8 +563,15 @@
         }
         
     } else {
+        int offlineScore = [[NSUserDefaults standardUserDefaults]floatForKey:@"offlineScore"];
+        
+        if (gameOverScore > offlineScore) {
+            offlineScore = gameOverScore;
+        }
+        
+        [[NSUserDefaults standardUserDefaults]setFloat:offlineScore forKey:@"offlineScore"];
+        
         alert.message = [NSString stringWithFormat:@"%lli is good, but you can do better :D",gameOverScore];
-        [[NSUserDefaults standardUserDefaults]setObject:[NSString stringWithFormat:@"%lli",gameOverScore] forKey:@"scoretosubmit"];
     }
     
     [alert show];
@@ -504,7 +592,7 @@
 - (void)togglePause {
     if (self.motionManager.isAccelerometerActive) {
         [self stopMotionManager];
-        [self stopMovingBlackHolemans];
+        [self stopMovingBlackHoles];
         [self.pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
         [self.theme setHidden:NO];
         [self.themeLabel setHidden:NO];
@@ -526,7 +614,7 @@
         }
         
         [self startMotionManager];
-        [self updateBlackHolesArray];
+        [self updateBlackHoles];
         
         if (self.bonusHole.superview) {
             [self.bonusHole redrawRectWithBallFrame:self.ball.frame];
@@ -539,7 +627,9 @@
 
     [self reloadHighscoresWithBlock:nil];
     
-    [self destroyBlackHolemans];
+    [self hideBlackHoles];
+    [self stopMovingBlackHoles];
+    [self hideBlackHoles];
     [self.bonusHole setHidden:YES];
     
     [self startMotionManager];
@@ -568,9 +658,7 @@
     [self.startButton setHidden:YES];
     [self.pauseButton setHidden:NO];
     
-    if ([networkTest isConnectedToInternet]) {
-        [self submitOfflineScore];
-    }
+    [self submitOfflineScore];
 }
 
 - (void)redrawBonusHole {
@@ -590,8 +678,13 @@
 }
 
 - (void)redraw {
-    [self updateBlackHolesArray];
-    [self.blackholes makeObjectsPerformSelector:@selector(redrawRectWithBallFrameNSValue:) withObject:[NSValue valueWithCGRect:self.ball.frame]];
+    [self updateBlackHoles];
+    CGRect frame = self.ball.frame;
+    [self.blackHoleOne redrawRectWithBallFrame:frame];
+    [self.blackHoleTwo redrawRectWithBallFrame:frame];
+    [self.blackHoleThree redrawRectWithBallFrame:frame];
+    [self.blackHoleFour redrawRectWithBallFrame:frame];
+    [self.blackHoleFive redrawRectWithBallFrame:frame];
 }
 
 - (void)addOneToScore {
@@ -599,12 +692,12 @@
     [self.score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:@"savedScore"];
     
-    [self updateBlackHolesArray];
-    [self startMovingBlackHolmans];
+    [self updateBlackHoles];
+    [self startMovingBlackHoles];
     [self redrawBonusHole];
     
     if (self.difficulty.selectedSegmentIndex > 0) {
-        if (self.blackholes.count > 0) {
+        if ([self numberOfBlackHoles] > 0) {
             if (!self.timer.isValid) {
                 [self createTimer];
                 [self.timer fire];

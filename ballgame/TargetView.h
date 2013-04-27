@@ -14,4 +14,7 @@
 - (void)setClassicMode:(BOOL)cm;
 - (void)redrawImageWithIsHorizontal:(BOOL)isH;
 
+@property (nonatomic, assign) BOOL isHorizontal;
+@property (nonatomic, assign) BOOL isClassicMode;
+
 @end

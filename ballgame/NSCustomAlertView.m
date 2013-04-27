@@ -13,22 +13,31 @@ float UIAlertPosition = 0;
 @implementation NSCustomAlertView
 
 - (void)layoutSubviews {
+    
+    Class UIAlertButton = NSClassFromString(@"UIAlertButton");
+    Class UILabelClass = [UILabel class];
+    Class UIImageViewClass = [UIImageView class];
+    
+    UIColor *textColor = [UIColor colorWithRed:210.0f/255.0f green:210.0f/255.0f blue:210.0f/255.0f alpha:1.0f];
+    UIColor *shadowColor = [UIColor blackColor];
+    CGSize shadowOffset = CGSizeMake(0.0f, 1.0f);
+    
     for (UIView *subview in self.subviews) {
-        if ([subview isMemberOfClass:[UIImageView class]]) {
+        if ([subview isMemberOfClass:UIImageViewClass]) {
             subview.hidden = YES;
             continue;
         }
         
-        if ([subview isKindOfClass:NSClassFromString(@"UIAlertButton")]) {
+        if ([subview isKindOfClass:UIAlertButton]) {
             UIAlertPosition = subview.frame.origin.y-10;
             continue;
         }
         
-        if ([subview isMemberOfClass:[UILabel class]]) {
+        if ([subview isMemberOfClass:UILabelClass]) {
             UILabel *label = (UILabel *)subview;
-            label.textColor = [UIColor colorWithRed:210.0f/255.0f green:210.0f/255.0f blue:210.0f/255.0f alpha:1.0f];
-            label.shadowColor = [UIColor blackColor];
-            label.shadowOffset = CGSizeMake(0.0f, 1.0f);
+            label.textColor = textColor;
+            label.shadowColor = shadowColor;
+            label.shadowOffset = shadowOffset;
             continue;
         }
     }
@@ -78,6 +87,7 @@ float UIAlertPosition = 0;
     CGFloat spacer = 4.0f;
     int rows = (activeBounds.size.width+activeBounds.size.height/spacer);
     CGMutablePathRef hatchPath = CGPathCreateMutable();
+    
     for (int i = 1; i <= rows; i++) {
         CGPathMoveToPoint(hatchPath, nil, spacer*i, 0.0f);
         CGPathAddLineToPoint(hatchPath, nil, 0.0f, spacer*i);

@@ -8,26 +8,11 @@
 
 #import "TargetView.h"
 
-@interface TargetView()
-
-@property (nonatomic, assign) BOOL isHorizontal;
-@property (nonatomic, assign) BOOL isClassicMode;
-
-@end
-
 @implementation TargetView
 
 - (void)setClassicMode:(BOOL)cm {
     self.isClassicMode = cm;
-    
-    if (!self.isClassicMode) {
-        [self setBackgroundColor:[UIColor clearColor]];
-        self.layer.cornerRadius = 0;
-    } else {
-        [self setBackgroundColor:[UIColor cyanColor]];
-        self.layer.cornerRadius = 5;
-    }
-    
+    self.layer.cornerRadius = cm?5:0;
     [self setNeedsDisplay];
 }
 
@@ -37,18 +22,11 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    if (!self.isClassicMode) {
-        UIImage *image = nil;
-        if (self.isHorizontal) {
-            // caps -> left: 15 Right: 0
-            image = [UIImage imageNamed:@"target-hor"];
-        } else {
-            // caps -> left: 0 Right: 15
-            image = [UIImage imageNamed:@"target-ver"];
-        }
-        [image drawInRect:self.bounds];
-    } else {
+    if (self.isClassicMode) {
         [super drawRect:rect];
+    } else {
+        UIImage *image = [UIImage imageNamed:self.isHorizontal?@"target-hor":@"target-ver"];
+        [image drawInRect:self.bounds];
     }
 }
 

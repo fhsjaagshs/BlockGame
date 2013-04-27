@@ -18,5 +18,6 @@
 
 @property (nonatomic) BOOL isMoving;
 @property (nonatomic) CGSize directionVector;
+@property (nonatomic) float dVectorDivisor;
 
 @end

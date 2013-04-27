@@ -10,23 +10,27 @@
 
 int numberOfTimes = 0;
 
-@implementation BonusHole
-
-- (void)animateImageView:(UIImageView *)imageView {
+void animateImageView(UIImageView *imageView, CGRect bounds) {
     [UIView animateWithDuration:0.2 animations:^{
-        imageView.frame = CGRectMake(-12.5, -12.5, self.frame.size.width+5+20, self.frame.size.width+5+20);
+        imageView.frame = CGRectMake(-12.5, -12.5, bounds.size.width+5+20, bounds.size.width+5+20);
     } completion:^(BOOL finished) {
         if (finished) {
-            imageView.frame = self.bounds;
+            imageView.frame = bounds;
             numberOfTimes += 1;
             if (numberOfTimes < 3) {
-                [self animateImageView:imageView];
+                animateImageView(imageView, bounds);
             } else {
                 numberOfTimes = 0;
                 [imageView removeFromSuperview];
             }
         }
     }];
+}
+
+@implementation BonusHole
+
+- (void)animateImageView:(UIImageView *)imageView {
+    animateImageView(imageView, self.bounds);
 }
 
 - (void)animateCircles {

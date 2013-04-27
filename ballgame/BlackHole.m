@@ -33,7 +33,7 @@ CGRect screenBounds;
 
 - (void)move {
     CGPoint center = self.center;
-    CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+_directionVector.height/35);
+    CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/30), center.y+_directionVector.height/30);
     
     if (!CGRectContainsPoint(screenBounds, perspectiveCenter)) {
         BOOL xTooHigh = (perspectiveCenter.x > screenBounds.size.width || perspectiveCenter.x <= 0);
