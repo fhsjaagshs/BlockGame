@@ -9,6 +9,7 @@
 #import "BonusHole.h"
 
 int numberOfTimes = 0;
+void animateImageView(UIImageView *imageView, CGRect bounds);
 
 void animateImageView(UIImageView *imageView, CGRect bounds) {
     [UIView animateWithDuration:0.2 animations:^{
