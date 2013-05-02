@@ -12,7 +12,7 @@
 
 - (void)setClassicMode:(BOOL)cm {
     self.isClassicMode = cm;
-    self.layer.cornerRadius = cm?5:0;
+    self.layer.cornerRadius = 5;
     [self setNeedsDisplay];
 }
 
@@ -22,16 +22,16 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    if (self.isClassicMode) {
+    if (_isClassicMode) {
         [super drawRect:rect];
     } else {
-        UIImage *image = [UIImage imageNamed:self.isHorizontal?@"target-hor":@"target-ver"];
+        UIImage *image = [UIImage imageNamed:_isHorizontal?@"target-hor":@"target-ver"];
         [image drawInRect:self.bounds];
     }
 }
 
 - (void)redrawImageWithIsHorizontal:(BOOL)isH {
-    self.isHorizontal = isH;
+    _isHorizontal = isH;
     [self setNeedsDisplay];
 }
 

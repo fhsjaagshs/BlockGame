@@ -9,6 +9,12 @@
 #import "AppDelegate.h"
 #import "ViewController.h"
 
+NSString * const difficultyIndexKey = @"difficultyIndex";
+NSString * const themeIndexKey = @"themeIndex";
+NSString * const offlineScoreKey = @"offlineScore";
+NSString * const gameOverKey = @"gameOver";
+NSString * const savedScoreKey = @"savedScore";
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
