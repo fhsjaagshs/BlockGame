@@ -292,7 +292,7 @@ CGRect screenBounds;
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    int speed = (_difficulty.selectedSegmentIndex+1)*10;
+    int speed = (_difficulty.selectedSegmentIndex+1)*4;
     
     float rateX = speed*acceleration.x;
     float rateY = -1*speed*acceleration.y;
@@ -303,6 +303,7 @@ CGRect screenBounds;
         _ball.center = newCenterPoint;
     } else {
         [self gameOverWithoutBlackholeStoppage];
+        return;
     }
 
     CGRect frame = _ball.frame;
@@ -329,12 +330,14 @@ CGRect screenBounds;
             [self gameOverWithoutBlackholeStoppage];
         }
         
-        if (CGRectIntersectsRect(_ball.frame, _target.frame)) {
+        frame = _ball.frame;
+        
+        if (CGRectIntersectsRect(frame, _target.frame)) {
             [self randomizePosition];
             [self addOneToScore];
         }
         
-        if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
+        if (CGRectIntersectsRect(frame, _bonusHole.frame) && !_bonusHole.hidden) {
             _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
             [self flashScoreLabelToGreen];
             [_bonusHole setHidden:YES];
