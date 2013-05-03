@@ -17,116 +17,116 @@
     self.view.backgroundColor = [UIColor darkGrayColor];
     
     self.theMainView = [[BackgroundView alloc]initWithFrame:self.view.bounds];
-    self.theMainView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:self.theMainView];
+    _theMainView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:_theMainView];
     
     self.difficultyLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 150, 320, 17)];
-    self.difficultyLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.difficultyLabel.font = [UIFont boldSystemFontOfSize:17];
-    self.difficultyLabel.textAlignment = UITextAlignmentCenter;
-    self.difficultyLabel.textColor = [UIColor whiteColor];
-    self.difficultyLabel.backgroundColor = [UIColor clearColor];
-    self.difficultyLabel.hidden = YES;
-    [self.view addSubview:self.difficultyLabel];
+    _difficultyLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _difficultyLabel.font = [UIFont boldSystemFontOfSize:17];
+    _difficultyLabel.textAlignment = UITextAlignmentCenter;
+    _difficultyLabel.textColor = [UIColor whiteColor];
+    _difficultyLabel.backgroundColor = [UIColor clearColor];
+    _difficultyLabel.hidden = YES;
+    [self.view addSubview:_difficultyLabel];
     
     self.themeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 363, 320, 31)];
-    self.themeLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.themeLabel.font = [UIFont boldSystemFontOfSize:19];
-    self.themeLabel.textAlignment = UITextAlignmentCenter;
-    self.themeLabel.textColor = [UIColor whiteColor];
-    self.themeLabel.backgroundColor = [UIColor clearColor];
-    self.themeLabel.text = @"Theme";
-    [self.view addSubview:self.themeLabel];
+    _themeLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _themeLabel.font = [UIFont boldSystemFontOfSize:19];
+    _themeLabel.textAlignment = UITextAlignmentCenter;
+    _themeLabel.textColor = [UIColor whiteColor];
+    _themeLabel.backgroundColor = [UIColor clearColor];
+    _themeLabel.text = @"Theme";
+    [self.view addSubview:_themeLabel];
     
     self.gameOverLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 150, 320, 80)];
-    self.gameOverLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.gameOverLabel.font = [UIFont boldSystemFontOfSize:34];
-    self.gameOverLabel.textAlignment = UITextAlignmentCenter;
-    self.gameOverLabel.textColor = [UIColor redColor];
-    self.gameOverLabel.backgroundColor = [UIColor clearColor];
-    self.gameOverLabel.text = @"Game Over";
-    self.gameOverLabel.hidden = YES;
-    [self.view addSubview:self.gameOverLabel];
+    _gameOverLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _gameOverLabel.font = [UIFont boldSystemFontOfSize:34];
+    _gameOverLabel.textAlignment = UITextAlignmentCenter;
+    _gameOverLabel.textColor = [UIColor redColor];
+    _gameOverLabel.backgroundColor = [UIColor clearColor];
+    _gameOverLabel.text = @"Game Over";
+    _gameOverLabel.hidden = YES;
+    [self.view addSubview:_gameOverLabel];
     
     self.score = [[UILabel alloc]initWithFrame:CGRectMake(0, 110, 320, 30)];
-    self.score.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.score.font = [UIFont systemFontOfSize:26];
-    self.score.textAlignment = UITextAlignmentCenter;
-    self.score.textColor = [UIColor whiteColor];
-    self.score.backgroundColor = [UIColor clearColor];
-    self.score.hidden = YES;
-    self.score.text = @"0";
-    [self.view addSubview:self.score];
+    _score.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _score.font = [UIFont systemFontOfSize:26];
+    _score.textAlignment = UITextAlignmentCenter;
+    _score.textColor = [UIColor whiteColor];
+    _score.backgroundColor = [UIColor clearColor];
+    _score.hidden = YES;
+    _score.text = @"0";
+    [self.view addSubview:_score];
     
     self.pauseButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.pauseButton.frame = CGRectMake(112, 76, 96, 37);
-    [self.pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
-    self.pauseButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];
-    self.pauseButton.titleLabel.textColor = [UIColor whiteColor];
-    self.pauseButton.titleLabel.textAlignment = UITextAlignmentCenter;
-    self.pauseButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-    self.pauseButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [self.pauseButton addTarget:self action:@selector(togglePause) forControlEvents:UIControlEventTouchDown];
-    self.pauseButton.hidden = YES;
-    [self.view addSubview:self.pauseButton];
+    _pauseButton.frame = CGRectMake(112, 76, 96, 37);
+    [_pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
+    _pauseButton.titleLabel.font = [UIFont boldSystemFontOfSize:20];
+    _pauseButton.titleLabel.textColor = [UIColor whiteColor];
+    _pauseButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    _pauseButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    _pauseButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    _pauseButton.hidden = YES;
+    [_pauseButton addTarget:self action:@selector(togglePause) forControlEvents:UIControlEventTouchDown];
+    [self.view addSubview:_pauseButton];
     
     self.startButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.startButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-    self.startButton.frame = CGRectMake(124, 228, 72, 37);
-    self.startButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-    self.startButton.titleLabel.textColor = [UIColor whiteColor];
-    self.startButton.titleLabel.textAlignment = UITextAlignmentCenter;
-    self.startButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-    self.startButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [self.startButton setBackgroundImage:[UIImage imageNamed:@"startretry"] forState:UIControlStateNormal];
-    [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
-    [self.startButton addTarget:self action:@selector(startOrRetry) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.startButton];
+    _startButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    _startButton.frame = CGRectMake(124, 228, 72, 37);
+    _startButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+    _startButton.titleLabel.textColor = [UIColor whiteColor];
+    _startButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    _startButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    _startButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    [_startButton setBackgroundImage:[UIImage imageNamed:@"startretry"] forState:UIControlStateNormal];
+    [_startButton setTitle:@"Start" forState:UIControlStateNormal];
+    [_startButton addTarget:self action:@selector(startOrRetry) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_startButton];
     
     self.leaderboardButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.leaderboardButton.frame = CGRectMake(102, 273, 113, 37);
-    self.leaderboardButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-    self.leaderboardButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
-    self.leaderboardButton.titleLabel.textColor = [UIColor whiteColor];
-    self.leaderboardButton.titleLabel.textAlignment = UITextAlignmentCenter;
-    self.leaderboardButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-    self.leaderboardButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [self.leaderboardButton setBackgroundImage:[UIImage imageNamed:@"leaderboard"] forState:UIControlStateNormal];
-    [self.leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
-    [self.leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.leaderboardButton];
+    _leaderboardButton.frame = CGRectMake(102, 273, 113, 37);
+    _leaderboardButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
+    _leaderboardButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
+    _leaderboardButton.titleLabel.textColor = [UIColor whiteColor];
+    _leaderboardButton.titleLabel.textAlignment = UITextAlignmentCenter;
+    _leaderboardButton.titleLabel.shadowColor = [UIColor lightGrayColor];
+    _leaderboardButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    [_leaderboardButton setBackgroundImage:[UIImage imageNamed:@"leaderboard"] forState:UIControlStateNormal];
+    [_leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
+    [_leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_leaderboardButton];
     
     self.theme = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
-    self.theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.theme.frame = CGRectMake(77, 402, 166, 30);
-    self.theme.segmentedControlStyle = UISegmentedControlStyleBar;
-    self.theme.tintColor = [UIColor lightGrayColor];
-    [self.theme setSelectedSegmentIndex:0];
-    [self.theme addTarget:self action:@selector(themeChanged) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:self.theme];
+    _theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _theme.frame = CGRectMake(77, 402, 166, 30);
+    _theme.segmentedControlStyle = UISegmentedControlStyleBar;
+    _theme.tintColor = [UIColor lightGrayColor];
+    [_theme setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults]floatForKey:themeIndexKey]];
+    [_theme addTarget:self action:@selector(themeChanged) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:_theme];
     
     self.difficulty = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Easy", @"Medium", @"Hard", @"Insane", nil]];
-    self.difficulty.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-    self.difficulty.frame = CGRectMake(42, 326, 237, 30);
-    self.difficulty.segmentedControlStyle = UISegmentedControlStyleBar;
-    self.difficulty.tintColor = [UIColor lightGrayColor];
-    [self.difficulty setSelectedSegmentIndex:0];
-    [self.difficulty addTarget:self action:@selector(difficultyChanged) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:self.difficulty];
+    _difficulty.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+    _difficulty.frame = CGRectMake(42, 326, 237, 30);
+    _difficulty.segmentedControlStyle = UISegmentedControlStyleBar;
+    _difficulty.tintColor = [UIColor lightGrayColor];
+    [_difficulty setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults]floatForKey:difficultyIndexKey]];
+    [_difficulty addTarget:self action:@selector(difficultyChanged) forControlEvents:UIControlEventValueChanged];
+    [self.view addSubview:_difficulty];
     
     self.target = [[TargetView alloc]init];
-    [self.view addSubview:self.target];
+    [self.view addSubview:_target];
     
     self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
-    self.ball.center = self.view.center;
-    self.ball.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.ball.layer.shadowOpacity = 0.7f;
-    self.ball.layer.shadowOffset = CGSizeZero;
-    self.ball.layer.shadowRadius = 5.0f;
-    self.ball.layer.masksToBounds = NO;
-    self.ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
-    self.ball.hidden = YES;
-    [self.view addSubview:self.ball];
+    _ball.center = self.view.center;
+    _ball.layer.shadowColor = [UIColor blackColor].CGColor;
+    _ball.layer.shadowOpacity = 0.7f;
+    _ball.layer.shadowOffset = CGSizeZero;
+    _ball.layer.shadowRadius = 5.0f;
+    _ball.layer.masksToBounds = NO;
+    _ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
+    _ball.hidden = YES;
+    [self.view addSubview:_ball];
     
     [self createMotionManager];
     [self loginUser];
@@ -137,28 +137,19 @@
         NSString *savedScore = [[NSUserDefaults standardUserDefaults]objectForKey:savedScoreKey];
         [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
         if (savedScore.length > 0) {
-            [self.score setText:savedScore];
-            [self.score setHidden:NO];
-            [self.difficulty setHidden:YES];
-            [self.difficultyLabel setHidden:NO];
-            [self.startButton setTitle:@"Resume" forState:UIControlStateNormal];
+            [_score setText:savedScore];
+            [_score setHidden:NO];
+            [_difficulty setHidden:YES];
+            [_difficultyLabel setHidden:NO];
+            [_startButton setTitle:@"Resume" forState:UIControlStateNormal];
         } else {
-            [self.startButton setTitle:@"Start" forState:UIControlStateNormal];
+            [_startButton setTitle:@"Start" forState:UIControlStateNormal];
         }
     }
     
-    int diff = [[NSUserDefaults standardUserDefaults]floatForKey:difficultyIndexKey];
-    int themey = [[NSUserDefaults standardUserDefaults]floatForKey:themeIndexKey];
-    
-    [self.difficulty setSelectedSegmentIndex:diff];
-    [self.theme setSelectedSegmentIndex:themey];
-    
-    [self.leaderboardButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.difficultyLabel setTextColor:[UIColor whiteColor]];
-    [self.startButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.score setTextColor:[UIColor whiteColor]];
-    [self.themeLabel setTextColor:[UIColor whiteColor]];
-    [self.pauseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+   // [_leaderboardButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+   // [_startButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+   // [_pauseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [self difficultyChanged];
     [self themeChanged];
@@ -166,7 +157,7 @@
 
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
-    self.motionManager.accelerometerUpdateInterval = 1/60; // used to be 1/180
+    _motionManager.accelerometerUpdateInterval = 1/60; // used to be 1/180
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
@@ -190,7 +181,7 @@
     CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
     
     if (CGRectContainsPoint([UIScreen mainScreen].bounds, newCenterPoint)) {
-        self.ball.center = newCenterPoint;
+        _ball.center = newCenterPoint;
     } else {
         [self gameOverWithoutBlackholeStoppage];
     }
@@ -201,9 +192,9 @@
     }
     
     if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
-        self.score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
+        _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
         [self flashScoreLabelToGreen];
-        [self.bonusHole setHidden:YES];
+        [_bonusHole setHidden:YES];
     }
     
     if ([self checkIfHitBlackHole]) {
@@ -212,27 +203,27 @@
 }
 
 - (void)stopMovingBlackHoles {
-    [self.blackHoleOne stopMoving];
-    [self.blackHoleTwo stopMoving];
-    [self.blackHoleThree stopMoving];
-    [self.blackHoleFour stopMoving];
-    [self.blackHoleFive stopMoving];
+    [_blackHoleOne stopMoving];
+    [_blackHoleTwo stopMoving];
+    [_blackHoleThree stopMoving];
+    [_blackHoleFour stopMoving];
+    [_blackHoleFive stopMoving];
 }
 
 - (void)startMovingBlackHoles {
-    [self.blackHoleOne startMoving];
-    [self.blackHoleTwo startMoving];
-    [self.blackHoleThree startMoving];
-    [self.blackHoleFour startMoving];
-    [self.blackHoleFive startMoving];
+    [_blackHoleOne startMoving];
+    [_blackHoleTwo startMoving];
+    [_blackHoleThree startMoving];
+    [_blackHoleFour startMoving];
+    [_blackHoleFive startMoving];
 }
 
 - (void)hideBlackHoles {
-    self.blackHoleOne.hidden = YES;
-    self.blackHoleTwo.hidden = YES;
-    self.blackHoleThree.hidden = YES;
-    self.blackHoleFour.hidden = YES;
-    self.blackHoleFive.hidden = YES;
+    _blackHoleOne.hidden = YES;
+    _blackHoleTwo.hidden = YES;
+    _blackHoleThree.hidden = YES;
+    _blackHoleFour.hidden = YES;
+    _blackHoleFive.hidden = YES;
 }
 
 - (BOOL)checkIfHitBlackHole {
@@ -277,87 +268,128 @@
     
     if (!_blackHoleOne) {
         self.blackHoleOne = [[BlackHole alloc]init];
-        [self.view addSubview:self.blackHoleOne];
-        [self.blackHoleOne redrawRectWithBallFrame:_ball.frame];
+        [self.view addSubview:_blackHoleOne];
+        [_blackHoleOne redrawRectWithBallFrame:_ball.frame];
     }
-    
-    self.blackHoleOne.hidden = YES;
     
     if (!_blackHoleTwo) {
         self.blackHoleTwo = [[BlackHole alloc]init];
-        [self.view addSubview:self.blackHoleTwo];
-        [self.blackHoleTwo redrawRectWithBallFrame:_ball.frame];
+        [self.view addSubview:_blackHoleTwo];
+        [_blackHoleTwo redrawRectWithBallFrame:_ball.frame];
     }
-    
-    self.blackHoleTwo.hidden = YES;
     
     if (!_blackHoleThree) {
         self.blackHoleThree = [[BlackHole alloc]init];
-        [self.view addSubview:self.blackHoleThree];
-        [self.blackHoleThree redrawRectWithBallFrame:_ball.frame];
+        [self.view addSubview:_blackHoleThree];
+        [_blackHoleThree redrawRectWithBallFrame:_ball.frame];
     }
-    
-    self.blackHoleThree.hidden = YES;
     
     if (!_blackHoleFour) {
         self.blackHoleFour = [[BlackHole alloc]init];
-        [self.view addSubview:self.blackHoleFour];
-        [self.blackHoleFour redrawRectWithBallFrame:_ball.frame];
+        [self.view addSubview:_blackHoleFour];
+        [_blackHoleFour redrawRectWithBallFrame:_ball.frame];
     }
-    
-    self.blackHoleFour.hidden = YES;
     
     if (!_blackHoleFive) {
         self.blackHoleFive = [[BlackHole alloc]init];
-        [self.view addSubview:self.blackHoleFive];
-        [self.blackHoleFive redrawRectWithBallFrame:_ball.frame];
+        [self.view addSubview:_blackHoleFive];
+        [_blackHoleFive redrawRectWithBallFrame:_ball.frame];
     }
-    
-    self.blackHoleFive.hidden = YES;
     
     int blackHolesC = [self numberOfBlackHoles];
 
     if (blackHolesC > 0) {
-        self.blackHoleOne.hidden = NO;
-        [self.blackHoleOne startMoving];
+        _blackHoleOne.hidden = NO;
+        [_blackHoleOne startMoving];
+    } else {
+        _blackHoleOne.hidden = YES;
     }
     
     if (blackHolesC > 1) {
-        self.blackHoleTwo.hidden = NO;
-        [self.blackHoleTwo startMoving];
+        _blackHoleTwo.hidden = NO;
+        [_blackHoleTwo startMoving];
+    } else {
+        _blackHoleTwo.hidden = YES;
     }
     
     if (blackHolesC > 2) {
-        self.blackHoleThree.hidden = NO;
-        [self.blackHoleThree startMoving];
+        _blackHoleThree.hidden = NO;
+        [_blackHoleThree startMoving];
+    } else {
+        _blackHoleThree.hidden = YES;
     }
     
     if (blackHolesC > 3) {
-        self.blackHoleFour.hidden = NO;
-        [self.blackHoleFour startMoving];
+        _blackHoleFour.hidden = NO;
+        [_blackHoleFour startMoving];
+    } else {
+        _blackHoleFour.hidden = YES;
     }
 
     if (blackHolesC > 4) {
-        self.blackHoleFive.hidden = NO;
-        [self.blackHoleFive startMoving];
+        _blackHoleFive.hidden = NO;
+        [_blackHoleFive startMoving];
+    } else {
+        _blackHoleFive.hidden = YES;
     }
 }
 
 - (void)startMotionManager {
-    [self.motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+    [_motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+        
+        CMAcceleration acceleration = accelerometerData.acceleration;
+        
+        float speed = 1;
+        int index = _difficulty.selectedSegmentIndex;
+        
+        if (index == 0) {
+            speed = 0.5;
+        } else if (index == 1) {
+            speed = 1;
+        } else if (index == 2) {
+            speed = 1.5;
+        } else if (index == 3) {
+            speed = 2;
+        }
+        
+        float rateX = (10*speed)*acceleration.x;
+        float rateY = -1*(10*speed)*acceleration.y;
+        
+        CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
+        
+        if (CGRectContainsPoint([UIScreen mainScreen].bounds, newCenterPoint)) {
+            _ball.center = newCenterPoint;
+        } else {
+            [self gameOverWithoutBlackholeStoppage];
+        }
+        
+        if (CGRectIntersectsRect(_ball.frame, _target.frame)) {
+            [self randomizePosition];
+            [self addOneToScore];
+        }
+        
+        if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
+            _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
+            [self flashScoreLabelToGreen];
+            [self.bonusHole setHidden:YES];
+        }
+        
+        if ([self checkIfHitBlackHole]) {
+            [self gameOver];
+        }
         [self handleAcceleration:accelerometerData.acceleration];
     }];
 }
 
 - (void)stopMotionManager {
-    [self.motionManager startAccelerometerUpdatesToQueue:nil withHandler:nil];
-    [self.motionManager stopAccelerometerUpdates];
+    [_motionManager startAccelerometerUpdatesToQueue:nil withHandler:nil];
+    [_motionManager stopAccelerometerUpdates];
 }
 
 - (void)randomizePosition {
     CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
     
-    [self.target setClassicMode:!(_theme.selectedSegmentIndex == 0)];
+    [_target setClassicMode:!(_theme.selectedSegmentIndex == 0)];
     
     int whichSide = (arc4random()%4)+1;
     
@@ -390,22 +422,22 @@
         height = 30;
     }
     
-    self.target.frame = CGRectMake(x, y, width, height);
-    self.target.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.target.layer.shadowOpacity = 0.9f;
-    self.target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    self.target.layer.shadowRadius = 5.0f;
-    self.target.layer.masksToBounds = NO;
-    self.target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, _target.frame.size.width+3, _target.frame.size.height+3)]CGPath];
+    _target.frame = CGRectMake(x, y, width, height);
+    _target.layer.shadowColor = [UIColor blackColor].CGColor;
+    _target.layer.shadowOpacity = 0.9f;
+    _target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    _target.layer.shadowRadius = 5.0f;
+    _target.layer.masksToBounds = NO;
+    _target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, _target.frame.size.width+3, _target.frame.size.height+3)]CGPath];
     
     if (_theme.selectedSegmentIndex == 0) {
-        [self.target redrawWithImage];
+        [_target redrawWithImage];
     } else {
         NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
-        [self.target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%8]];
+        [_target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%8]];
     }
     
-    self.target.hidden = NO;
+    _target.hidden = NO;
 }
 
 - (NSString *)getCurrentLeaderboard {
@@ -433,12 +465,12 @@
 - (void)reloadHighscoresWithBlock:(void(^)(NSError *error))block {
     [GCManager reloadHighScoresForCategory:[self getCurrentLeaderboard] withCompletionHandler:^(NSArray *scores, GKLeaderboard *leaderboard, NSError *error) {
         if (!error) {
-            self.highscore = (int)leaderboard.localPlayerScore.value;
+            _highscore = (int)leaderboard.localPlayerScore.value;
             if (block) {
                 block(nil);
             }
         } else {
-            self.highscore = -1;
+            _highscore = -1;
             if (block) {
                 block(error);
             }
@@ -494,24 +526,24 @@
     
     [[NSUserDefaults standardUserDefaults]setFloat:index forKey:difficultyIndexKey];
     
-    if (self.difficulty.selectedSegmentIndex == 0)  {
-        [self.difficultyLabel setText:@"Easy"];
+    if (index == 0)  {
+        [_difficultyLabel setText:@"Easy"];
         [self stopMovingBlackHoles];
         [self hideBlackHoles];
-    } else if (self.difficulty.selectedSegmentIndex == 1) {
-        [self.difficultyLabel setText:@"Medium"];
-    } else if (self.difficulty.selectedSegmentIndex == 2) {
-        [self.difficultyLabel setText:@"Hard"];
-    } else if (self.difficulty.selectedSegmentIndex == 3) {
-        [self.difficultyLabel setText:@"Insane"];
+    } else if (index == 1) {
+        [_difficultyLabel setText:@"Medium"];
+    } else if (index == 2) {
+        [_difficultyLabel setText:@"Hard"];
+    } else if (index == 3) {
+        [_difficultyLabel setText:@"Insane"];
     }
 }
 
 - (void)themeChanged {
     [[NSUserDefaults standardUserDefaults]setFloat:_theme.selectedSegmentIndex forKey:themeIndexKey];
     BOOL isSelectedIndexOne = (_theme.selectedSegmentIndex == 1);
-    [self.theMainView setHidden:isSelectedIndexOne];
-    [self.target setClassicMode:isSelectedIndexOne];
+    [_theMainView setHidden:isSelectedIndexOne];
+    [_target setClassicMode:isSelectedIndexOne];
 }
 
 - (void)gameOver {
@@ -528,19 +560,19 @@
     [self stopMotionManager];
     
     if (_timer.isValid) {
-        [self.timer invalidate];
+        [_timer invalidate];
     }
     
     self.timer = nil;
     
-    [self.themeLabel setHidden:NO];
-    [self.difficulty setHidden:NO];
-    [self.theme setHidden:NO];
-    [self.startButton setHidden:NO];
-    [self.gameOverLabel setHidden:NO];
-    [self.leaderboardButton setHidden:NO];
-    [self.pauseButton setHidden:YES];
-    [self.startButton setTitle:@"Retry" forState:UIControlStateNormal];
+    [_themeLabel setHidden:NO];
+    [_difficulty setHidden:NO];
+    [_theme setHidden:NO];
+    [_startButton setHidden:NO];
+    [_gameOverLabel setHidden:NO];
+    [_leaderboardButton setHidden:NO];
+    [_pauseButton setHidden:YES];
+    [_startButton setTitle:@"Retry" forState:UIControlStateNormal];
     
     [[NSUserDefaults standardUserDefaults]setBool:YES forKey:gameOverKey];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
@@ -595,31 +627,30 @@
     if (_motionManager.isAccelerometerActive) {
         [self stopMotionManager];
         [self stopMovingBlackHoles];
-        [self.pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
-        [self.theme setHidden:NO];
-        [self.themeLabel setHidden:NO];
+        [_pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
+        [_theme setHidden:NO];
+        [_themeLabel setHidden:NO];
         
         if (_timer.isValid) {
-            [self.timer invalidate];
+            [_timer invalidate];
         }
 
         self.timer = nil;
     } else {
-        
-        [self.pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
-        [self.themeLabel setHidden:YES];
-        [self.theme setHidden:YES];
+        [_pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
+        [_themeLabel setHidden:YES];
+        [_theme setHidden:YES];
         
         if (!_timer.isValid) {
             [self createTimer];
-            [self.timer fire];
+            [_timer fire];
         }
         
         [self startMotionManager];
         [self updateBlackHoles];
         
         if (_bonusHole.superview) {
-            [self.bonusHole redrawRectWithBallFrame:_ball.frame];
+            [_bonusHole redrawRectWithBallFrame:_ball.frame];
         }
     }
 }
@@ -632,33 +663,33 @@
     [self hideBlackHoles];
     [self stopMovingBlackHoles];
     [self hideBlackHoles];
-    [self.bonusHole setHidden:YES];
+    [_bonusHole setHidden:YES];
     
     [self startMotionManager];
     
-    [self.difficultyLabel setHidden:NO];
-    [self.ball setHidden:NO];
-    [self.score setHidden:NO];
+    [_difficultyLabel setHidden:NO];
+    [_ball setHidden:NO];
+    [_score setHidden:NO];
 
-    [self.difficulty setHidden:YES];
-    [self.theme setHidden:YES];
-    [self.themeLabel setHidden:YES];
-    [self.leaderboardButton setHidden:YES];
+    [_difficulty setHidden:YES];
+    [_theme setHidden:YES];
+    [_themeLabel setHidden:YES];
+    [_leaderboardButton setHidden:YES];
     
-    [self.score setText:@"0"];
+    [_score setText:@"0"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
-    [self.ball setCenter:self.view.center];
+    [_ball setCenter:self.view.center];
     
     if (_timer.isValid) {
-        [self.timer invalidate];
+        [_timer invalidate];
     }
     
     self.timer = nil;
 
     [self randomizePosition];
-    [self.gameOverLabel setHidden:YES];
-    [self.startButton setHidden:YES];
-    [self.pauseButton setHidden:NO];
+    [_gameOverLabel setHidden:YES];
+    [_startButton setHidden:YES];
+    [_pauseButton setHidden:NO];
     
     [self submitOfflineScore];
 }
@@ -667,14 +698,14 @@
     
     if (!_bonusHole) {
         self.bonusHole = [[BonusHole alloc]init];
-        [self.view addSubview:self.bonusHole];
+        [self.view addSubview:_bonusHole];
     }
     
-    self.bonusHole.hidden = (fmod(_score.text.intValue+17, 20) > 0);
+    _bonusHole.hidden = (fmod(_score.text.intValue+17, 20) > 0);
     
     if (!_bonusHole.hidden) {
         [UIView animateWithDuration:0.1 animations:^{
-            [self.bonusHole redrawRectWithBallFrame:_ball.frame];
+            [_bonusHole redrawRectWithBallFrame:_ball.frame];
         }];
     }
 }
@@ -682,16 +713,16 @@
 - (void)redraw {
     [self updateBlackHoles];
     CGRect frame = _ball.frame;
-    [self.blackHoleOne redrawRectWithBallFrame:frame];
-    [self.blackHoleTwo redrawRectWithBallFrame:frame];
-    [self.blackHoleThree redrawRectWithBallFrame:frame];
-    [self.blackHoleFour redrawRectWithBallFrame:frame];
-    [self.blackHoleFive redrawRectWithBallFrame:frame];
+    [_blackHoleOne redrawRectWithBallFrame:frame];
+    [_blackHoleTwo redrawRectWithBallFrame:frame];
+    [_blackHoleThree redrawRectWithBallFrame:frame];
+    [_blackHoleFour redrawRectWithBallFrame:frame];
+    [_blackHoleFive redrawRectWithBallFrame:frame];
 }
 
 - (void)addOneToScore {
-    NSString *newScoreString = [NSString stringWithFormat:@"%d",self.score.text.intValue+1];
-    [self.score setText:newScoreString];
+    NSString *newScoreString = [NSString stringWithFormat:@"%d",_score.text.intValue+1];
+    [_score setText:newScoreString];
     [[NSUserDefaults standardUserDefaults]setObject:newScoreString forKey:savedScoreKey];
     
     [self updateBlackHoles];
@@ -701,11 +732,11 @@
         if ([self numberOfBlackHoles] > 0) {
             if (!_timer.isValid) {
                 [self createTimer];
-                [self.timer fire];
+                [_timer fire];
             }
         } else {
             if (_timer.isValid) {
-                [self.timer invalidate];
+                [_timer invalidate];
             }
             
             self.timer = nil;
@@ -714,8 +745,8 @@
 }
 
 - (void)flashScoreLabelToGreen {
-    [self.score setTextColor:[UIColor greenColor]];
-    [self.score performSelector:@selector(setTextColor:) withObject:[UIColor whiteColor] afterDelay:0.5];
+    [_score setTextColor:[UIColor greenColor]];
+    [_score performSelector:@selector(setTextColor:) withObject:[UIColor whiteColor] afterDelay:0.5];
 }
 
 @end
