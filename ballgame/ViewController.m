@@ -304,13 +304,15 @@ CGRect screenBounds;
     } else {
         [self gameOverWithoutBlackholeStoppage];
     }
+
+    CGRect frame = _ball.frame;
     
-    if (CGRectIntersectsRect(_ball.frame, _target.frame)) {
+    if (CGRectIntersectsRect(frame, _target.frame)) {
         [self randomizePosition];
         [self addOneToScore];
     }
     
-    if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
+    if (CGRectIntersectsRect(frame, _bonusHole.frame) && !_bonusHole.hidden) {
         _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
         [self flashScoreLabelToGreen];
         [_bonusHole setHidden:YES];
@@ -318,6 +320,25 @@ CGRect screenBounds;
     
     if ([self checkIfHitBlackHole]) {
         [self gameOver];
+    } else {
+        CGPoint newCenterPointRecur = CGPointMake(newCenterPoint.x+rateX, newCenterPoint.y+rateY);
+        
+        if (CGRectContainsPoint(screenBounds, newCenterPointRecur)) {
+            _ball.center = newCenterPointRecur;
+        } else {
+            [self gameOverWithoutBlackholeStoppage];
+        }
+        
+        if (CGRectIntersectsRect(_ball.frame, _target.frame)) {
+            [self randomizePosition];
+            [self addOneToScore];
+        }
+        
+        if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
+            _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
+            [self flashScoreLabelToGreen];
+            [_bonusHole setHidden:YES];
+        }
     }
 }
 
