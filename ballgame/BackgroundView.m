@@ -11,7 +11,7 @@
 @implementation BackgroundView
 
 - (void)drawRect:(CGRect)rect {
-    UIImage *scaled = [UIImage imageWithCGImage:[UIImage imageNamed:@"background"].CGImage scale:[[UIScreen mainScreen]scale] orientation:UIImageOrientationUp];
+    UIImage *scaled = [UIImage imageWithCGImage:[[UIImage imageNamed:@"background"]CGImage] scale:[[UIScreen mainScreen]scale] orientation:UIImageOrientationUp];
     [scaled drawInRect:self.bounds];
 }
 

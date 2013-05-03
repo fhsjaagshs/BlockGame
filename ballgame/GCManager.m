@@ -59,17 +59,20 @@
                 [GCManager setEarnedArcheivementCache:temp];
                 [self submitAchievement:identifier percentComplete:percentComplete andCompletionHandler:block];
 			} else {
-                block(nil, error);
+                if (block) {
+                    block(nil, error);
+                }
 			}
 		}];
 	} else {
 		GKAchievement *achievement = [tempCache objectForKey:identifier];
         
 		if (achievement) {
-			if ((achievement.percentComplete >= 100.0) || (achievement.percentComplete >= percentComplete)) {
+			if (achievement.percentComplete >= 100 || achievement.percentComplete >= percentComplete) {
 				achievement = nil;
-			}
-			achievement.percentComplete = percentComplete;
+			} else {
+                achievement.percentComplete = percentComplete;
+            }
 		} else {
 			achievement = [[GKAchievement alloc]initWithIdentifier:identifier];
 			achievement.percentComplete = percentComplete;
@@ -93,15 +96,19 @@
 
 + (void)mapPlayerIDtoPlayer:(NSString *)playerID withCompletionBlock:(void(^)(GKPlayer *player, NSError *error))block {
 	[GKPlayer loadPlayersForIdentifiers:[NSArray arrayWithObjects:playerID, nil] withCompletionHandler:^(NSArray *playerArray, NSError *error) {
-		GKPlayer *player = nil;
-		for (GKPlayer *tempPlayer in playerArray) {
-			if ([tempPlayer.playerID isEqualToString:playerID]) {
-				player = tempPlayer;
-				break;
-			}
-		}
-        if (block) {
-            block(player, error);
+        if (error) {
+            if (block) {
+                block(nil,error);
+            }
+        } else {
+            for (GKPlayer *player in playerArray) {
+                if ([player.playerID isEqualToString:playerID]) {
+                    if (block) {
+                        block(player, nil);
+                    }
+                    break;
+                }
+            }
         }
 	}];
 }

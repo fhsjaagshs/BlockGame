@@ -8,17 +8,11 @@
 
 #import "BlackHole.h"
 
-CGRect screenBounds;
-
 @implementation BlackHole
 
-- (void)redrawRectWithBallFrameNSValue:(NSValue *)value {
-    [self muckWithFrame:value.CGRectValue];
-}
-
 - (void)muckWithFrame:(CGRect)ballframe {
-    int adjustedWidth = (int)floor(screenBounds.size.width-60);
-    int adjustedHeight = (int)floor(screenBounds.size.height-60);
+    int adjustedWidth = (int)floor(_screenBounds.size.width-60);
+    int adjustedHeight = (int)floor(_screenBounds.size.height-60);
     int x = (arc4random()%adjustedWidth)+30;
     int y = (arc4random()%adjustedHeight)+30;
 
@@ -35,9 +29,9 @@ CGRect screenBounds;
     CGPoint center = self.center;
     CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/30), center.y+_directionVector.height/30);
     
-    if (!CGRectContainsPoint(screenBounds, perspectiveCenter)) {
-        BOOL xTooHigh = (perspectiveCenter.x > screenBounds.size.width || perspectiveCenter.x <= 0);
-        BOOL yTooHigh = (perspectiveCenter.y > screenBounds.size.height || perspectiveCenter.y <= 0);
+    if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
+        BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
+        BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
         _directionVector = CGSizeMake(xTooHigh?-1*_directionVector.width:_directionVector.width, yTooHigh?-1*_directionVector.height:_directionVector.height);
         perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
     }
@@ -68,7 +62,7 @@ CGRect screenBounds;
 - (id)init {
     self = [super init];
     if (self) {
-        screenBounds = [UIScreen mainScreen].bounds;
+        self.screenBounds = [UIScreen mainScreen].bounds;
         self.backgroundColor = [UIColor clearColor];
     }
     return self;
@@ -77,7 +71,7 @@ CGRect screenBounds;
 - (id)initWithBallframe:(CGRect)ballframe {
     self = [super initWithFrame:self.frame];
     if (self) {
-        screenBounds = [UIScreen mainScreen].bounds;
+        self.screenBounds = [UIScreen mainScreen].bounds;
         self.backgroundColor = [UIColor clearColor];
         [self muckWithFrame:ballframe];
     }
@@ -90,9 +84,10 @@ CGRect screenBounds;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    self.layer.shouldRasterize = YES;
     self.layer.shadowColor = [UIColor blackColor].CGColor;
     self.layer.shadowOpacity = 0.7f;
-    self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+    self.layer.shadowOffset = CGSizeZero;
     self.layer.shadowRadius = 5.0f;
     self.layer.masksToBounds = NO;
     self.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(-5, -5, 44, 44)].CGPath;

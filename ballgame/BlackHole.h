@@ -12,12 +12,12 @@
 
 - (id)initWithBallframe:(CGRect)ballframe;
 - (void)redrawRectWithBallFrame:(CGRect)ballFrame;
-- (void)redrawRectWithBallFrameNSValue:(NSValue *)value;
 - (void)startMoving;
 - (void)stopMoving;
 
 @property (nonatomic) BOOL isMoving;
 @property (nonatomic) CGSize directionVector;
 @property (nonatomic) float dVectorDivisor;
+@property (nonatomic) CGRect screenBounds;
 
 @end

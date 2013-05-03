@@ -9,10 +9,14 @@
 #import "ViewController.h"
 #import "AppDelegate.h"
 
+CGRect screenBounds;
+
 @implementation ViewController
 
 - (void)loadView {
     [super loadView];
+    
+    screenBounds = [[UIScreen mainScreen]bounds];
     
     self.view.backgroundColor = [UIColor darkGrayColor];
     
@@ -26,7 +30,6 @@
     _difficultyLabel.textAlignment = UITextAlignmentCenter;
     _difficultyLabel.textColor = [UIColor whiteColor];
     _difficultyLabel.backgroundColor = [UIColor clearColor];
-    _difficultyLabel.hidden = YES;
     [self.view addSubview:_difficultyLabel];
     
     self.themeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 363, 320, 31)];
@@ -54,7 +57,6 @@
     _score.textAlignment = UITextAlignmentCenter;
     _score.textColor = [UIColor whiteColor];
     _score.backgroundColor = [UIColor clearColor];
-    _score.hidden = YES;
     _score.text = @"0";
     [self.view addSubview:_score];
     
@@ -119,7 +121,8 @@
     
     self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
     _ball.center = self.view.center;
-    _ball.layer.shadowColor = [UIColor blackColor].CGColor;
+    _ball.layer.shouldRasterize = YES;
+    _ball.layer.shadowColor = [[UIColor blackColor]CGColor];
     _ball.layer.shadowOpacity = 0.7f;
     _ball.layer.shadowOffset = CGSizeZero;
     _ball.layer.shadowRadius = 5.0f;
@@ -140,16 +143,12 @@
             [_score setText:savedScore];
             [_score setHidden:NO];
             [_difficulty setHidden:YES];
-            [_difficultyLabel setHidden:NO];
             [_startButton setTitle:@"Resume" forState:UIControlStateNormal];
         } else {
+            [_score setHidden:YES];
             [_startButton setTitle:@"Start" forState:UIControlStateNormal];
         }
     }
-    
-   // [_leaderboardButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-   // [_startButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-   // [_pauseButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     [self difficultyChanged];
     [self themeChanged];
@@ -158,48 +157,6 @@
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
     _motionManager.accelerometerUpdateInterval = 1/60; // used to be 1/180
-}
-
-- (void)handleAcceleration:(CMAcceleration)acceleration {
-    
-    float speed = 1;
-    int index = _difficulty.selectedSegmentIndex;
-    
-    if (index == 0) {
-        speed = 0.5;
-    } else if (index == 1) {
-        speed = 1;
-    } else if (index == 2) {
-        speed = 1.5;
-    } else if (index == 3) {
-        speed = 2;
-    }
-    
-    float rateX = (10*speed)*acceleration.x;
-    float rateY = -1*(10*speed)*acceleration.y;
-    
-    CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
-    
-    if (CGRectContainsPoint([UIScreen mainScreen].bounds, newCenterPoint)) {
-        _ball.center = newCenterPoint;
-    } else {
-        [self gameOverWithoutBlackholeStoppage];
-    }
-    
-    if (CGRectIntersectsRect(_ball.frame, _target.frame)) {
-        [self randomizePosition];
-        [self addOneToScore];
-    }
-    
-    if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
-        _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
-        [self flashScoreLabelToGreen];
-        [_bonusHole setHidden:YES];
-    }
-    
-    if ([self checkIfHitBlackHole]) {
-        [self gameOver];
-    }
 }
 
 - (void)stopMovingBlackHoles {
@@ -334,49 +291,38 @@
     }
 }
 
+- (void)handleAcceleration:(CMAcceleration)acceleration {
+    int speed = (_difficulty.selectedSegmentIndex+1)*10;
+    
+    float rateX = speed*acceleration.x;
+    float rateY = -1*speed*acceleration.y;
+    
+    CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
+    
+    if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
+        _ball.center = newCenterPoint;
+    } else {
+        [self gameOverWithoutBlackholeStoppage];
+    }
+    
+    if (CGRectIntersectsRect(_ball.frame, _target.frame)) {
+        [self randomizePosition];
+        [self addOneToScore];
+    }
+    
+    if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
+        _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
+        [self flashScoreLabelToGreen];
+        [_bonusHole setHidden:YES];
+    }
+    
+    if ([self checkIfHitBlackHole]) {
+        [self gameOver];
+    }
+}
+
 - (void)startMotionManager {
     [_motionManager startAccelerometerUpdatesToQueue:[NSOperationQueue currentQueue] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
-        
-        CMAcceleration acceleration = accelerometerData.acceleration;
-        
-        float speed = 1;
-        int index = _difficulty.selectedSegmentIndex;
-        
-        if (index == 0) {
-            speed = 0.5;
-        } else if (index == 1) {
-            speed = 1;
-        } else if (index == 2) {
-            speed = 1.5;
-        } else if (index == 3) {
-            speed = 2;
-        }
-        
-        float rateX = (10*speed)*acceleration.x;
-        float rateY = -1*(10*speed)*acceleration.y;
-        
-        CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
-        
-        if (CGRectContainsPoint([UIScreen mainScreen].bounds, newCenterPoint)) {
-            _ball.center = newCenterPoint;
-        } else {
-            [self gameOverWithoutBlackholeStoppage];
-        }
-        
-        if (CGRectIntersectsRect(_ball.frame, _target.frame)) {
-            [self randomizePosition];
-            [self addOneToScore];
-        }
-        
-        if (CGRectIntersectsRect(_ball.frame, _bonusHole.frame) && !_bonusHole.hidden) {
-            _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
-            [self flashScoreLabelToGreen];
-            [self.bonusHole setHidden:YES];
-        }
-        
-        if ([self checkIfHitBlackHole]) {
-            [self gameOver];
-        }
         [self handleAcceleration:accelerometerData.acceleration];
     }];
 }
@@ -387,8 +333,6 @@
 }
 
 - (void)randomizePosition {
-    CGRect screenBounds = [[UIScreen mainScreen]applicationFrame];
-    
     [_target setClassicMode:!(_theme.selectedSegmentIndex == 0)];
     
     int whichSide = (arc4random()%4)+1;
@@ -423,13 +367,8 @@
     }
     
     _target.frame = CGRectMake(x, y, width, height);
-    _target.layer.shadowColor = [UIColor blackColor].CGColor;
-    _target.layer.shadowOpacity = 0.9f;
-    _target.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
-    _target.layer.shadowRadius = 5.0f;
-    _target.layer.masksToBounds = NO;
-    _target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, _target.frame.size.width+3, _target.frame.size.height+3)]CGPath];
-    
+    _target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, width+3, height+3)]CGPath];
+
     if (_theme.selectedSegmentIndex == 0) {
         [_target redrawWithImage];
     } else {
@@ -501,7 +440,25 @@
             leaderboardController.timeScope = GKLeaderboardTimeScopeAllTime;
             leaderboardController.leaderboardDelegate = self;
             
+            UIView *blockerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 200, 60)];
+            blockerView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
+            blockerView.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2);
+            blockerView.clipsToBounds = YES;
+            blockerView.layer.cornerRadius = 10;
+            
+            UIActivityIndicatorView	*spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+            spinner.center = CGPointMake(blockerView.bounds.size.width/2, (blockerView.bounds.size.height/2)+10);
+            [blockerView addSubview:spinner];
+            [self.view addSubview:blockerView];
+            [spinner startAnimating];
+            
+            self.view.userInteractionEnabled = NO;
+            
             [self reloadHighscoresWithBlock:^(NSError *error) {
+                self.view.userInteractionEnabled = YES;
+                [spinner stopAnimating];
+                [spinner removeFromSuperview];
+                [blockerView removeFromSuperview];
                 [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackTranslucent];
                 [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
                 [self presentModalViewController:leaderboardController animated:YES];
@@ -587,9 +544,9 @@
         [self submitScore:gameOverScore];
         [self submitOfflineScore];
         
-        if (gameOverScore > _highscore && _highscore != -1) {
+        if (gameOverScore > _highscore && _highscore > -1) {
             alert.message = @"Congrats, you beat your high score!";
-        } else if (gameOverScore < _highscore && _highscore != -1) {
+        } else if (gameOverScore < _highscore && _highscore > -1) {
             alert.message = @"You did not beat your high score :(";
         } else {
             alert.message = [NSString stringWithFormat:@"%lli is good, but you can do better :D",gameOverScore];
@@ -662,7 +619,6 @@
     
     [self hideBlackHoles];
     [self stopMovingBlackHoles];
-    [self hideBlackHoles];
     [_bonusHole setHidden:YES];
     
     [self startMotionManager];
@@ -670,11 +626,13 @@
     [_difficultyLabel setHidden:NO];
     [_ball setHidden:NO];
     [_score setHidden:NO];
-
     [_difficulty setHidden:YES];
     [_theme setHidden:YES];
     [_themeLabel setHidden:YES];
     [_leaderboardButton setHidden:YES];
+    [_gameOverLabel setHidden:YES];
+    [_startButton setHidden:YES];
+    [_pauseButton setHidden:NO];
     
     [_score setText:@"0"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
@@ -687,10 +645,6 @@
     self.timer = nil;
 
     [self randomizePosition];
-    [_gameOverLabel setHidden:YES];
-    [_startButton setHidden:YES];
-    [_pauseButton setHidden:NO];
-    
     [self submitOfflineScore];
 }
 

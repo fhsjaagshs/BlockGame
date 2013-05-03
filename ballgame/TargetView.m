@@ -12,6 +12,20 @@ UIColor *oldBGColor;
 
 @implementation TargetView
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.layer.shouldRasterize = YES;
+        self.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.layer.shadowOpacity = 0.9f;
+        self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+        self.layer.shadowRadius = 5.0f;
+        self.layer.masksToBounds = NO;
+        self.layer.shadowPath = nil;
+    }
+    return self;
+}
+
 - (void)setClassicMode:(BOOL)cm {
     self.isClassicMode = cm;
     self.backgroundColor = cm?oldBGColor:[UIColor clearColor];
@@ -29,7 +43,8 @@ UIColor *oldBGColor;
     if (_isClassicMode) {
         [super drawRect:rect];
     } else {
-        UIImage *image = [UIImage imageNamed:(self.bounds.size.width > self.bounds.size.height)?@"target-hor":@"target-ver"];
+        CGSize size = self.bounds.size;
+        UIImage *image = [UIImage imageNamed:(size.width > size.height)?@"target-hor":@"target-ver"];
         [image drawInRect:self.bounds];
     }
 }
