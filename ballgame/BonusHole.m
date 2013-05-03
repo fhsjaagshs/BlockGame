@@ -99,6 +99,7 @@ void animateImageView(UIImageView *imageView, CGRect bounds) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    self.layer.shouldRasterize = YES;
     self.layer.shadowColor = [UIColor blackColor].CGColor;
     self.layer.shadowOpacity = 0.7f;
     self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
