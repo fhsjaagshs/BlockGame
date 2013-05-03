@@ -34,9 +34,9 @@
 @property (nonatomic, strong) BlackHole *blackHoleFive;
 
 @property (strong, nonatomic) NSTimer *timer;
-@property (strong, nonatomic) NSString *highscore;
-
 @property (strong, nonatomic) CMMotionManager *motionManager;
+
+@property (assign, nonatomic) int highscore;
 
 - (void)gameOver;
 - (void)togglePause;

@@ -399,10 +399,10 @@
     self.target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, _target.frame.size.width+3, _target.frame.size.height+3)]CGPath];
     
     if (_theme.selectedSegmentIndex == 0) {
-        [self.target redrawImageWithIsHorizontal:(whichSide > 2)];
+        [self.target redrawWithImage];
     } else {
         NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
-        [self.target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%(8)] vertically:(whichSide < 3)];
+        [self.target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%8]];
     }
     
     self.target.hidden = NO;
@@ -433,12 +433,12 @@
 - (void)reloadHighscoresWithBlock:(void(^)(NSError *error))block {
     [GCManager reloadHighScoresForCategory:[self getCurrentLeaderboard] withCompletionHandler:^(NSArray *scores, GKLeaderboard *leaderboard, NSError *error) {
         if (!error) {
-            self.highscore = [NSString stringWithFormat:@"%lld",leaderboard.localPlayerScore.value];
+            self.highscore = (int)leaderboard.localPlayerScore.value;
             if (block) {
                 block(nil);
             }
         } else {
-            self.highscore = @"-1";
+            self.highscore = -1;
             if (block) {
                 block(error);
             }
@@ -509,7 +509,6 @@
 
 - (void)themeChanged {
     [[NSUserDefaults standardUserDefaults]setFloat:_theme.selectedSegmentIndex forKey:themeIndexKey];
-    
     BOOL isSelectedIndexOne = (_theme.selectedSegmentIndex == 1);
     [self.theMainView setHidden:isSelectedIndexOne];
     [self.target setClassicMode:isSelectedIndexOne];
@@ -553,13 +552,12 @@
     NSCustomAlertView *alert = [[NSCustomAlertView alloc]initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
     
     if ([networkTest isConnectedToInternet]) {
-        int64_t personalBest = _highscore.intValue;
         [self submitScore:gameOverScore];
         [self submitOfflineScore];
         
-        if (gameOverScore > personalBest && personalBest != -1) {
+        if (gameOverScore > _highscore && _highscore != -1) {
             alert.message = @"Congrats, you beat your high score!";
-        } else if (gameOverScore < personalBest && personalBest != -1) {
+        } else if (gameOverScore < _highscore && _highscore != -1) {
             alert.message = @"You did not beat your high score :(";
         } else {
             alert.message = [NSString stringWithFormat:@"%lli is good, but you can do better :D",gameOverScore];

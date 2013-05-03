@@ -8,16 +8,20 @@
 
 #import "TargetView.h"
 
+UIColor *oldBGColor;
+
 @implementation TargetView
 
 - (void)setClassicMode:(BOOL)cm {
     self.isClassicMode = cm;
+    self.backgroundColor = cm?oldBGColor:[UIColor clearColor];
     self.layer.cornerRadius = 5;
     [self setNeedsDisplay];
 }
 
-- (void)redrawWithBackgroundColor:(UIColor *)color vertically:(BOOL)vertically {
+- (void)redrawWithBackgroundColor:(UIColor *)color {
     self.backgroundColor = color;
+    oldBGColor = color;
     [self setNeedsDisplay];
 }
 
@@ -25,13 +29,12 @@
     if (_isClassicMode) {
         [super drawRect:rect];
     } else {
-        UIImage *image = [UIImage imageNamed:_isHorizontal?@"target-hor":@"target-ver"];
+        UIImage *image = [UIImage imageNamed:(self.bounds.size.width > self.bounds.size.height)?@"target-hor":@"target-ver"];
         [image drawInRect:self.bounds];
     }
 }
 
-- (void)redrawImageWithIsHorizontal:(BOOL)isH {
-    _isHorizontal = isH;
+- (void)redrawWithImage {
     [self setNeedsDisplay];
 }
 

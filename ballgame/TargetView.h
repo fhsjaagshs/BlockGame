@@ -10,11 +10,10 @@
 
 @interface TargetView : UIView
 
-- (void)redrawWithBackgroundColor:(UIColor *)color vertically:(BOOL)vertically;
+- (void)redrawWithBackgroundColor:(UIColor *)color;
 - (void)setClassicMode:(BOOL)cm;
-- (void)redrawImageWithIsHorizontal:(BOOL)isH;
+- (void)redrawWithImage;
 
-@property (nonatomic, assign) BOOL isHorizontal;
 @property (nonatomic, assign) BOOL isClassicMode;
 
 @end
