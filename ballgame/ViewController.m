@@ -146,6 +146,7 @@ CGRect screenBounds;
             [_startButton setTitle:@"Resume" forState:UIControlStateNormal];
         } else {
             [_score setHidden:YES];
+            [_difficultyLabel setHidden:YES];
             [_startButton setTitle:@"Start" forState:UIControlStateNormal];
         }
     }
@@ -292,7 +293,7 @@ CGRect screenBounds;
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    int speed = (_difficulty.selectedSegmentIndex+1)*10; // multiplier used to be 4
+    int speed = (_difficulty.selectedSegmentIndex+1)*4;
     
     float rateX = speed*acceleration.x;
     float rateY = -1*speed*acceleration.y;
