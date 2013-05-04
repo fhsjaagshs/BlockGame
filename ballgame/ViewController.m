@@ -127,7 +127,7 @@ CGRect screenBounds;
     _ball.layer.shadowOffset = CGSizeZero;
     _ball.layer.shadowRadius = 5.0f;
     _ball.layer.masksToBounds = NO;
-    _ball.layer.shadowPath = [UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)].CGPath;
+    _ball.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, 46, 46)]CGPath];
     _ball.hidden = YES;
     [self.view addSubview:_ball];
     
@@ -292,7 +292,7 @@ CGRect screenBounds;
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    int speed = (_difficulty.selectedSegmentIndex+1)*4;
+    int speed = (_difficulty.selectedSegmentIndex+1)*10; // multiplier used to be 4
     
     float rateX = speed*acceleration.x;
     float rateY = -1*speed*acceleration.y;

@@ -16,7 +16,9 @@
     int x = (arc4random()%adjustedWidth)+30;
     int y = (arc4random()%adjustedHeight)+30;
 
-    CGRect adjustedFrame = CGRectMake(x-75, y-75, self.frame.size.width+150, self.frame.size.height+150);
+    CGSize size = self.frame.size;
+    
+    CGRect adjustedFrame = CGRectMake(x-75, y-75, size.width+150, size.height+150);
     
     if (CGRectIntersectsRect(adjustedFrame, ballframe)) {
         [self muckWithFrame:ballframe];
@@ -26,21 +28,29 @@
 }
 
 - (void)move {
-    CGPoint center = self.center;
-    CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/30), center.y+_directionVector.height/30);
-    
-    if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
-        BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
-        BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
-        _directionVector = CGSizeMake(xTooHigh?-1*_directionVector.width:_directionVector.width, yTooHigh?-1*_directionVector.height:_directionVector.height);
-        perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
-    }
-    
-    self.center = perspectiveCenter;
-    
-    if (_isMoving) {
-        [self performSelector:@selector(move) withObject:nil afterDelay:1/60];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @autoreleasepool {
+            CGPoint center = self.center;
+            
+            float divisor = _displayLink.duration*30;
+            
+            CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/divisor), center.y+_directionVector.height/divisor);
+            
+            if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
+                BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
+                BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
+                _directionVector.width = xTooHigh?-1*_directionVector.width:_directionVector.width;
+                _directionVector.height = yTooHigh?-1*_directionVector.height:_directionVector.height;
+                perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
+            }
+            
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                @autoreleasepool {
+                    self.center = perspectiveCenter;
+                }
+            });
+        }
+    });
 }
 
 - (void)startMoving {
@@ -51,11 +61,14 @@
     
     _directionVector = CGSizeMake(1, 1);
     _isMoving = YES;
-    [self move];
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(move)];
+    [_displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
 }
 
 - (void)stopMoving {
     _isMoving = NO;
+    [_displayLink invalidate];
+    self.displayLink = nil;
     _directionVector = CGSizeMake(1, 1);
 }
 
@@ -90,11 +103,10 @@
     self.layer.shadowOffset = CGSizeZero;
     self.layer.shadowRadius = 5.0f;
     self.layer.masksToBounds = NO;
-    self.layer.shadowPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(-5, -5, 44, 44)].CGPath;
+    self.layer.shadowPath = [[UIBezierPath bezierPathWithOvalInRect:CGRectMake(-5, -5, 44, 44)]CGPath];
 }
 
 - (void)drawRect:(CGRect)rect {
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGRect rectb = self.bounds;

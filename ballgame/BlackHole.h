@@ -19,5 +19,6 @@
 @property (nonatomic) CGSize directionVector;
 @property (nonatomic) float dVectorDivisor;
 @property (nonatomic) CGRect screenBounds;
+@property (strong, nonatomic) CADisplayLink *displayLink;
 
 @end
