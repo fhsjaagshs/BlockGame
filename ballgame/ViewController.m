@@ -11,6 +11,14 @@
 
 CGRect screenBounds;
 
+@interface ViewController ()
+
+// Anti-Grav well
+@property (nonatomic, assign) CGPoint wellPoint;
+@property (strong, nonatomic) CADisplayLink *wellDisplayLink;
+
+@end
+
 @implementation ViewController
 
 - (void)loadView {
@@ -153,6 +161,48 @@ CGRect screenBounds;
     
     [self difficultyChanged];
     [self themeChanged];
+}
+
+- (void)actAntiGravityWell {
+    
+    if (![[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
+    
+        CGRect inRangeRect = CGRectMake(_wellPoint.x-100, _wellPoint.y-100, 200, 200);
+    
+        if (CGRectContainsPoint(inRangeRect, _ball.center)) {
+            float distanceToMove = 800*_wellDisplayLink.duration;
+            CGSize vector = CGSizeMake(_ball.center.x-_wellPoint.x, _ball.center.y-_wellPoint.y);
+            
+            float theta = fabs(atan(vector.height/vector.width));
+            
+            float xDirection = vector.width/fabsf(vector.width);
+            float yDirection = vector.height/fabsf(vector.height);
+
+            CGSize newVector = CGSizeMake(((cos(theta)*distanceToMove)*xDirection), ((sin(theta)*distanceToMove)*yDirection));
+
+            _ball.center = CGPointMake(_ball.center.x+newVector.width, _ball.center.y+newVector.height);
+        }
+    }
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.wellPoint = [[touches anyObject]locationInView:self.view];
+    self.wellDisplayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(actAntiGravityWell)];
+    [_wellDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    [_wellDisplayLink invalidate];
+    self.wellDisplayLink = nil;
+    self.wellPoint = CGPointMake(-100, -100);
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self touchesEnded:touches withEvent:event];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.wellPoint = [[touches anyObject]locationInView:self.view];
 }
 
 - (void)createMotionManager {
