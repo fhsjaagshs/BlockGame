@@ -192,17 +192,17 @@ CGRect screenBounds;
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [_wellDisplayLink invalidate];
+    
+    if (_wellDisplayLink) {
+        [_wellDisplayLink invalidate];
+    }
+
     self.wellDisplayLink = nil;
     self.wellPoint = CGPointMake(-100, -100);
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
     [self touchesEnded:touches withEvent:event];
-}
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    self.wellPoint = [[touches anyObject]locationInView:self.view];
 }
 
 - (void)createMotionManager {
