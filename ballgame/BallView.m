@@ -41,7 +41,7 @@
         }
     }
     
-    float movement = log10f(_numMovements)*2;
+    float movement = log10f(_numMovements)*3;
     
     float x = fabsf(movement*sinf(_theta))*_dVector.width;
     float y = fabsf(movement*cosf(_theta))*_dVector.height;

@@ -162,7 +162,7 @@ CGRect screenBounds;
 
     if (CGRectContainsPoint(inRangeRect, _ball.center)) {
         CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
-        float theta = fabsf(atan(vector.height/vector.width));
+        float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
         CGSize dVector = CGSizeMake(vector.width/fabsf(vector.width), vector.height/fabsf(vector.height));
         [_ball moveSexilyWithTheta:theta andDirectionVector:dVector];
     }
