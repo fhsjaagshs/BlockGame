@@ -8,7 +8,7 @@
 
 #import "BallView.h"
 
-@interface BallView()
+@interface BallView ()
 
 @property (nonatomic, retain) CADisplayLink *link;
 @property (nonatomic, assign) float theta;
@@ -30,8 +30,6 @@
         if (_numMovements < 1) {
             [_link invalidate];
             self.link = nil;
-            self.theta = -2;
-            // we're done here;
             return;
         }
     }
