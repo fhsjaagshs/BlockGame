@@ -20,7 +20,7 @@ CGRect screenBounds;
     
     self.view.backgroundColor = [UIColor darkGrayColor];
     
-    self.theMainView = [[BackgroundView alloc]initWithFrame:self.view.bounds];
+    self.theMainView = [[BackgroundView alloc]initWithFrame:screenBounds];
     _theMainView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:_theMainView];
     
@@ -162,8 +162,9 @@ CGRect screenBounds;
 
     if (CGRectContainsPoint(inRangeRect, _ball.center)) {
         CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
-        float theta = fabs(atan(vector.height/vector.width));
-        [_ball moveSexilyWithTheta:theta];
+        float theta = fabsf(atan(vector.height/vector.width));
+        CGSize dVector = CGSizeMake(vector.width/fabsf(vector.width), vector.height/fabsf(vector.height));
+        [_ball moveSexilyWithTheta:theta andDirectionVector:dVector];
     }
 }
 

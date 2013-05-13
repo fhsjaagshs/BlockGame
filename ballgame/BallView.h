@@ -10,6 +10,6 @@
 
 @interface BallView : UIView
 
-- (void)moveSexilyWithTheta:(float)theta;
+- (void)moveSexilyWithTheta:(float)theta andDirectionVector:(CGSize)vector;
 
 @end
