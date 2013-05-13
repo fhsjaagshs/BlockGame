@@ -14,11 +14,8 @@ NSString * const offlineScoreKey;
 NSString * const gameOverKey;
 NSString * const savedScoreKey;
 
-@class ViewController;
-
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) ViewController *viewController;
 
 @end

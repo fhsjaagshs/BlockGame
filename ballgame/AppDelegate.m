@@ -20,15 +20,15 @@ NSString * const savedScoreKey = @"savedScore";
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     application.idleTimerDisabled = YES;
     _window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
-    _viewController = [[ViewController alloc]init];
-    _window.rootViewController = _viewController;
+    _window.rootViewController = [[ViewController alloc]init];
     [_window makeKeyAndVisible];
     return YES;
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    if (_viewController.motionManager.isAccelerometerActive) {
-        [_viewController togglePause];
+    ViewController *viewController = ((ViewController *)_window.rootViewController);
+    if (viewController.motionManager.isAccelerometerActive) {
+        [viewController togglePause];
     }
 }
 
