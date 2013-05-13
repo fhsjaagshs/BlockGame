@@ -12,6 +12,7 @@
 
 @property (nonatomic, retain) CADisplayLink *link;
 @property (nonatomic, assign) float theta;
+@property (nonatomic, assign) float numMovements;
 
 @end
 
@@ -21,17 +22,28 @@
     [[UIImage imageNamed:@"ball"]drawInRect:self.bounds];
 }
 
-- (void)moveSexilyCore {
-    float numMovements = floorf(0.5/_link.duration);
-    
-    if (numMovements < 1) {
-        [_link invalidate];
-        self.link = nil;
-        // we're done here;
-        return;
+- (void)moveSexilyCore {    
+    if (_numMovements < 1) {
+        
+        self.numMovements = floorf(0.5/_link.duration);
+        
+        if (_numMovements < 1) {
+            [_link invalidate];
+            self.link = nil;
+            self.theta = 0;
+            // we're done here;
+            return;
+        }
     }
     
-    float movement = log10f(numMovements);
+    float movement = log10f(_numMovements);
+    
+    NSLog(@"Movement: %f",movement);
+    
+    float x = movement*sinf(_theta);
+    float y = movement*cosf(_theta);
+    
+    self.center = CGPointMake(self.center.x+x, self.center.y+y);
 }
 
 - (void)moveSexilyWithTheta:(float)theta {
@@ -41,19 +53,7 @@
         [_link invalidate];
     }
     [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-    NSLog(@"%@",_link.duration);
     self.theta = theta;
 }
-
-/*- (void)moveSexilyToPoint:(CGPoint)pointTwo {
-    if (_link) {
-        self.link = [CADisplayLink displayLinkWithTarget:self selector:@selector(moveSexily)];
-    }
-    self.sexyPoint = pointTwo;
-    float a = self.center.y-_sexyPoint.y;
-    float b = self.center.x-_sexyPoint.x;
-    self.tangentialDistance = sqrtf((a*a)+(b*b));
-    [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
-}*/
 
 @end
