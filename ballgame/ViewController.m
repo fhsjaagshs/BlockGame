@@ -157,6 +157,10 @@ CGRect screenBounds;
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
+        return;
+    }
+    
     CGPoint point = [[touches anyObject]locationInView:self.view];
     CGRect inRangeRect = CGRectMake(point.x-100, point.y-100, 200, 200);
 
@@ -303,6 +307,33 @@ CGRect screenBounds;
     } else {
         _blackHoleFive.hidden = YES;
     }
+}
+
+- (BOOL)checkStuff {
+    CGRect frame = _ball.frame;
+
+    if (CGRectIntersectsRect(frame, _target.frame)) {
+        [self randomizePosition];
+        [self addOneToScore];
+    }
+    
+    if (CGRectIntersectsRect(frame, _bonusHole.frame) && !_bonusHole.hidden) {
+        _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
+        [self flashScoreLabelToGreen];
+        [_bonusHole setHidden:YES];
+    }
+    
+    if ([self checkIfHitBlackHole]) {
+        [self gameOver];
+        return NO;
+    }
+    
+    if (!CGRectContainsPoint(screenBounds, _ball.center)) {
+        [self gameOverWithoutBlackholeStoppage];
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
@@ -542,8 +573,8 @@ CGRect screenBounds;
 }
 
 - (void)gameOver {
-    [self stopMovingBlackHoles];
     [self gameOverWithoutBlackholeStoppage];
+    [self stopMovingBlackHoles];
 }
 
 - (void)gameOverWithoutBlackholeStoppage {
@@ -551,6 +582,9 @@ CGRect screenBounds;
     if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
         return;
     }
+    
+    [[NSUserDefaults standardUserDefaults]setBool:YES forKey:gameOverKey];
+    [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
     
     [self stopMotionManager];
     
@@ -568,9 +602,6 @@ CGRect screenBounds;
     [_leaderboardButton setHidden:NO];
     [_pauseButton setHidden:YES];
     [_startButton setTitle:@"Retry" forState:UIControlStateNormal];
-    
-    [[NSUserDefaults standardUserDefaults]setBool:YES forKey:gameOverKey];
-    [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
     
     int64_t gameOverScore = _score.text.intValue;
     

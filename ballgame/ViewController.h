@@ -41,4 +41,6 @@
 - (void)gameOver;
 - (void)togglePause;
 
+- (BOOL)checkStuff;
+
 @end
