@@ -10,6 +10,10 @@
 
 @implementation BlackHole
 
+- (void)redrawWithNSValueCGRect:(NSValue *)value {
+    [self muckWithFrame:[value CGRectValue]];
+}
+
 - (void)muckWithFrame:(CGRect)ballframe {
     int adjustedWidth = (int)floor(_screenBounds.size.width-60);
     int adjustedHeight = (int)floor(_screenBounds.size.height-60);

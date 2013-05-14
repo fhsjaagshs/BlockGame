@@ -10,15 +10,18 @@
 
 @interface BlackHole : UIView
 
-- (id)initWithBallframe:(CGRect)ballframe;
-- (void)redrawRectWithBallFrame:(CGRect)ballFrame;
-- (void)startMoving;
-- (void)stopMoving;
-
 @property (nonatomic) BOOL isMoving;
 @property (nonatomic) CGSize directionVector;
 @property (nonatomic) float dVectorDivisor;
 @property (nonatomic) CGRect screenBounds;
 @property (strong, nonatomic) CADisplayLink *displayLink;
+
+- (id)initWithBallframe:(CGRect)ballframe;
+
+- (void)redrawRectWithBallFrame:(CGRect)ballFrame;
+- (void)redrawWithNSValueCGRect:(NSValue *)value;
+
+- (void)startMoving;
+- (void)stopMoving;
 
 @end

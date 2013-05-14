@@ -178,52 +178,25 @@ CGRect screenBounds;
 }
 
 - (void)stopMovingBlackHoles {
-    [_blackHoleOne stopMoving];
-    [_blackHoleTwo stopMoving];
-    [_blackHoleThree stopMoving];
-    [_blackHoleFour stopMoving];
-    [_blackHoleFive stopMoving];
+    [_blackHoles makeObjectsPerformSelector:@selector(stopMoving)];
 }
 
 - (void)startMovingBlackHoles {
-    [_blackHoleOne startMoving];
-    [_blackHoleTwo startMoving];
-    [_blackHoleThree startMoving];
-    [_blackHoleFour startMoving];
-    [_blackHoleFive startMoving];
+    [_blackHoles makeObjectsPerformSelector:@selector(startMoving)];
 }
 
 - (void)hideBlackHoles {
-    _blackHoleOne.hidden = YES;
-    _blackHoleTwo.hidden = YES;
-    _blackHoleThree.hidden = YES;
-    _blackHoleFour.hidden = YES;
-    _blackHoleFive.hidden = YES;
+    [_blackHoles makeObjectsPerformSelector:@selector(setHidden:) withObject:(id)kCFBooleanTrue];
 }
 
 - (BOOL)checkIfHitBlackHole {
     CGRect frame = _ball.frame;
     
-    if (CGRectIntersectsRect(frame, _blackHoleOne.frame) && !_blackHoleOne.hidden) {
-        return YES;
+    for (BlackHole *blackHoleman in _blackHoles) {
+        if (CGRectIntersectsRect(frame, blackHoleman.frame) && !blackHoleman.hidden) {
+            return YES;
+        }
     }
-    
-    if (CGRectIntersectsRect(frame, _blackHoleTwo.frame) && !_blackHoleTwo.hidden) {
-        return YES;
-    }
-    
-    if (CGRectIntersectsRect(frame, _blackHoleThree.frame) && !_blackHoleThree.hidden) {
-        return YES;
-    }
-    
-    if (CGRectIntersectsRect(frame, _blackHoleFour.frame) && !_blackHoleFour.hidden) {
-        return YES;
-    }
-    
-    if (CGRectIntersectsRect(frame, _blackHoleFive.frame) && !_blackHoleFive.hidden) {
-        return YES;
-    }
-    
     return NO;
 }
 
@@ -240,72 +213,18 @@ CGRect screenBounds;
 }
 
 - (void)updateBlackHoles {
-    
-    if (!_blackHoleOne) {
-        self.blackHoleOne = [[BlackHole alloc]init];
-        [self.view addSubview:_blackHoleOne];
-        [_blackHoleOne redrawRectWithBallFrame:_ball.frame];
-    }
-    
-    if (!_blackHoleTwo) {
-        self.blackHoleTwo = [[BlackHole alloc]init];
-        [self.view addSubview:_blackHoleTwo];
-        [_blackHoleTwo redrawRectWithBallFrame:_ball.frame];
-    }
-    
-    if (!_blackHoleThree) {
-        self.blackHoleThree = [[BlackHole alloc]init];
-        [self.view addSubview:_blackHoleThree];
-        [_blackHoleThree redrawRectWithBallFrame:_ball.frame];
-    }
-    
-    if (!_blackHoleFour) {
-        self.blackHoleFour = [[BlackHole alloc]init];
-        [self.view addSubview:_blackHoleFour];
-        [_blackHoleFour redrawRectWithBallFrame:_ball.frame];
-    }
-    
-    if (!_blackHoleFive) {
-        self.blackHoleFive = [[BlackHole alloc]init];
-        [self.view addSubview:_blackHoleFive];
-        [_blackHoleFive redrawRectWithBallFrame:_ball.frame];
+    if (_blackHoles.count == 0) {
+        _blackHoles = [NSMutableArray array];
     }
     
     int blackHolesC = [self numberOfBlackHoles];
-
-    if (blackHolesC > 0) {
-        _blackHoleOne.hidden = NO;
-        [_blackHoleOne startMoving];
-    } else {
-        _blackHoleOne.hidden = YES;
-    }
     
-    if (blackHolesC > 1) {
-        _blackHoleTwo.hidden = NO;
-        [_blackHoleTwo startMoving];
-    } else {
-        _blackHoleTwo.hidden = YES;
-    }
-    
-    if (blackHolesC > 2) {
-        _blackHoleThree.hidden = NO;
-        [_blackHoleThree startMoving];
-    } else {
-        _blackHoleThree.hidden = YES;
-    }
-    
-    if (blackHolesC > 3) {
-        _blackHoleFour.hidden = NO;
-        [_blackHoleFour startMoving];
-    } else {
-        _blackHoleFour.hidden = YES;
-    }
-
-    if (blackHolesC > 4) {
-        _blackHoleFive.hidden = NO;
-        [_blackHoleFive startMoving];
-    } else {
-        _blackHoleFive.hidden = YES;
+    while (_blackHoles.count < blackHolesC) {
+        BlackHole *blackHoleman = [[BlackHole alloc]init];
+        [self.view addSubview:blackHoleman];
+        [blackHoleman redrawRectWithBallFrame:_ball.frame];
+        [blackHoleman startMoving];
+        [_blackHoles addObject:blackHoleman];
     }
 }
 
@@ -473,7 +392,7 @@ CGRect screenBounds;
 - (void)reloadHighscoresWithBlock:(void(^)(NSError *error))block {
     [GCManager reloadHighScoresForCategory:[self getCurrentLeaderboard] withCompletionHandler:^(NSArray *scores, GKLeaderboard *leaderboard, NSError *error) {
         if (!error) {
-            _highscore = (int)leaderboard.localPlayerScore.value;
+            self.highscore = (int)leaderboard.localPlayerScore.value;
             if (block) {
                 block(nil);
             }
@@ -735,12 +654,7 @@ CGRect screenBounds;
 
 - (void)redraw {
     [self updateBlackHoles];
-    CGRect frame = _ball.frame;
-    [_blackHoleOne redrawRectWithBallFrame:frame];
-    [_blackHoleTwo redrawRectWithBallFrame:frame];
-    [_blackHoleThree redrawRectWithBallFrame:frame];
-    [_blackHoleFour redrawRectWithBallFrame:frame];
-    [_blackHoleFive redrawRectWithBallFrame:frame];
+    [_blackHoles makeObjectsPerformSelector:@selector(redrawWithNSValueCGRect:) withObject:[NSValue valueWithCGRect:_ball.frame]];
 }
 
 - (void)addOneToScore {
@@ -752,7 +666,7 @@ CGRect screenBounds;
     [self redrawBonusHole];
     
     if (_difficulty.selectedSegmentIndex > 0) {
-        if ([self numberOfBlackHoles] > 0) {
+        if (_blackHoles.count > 0) {
             if (!_timer.isValid) {
                 [self createTimer];
                 [_timer fire];
