@@ -31,7 +31,7 @@
     if (_numMovements < 1) {
         
         if (_shouldGetNumMovements) {
-            self.numMovements = floorf(0.5/_link.duration);
+            self.numMovements = floorf(0.45/_link.duration);
             self.shouldGetNumMovements = NO;
         }
         
@@ -52,7 +52,7 @@
         return;
     }
     
-    float movement = log10f(_numMovements)*3;
+    float movement = log10f(_numMovements)*4;
     
     float x = fabsf(movement*sinf(_theta))*_dVector.width;
     float y = fabsf(movement*cosf(_theta))*_dVector.height;
