@@ -56,12 +56,17 @@ float UIAlertPosition = 0;
     CGFloat height = activeBounds.size.height-(inset*2.0f);
 
     CGPathRef path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(originX, originY, width, height) cornerRadius:cornerRadius].CGPath;
+    CGColorRef twoTen = [UIColor colorWithRed:210.0f/255.0f green:210.0f/255.0f blue:210.0f/255.0f alpha:1.0f].CGColor;
+    CGColorRef zero = [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f].CGColor;
 
+    CGContextSaveGState(context); // added
+    
     CGContextAddPath(context, path);
     CGContextSetFillColorWithColor(context, [UIColor colorWithRed:210.0f/255.0f green:210.0f/255.0f blue:210.0f/255.0f alpha:1.0f].CGColor);
-    CGContextSetShadowWithColor(context, CGSizeMake(0.0f, 1.0f), 6.0f, [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f].CGColor);
+    CGContextSetShadowWithColor(context, CGSizeMake(0.0f, 1.0f), 6.0f, zero);
     CGContextDrawPath(context, kCGPathFill);
-    CGContextSaveGState(context);
+    
+   // CGContextSaveGState(context);
     CGContextAddPath(context, path);
     CGContextClip(context);
     
@@ -79,6 +84,7 @@ float UIAlertPosition = 0;
     CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
     CGColorSpaceRelease(colorSpace);
     CGGradientRelease(gradient);
+    
     CGFloat buttonOffset = UIAlertPosition;
     CGContextSaveGState(context);
     CGRect hatchFrame = CGRectMake(0.0f, buttonOffset, activeBounds.size.width, (activeBounds.size.height-buttonOffset+1.0f));
@@ -100,6 +106,7 @@ float UIAlertPosition = 0;
     CGContextSetLineCap(context, kCGLineCapRound);
     CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.15f].CGColor);
     CGContextDrawPath(context, kCGPathStroke);
+    
     CGContextRestoreGState(context);
     
     CGMutablePathRef linePath = CGPathCreateMutable();
@@ -108,24 +115,20 @@ float UIAlertPosition = 0;
     CGContextAddPath(context, linePath);
     CGPathRelease(linePath);
     CGContextSetLineWidth(context, 1.0f);
+    
     CGContextSaveGState(context);
+    
     CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.6f].CGColor);
     CGContextSetShadowWithColor(context, CGSizeMake(0.0f, 1.0f), 0.0f, [UIColor colorWithRed:1.0f green:1.0f blue:1.0f alpha:0.2f].CGColor);
     CGContextDrawPath(context, kCGPathStroke);
+    
     CGContextRestoreGState(context);
 
     CGContextAddPath(context, path);
     CGContextSetLineWidth(context, 3.0f);
-    CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:210.0f/255.0f green:210.0f/255.0f blue:210.0f/255.0f alpha:1.0f].CGColor);
-    CGContextSetShadowWithColor(context, CGSizeMake(0.0f, 0.0f), 6.0f, [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:1.0f].CGColor);
+    CGContextSetStrokeColorWithColor(context, zero);
+    CGContextSetShadowWithColor(context, CGSizeZero, 6.0f, zero);
     CGContextDrawPath(context, kCGPathStroke);
-    
-    CGContextRestoreGState(context);
-    CGContextAddPath(context, path);
-    CGContextSetLineWidth(context, 3.0f);
-    CGContextSetStrokeColorWithColor(context, [UIColor colorWithRed:210.0f/255.0f green:210.0f/255.0f blue:210.0f/255.0f alpha:1.0f].CGColor);
-    CGContextSetShadowWithColor(context, CGSizeMake(0.0f, 0.0f), 0.0f, [UIColor colorWithRed:0.0f green:0.0f blue:0.0f alpha:0.1f].CGColor);
-    CGContextDrawPath(context, kCGPathStroke);  
 }
 
 @end

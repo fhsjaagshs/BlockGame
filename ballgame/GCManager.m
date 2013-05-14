@@ -98,7 +98,7 @@
 	[GKPlayer loadPlayersForIdentifiers:[NSArray arrayWithObjects:playerID, nil] withCompletionHandler:^(NSArray *playerArray, NSError *error) {
         if (error) {
             if (block) {
-                block(nil,error);
+                block(nil, error);
             }
         } else {
             for (GKPlayer *player in playerArray) {

@@ -26,6 +26,13 @@
     [[UIImage imageNamed:@"ball"]drawInRect:self.bounds];
 }
 
+- (void)invalidate {
+    [_link invalidate];
+    self.link = nil;
+    self.shouldGetNumMovements = NO;
+    self.numMovements = 0;
+}
+
 - (void)moveSexilyCore {
     
     if (_numMovements < 1) {
@@ -36,19 +43,13 @@
         }
         
         if (_numMovements < 1) {
-            [_link invalidate];
-            self.link = nil;
-            self.shouldGetNumMovements = NO;
-            self.numMovements = 0;
+            [self invalidate];
             return;
         }
     }
     
     if (![((ViewController *)((AppDelegate *)[[UIApplication sharedApplication]delegate]).window.rootViewController) checkStuff]) {
-        [_link invalidate];
-        self.link = nil;
-        self.numMovements = 0;
-        self.shouldGetNumMovements = NO;
+        [self invalidate];
         return;
     }
     

@@ -218,8 +218,9 @@ CGRect screenBounds;
     }
     
     int blackHolesC = [self numberOfBlackHoles];
+    int count = _blackHoles.count;
     
-    while (_blackHoles.count < blackHolesC) {
+    while (count < blackHolesC) {
         BlackHole *blackHoleman = [[BlackHole alloc]init];
         [self.view addSubview:blackHoleman];
         [blackHoleman redrawRectWithBallFrame:_ball.frame];
@@ -283,7 +284,16 @@ CGRect screenBounds;
         [_bonusHole setHidden:YES];
     }
     
-    if ([self checkIfHitBlackHole]) {
+    BOOL hitBlackHole = NO;
+    
+    for (BlackHole *blackHoleman in _blackHoles) {
+        if (CGRectIntersectsRect(frame, blackHoleman.frame) && !blackHoleman.hidden) {
+            hitBlackHole = YES;
+            break;
+        }
+    }
+    
+    if (hitBlackHole) {
         [self gameOver];
     } else {
         CGPoint newCenterPointRecur = CGPointMake(newCenterPoint.x+rateX, newCenterPoint.y+rateY);
@@ -434,7 +444,7 @@ CGRect screenBounds;
             blockerView.clipsToBounds = YES;
             blockerView.layer.cornerRadius = 10;
             
-            UIActivityIndicatorView	*spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+            UIActivityIndicatorView	*spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
             spinner.center = CGPointMake(blockerView.bounds.size.width/2, (blockerView.bounds.size.height/2)+10);
             [blockerView addSubview:spinner];
             [self.view addSubview:blockerView];
@@ -675,7 +685,6 @@ CGRect screenBounds;
             if (_timer.isValid) {
                 [_timer invalidate];
             }
-            
             self.timer = nil;
         }
     }
