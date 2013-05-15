@@ -11,6 +11,20 @@
 
 CGRect screenBounds;
 
+@interface ViewController ()
+
+// Ball view sexy movement
+@property (nonatomic, assign) float bv_theta;
+@property (nonatomic, assign) float bv_numMovements;
+@property (nonatomic, assign) BOOL bv_shouldGetNumMovements;
+@property (nonatomic, assign) CGSize bv_dVector;
+@property (nonatomic, assign) BOOL bv_shouldSexilyMove;
+
+// Black hole movement
+@property (nonatomic, assign) float bh_timeSinceRedraw;
+
+@end
+
 
 @implementation ViewController
 
@@ -156,6 +170,86 @@ CGRect screenBounds;
     [self themeChanged];
 }
 
+- (void)startTimer {
+    self.link = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameTick)];
+    [_link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)stopTimer {
+    if (_link) {
+        [_link invalidate];
+    }
+    self.link = nil;
+}
+
+- (void)gameTick {
+    if (_bv_shouldSexilyMove) {
+        [self moveSexilyCore];
+    }
+    
+    [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:[NSNumber numberWithFloat:_link.duration]];
+    
+    if (_difficulty.selectedSegmentIndex > 0) {
+        if (_blackHoles.count > 0) {
+            self.bh_timeSinceRedraw += _link.duration;
+            
+            if (floorf(_bh_timeSinceRedraw) >= (5-_difficulty.selectedSegmentIndex)) {
+                [self redraw];
+                self.bh_timeSinceRedraw = 0;
+            }
+            
+        } else {
+            self.bh_timeSinceRedraw = 0;
+        }
+    }
+}
+
+- (void)moveSexilyCore {
+    
+    if (_bv_numMovements < 1) {
+        
+        if (_bv_shouldGetNumMovements) {
+            self.bv_numMovements = floorf(0.45/_link.duration);
+            self.bv_shouldGetNumMovements = NO;
+        }
+        
+        if (_bv_numMovements < 1) {
+            self.bv_shouldGetNumMovements = NO;
+            self.bv_numMovements = -1;
+            self.bv_shouldSexilyMove = NO;
+            return;
+        }
+    }
+    
+    if (![self checkStuff]) {
+        self.bv_shouldGetNumMovements = NO;
+        self.bv_numMovements = -1;
+        self.bv_shouldSexilyMove = NO;
+        return;
+    }
+    
+    float movement = log10f(_bv_numMovements)*4;
+    
+    float x = fabsf(movement*sinf(_bv_theta))*_bv_dVector.width;
+    float y = fabsf(movement*cosf(_bv_theta))*_bv_dVector.height;
+    
+    _ball.center = CGPointMake(_ball.center.x+x, _ball.center.y+y);
+    self.bv_numMovements -= 1;
+}
+
+- (void)moveSexilyWithTheta:(float)theta andDirectionVector:(CGSize)vector {
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
+        self.bv_shouldSexilyMove = NO;
+        return;
+    }
+    
+    self.bv_theta = theta;
+    self.bv_dVector = vector;
+    self.bv_shouldGetNumMovements = YES;
+    self.bv_shouldSexilyMove = YES;
+}
+
 - (void)showPurpleShitAtPoint:(CGPoint)point {
     
     CGRect frame = CGRectMake(point.x-50, point.y-50, 100, 100);
@@ -210,7 +304,7 @@ CGRect screenBounds;
         CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
         float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
         CGSize dVector = CGSizeMake(vector.width/fabsf(vector.width), vector.height/fabsf(vector.height));
-        [_ball moveSexilyWithTheta:theta andDirectionVector:dVector];
+        [self moveSexilyWithTheta:theta andDirectionVector:dVector];
         [self showPurpleShitAtPoint:point];
     }
 }
@@ -220,12 +314,9 @@ CGRect screenBounds;
     _motionManager.accelerometerUpdateInterval = 1/60; // used to be 1/180
 }
 
-- (void)stopMovingBlackHoles {
-    [_blackHoles makeObjectsPerformSelector:@selector(stopMoving)];
-}
-
-- (void)startMovingBlackHoles {
-    [_blackHoles makeObjectsPerformSelector:@selector(startMoving)];
+- (void)killBlackHoles {
+    [_blackHoles makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_blackHoles removeAllObjects];
 }
 
 - (void)hideBlackHoles {
@@ -261,13 +352,13 @@ CGRect screenBounds;
     }
     
     int blackHolesC = [self numberOfBlackHoles];
-    int count = _blackHoles.count;
     
-    while (count < blackHolesC) {
+    int remainder = blackHolesC-_blackHoles.count;
+    
+    for (int i = 0; i < remainder; i++) {
         BlackHole *blackHoleman = [[BlackHole alloc]init];
         [self.view addSubview:blackHoleman];
         [blackHoleman redrawRectWithBallFrame:_ball.frame];
-        [blackHoleman startMoving];
         [_blackHoles addObject:blackHoleman];
     }
 }
@@ -526,8 +617,7 @@ CGRect screenBounds;
     
     if (index == 0)  {
         [_difficultyLabel setText:@"Easy"];
-        [self stopMovingBlackHoles];
-        [self hideBlackHoles];
+        [self killBlackHoles];
     } else if (index == 1) {
         [_difficultyLabel setText:@"Medium"];
     } else if (index == 2) {
@@ -546,7 +636,6 @@ CGRect screenBounds;
 
 - (void)gameOver {
     [self gameOverWithoutBlackholeStoppage];
-    [self stopMovingBlackHoles];
 }
 
 - (void)gameOverWithoutBlackholeStoppage {
@@ -559,12 +648,7 @@ CGRect screenBounds;
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
     
     [self stopMotionManager];
-    
-    if (_timer.isValid) {
-        [_timer invalidate];
-    }
-    
-    self.timer = nil;
+    [self stopTimer];
     
     [_themeLabel setHidden:NO];
     [_difficulty setHidden:NO];
@@ -608,42 +692,19 @@ CGRect screenBounds;
     [alert show];
 }
 
-- (void)createTimer {
-    int index = _difficulty.selectedSegmentIndex;
-    if (index == 1) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:4.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-    } else if (index == 2) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:3.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-    } else if (index == 3) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:2.0f target:self selector:@selector(redraw) userInfo:nil repeats:YES];
-    } else {
-        self.timer = nil;
-    }
-}
-
 - (void)togglePause {
     if (_motionManager.isAccelerometerActive) {
         [self stopMotionManager];
-        [self stopMovingBlackHoles];
+        [self stopTimer];
         [_pauseButton setTitle:@"Resume" forState:UIControlStateNormal];
         [_theme setHidden:NO];
         [_themeLabel setHidden:NO];
-        
-        if (_timer.isValid) {
-            [_timer invalidate];
-        }
-
-        self.timer = nil;
     } else {
         [_pauseButton setTitle:@"Pause" forState:UIControlStateNormal];
         [_themeLabel setHidden:YES];
         [_theme setHidden:YES];
         
-        if (!_timer.isValid) {
-            [self createTimer];
-            [_timer fire];
-        }
-        
+        [self startTimer];
         [self startMotionManager];
         [self updateBlackHoles];
         
@@ -659,9 +720,10 @@ CGRect screenBounds;
     [self reloadHighscoresWithBlock:nil];
     
     [self hideBlackHoles];
-    [self stopMovingBlackHoles];
+
     [_bonusHole setHidden:YES];
     
+    [self startTimer];
     [self startMotionManager];
     
     [_difficultyLabel setHidden:NO];
@@ -678,12 +740,6 @@ CGRect screenBounds;
     [_score setText:@"0"];
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
     [_ball setCenter:self.view.center];
-    
-    if (_timer.isValid) {
-        [_timer invalidate];
-    }
-    
-    self.timer = nil;
 
     [self randomizePosition];
     [self submitOfflineScore];
@@ -717,20 +773,6 @@ CGRect screenBounds;
     
     [self updateBlackHoles];
     [self redrawBonusHole];
-    
-    if (_difficulty.selectedSegmentIndex > 0) {
-        if (_blackHoles.count > 0) {
-            if (!_timer.isValid) {
-                [self createTimer];
-                [_timer fire];
-            }
-        } else {
-            if (_timer.isValid) {
-                [_timer invalidate];
-            }
-            self.timer = nil;
-        }
-    }
 }
 
 - (void)flashScoreLabelToGreen {

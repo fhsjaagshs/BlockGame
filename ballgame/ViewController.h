@@ -27,15 +27,11 @@
 @property (strong, nonatomic) UIButton *leaderboardButton;
 
 @property (strong, nonatomic) BonusHole *bonusHole;
-/*@property (nonatomic, strong) BlackHole *blackHoleOne;
-@property (nonatomic, strong) BlackHole *blackHoleTwo;
-@property (nonatomic, strong) BlackHole *blackHoleThree;
-@property (nonatomic, strong) BlackHole *blackHoleFour;
-@property (nonatomic, strong) BlackHole *blackHoleFive;*/
 
-@property (strong, nonatomic) NSTimer *timer;
+//@property (strong, nonatomic) NSTimer *timer;
 @property (strong, nonatomic) CMMotionManager *motionManager;
 @property (strong, nonatomic) NSMutableArray *blackHoles;
+@property (strong, nonatomic) CADisplayLink *link;
 
 @property (assign, nonatomic) int highscore;
 
