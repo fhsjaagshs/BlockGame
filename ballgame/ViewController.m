@@ -11,6 +11,7 @@
 
 CGRect screenBounds;
 
+
 @implementation ViewController
 
 - (void)loadView {
@@ -155,6 +156,47 @@ CGRect screenBounds;
     [self themeChanged];
 }
 
+- (void)showPurpleShitAtPoint:(CGPoint)point {
+    
+    CGRect frame = CGRectMake(point.x-50, point.y-50, 100, 100);
+    
+    UIGraphicsBeginImageContextWithOptions(frame.size, NO, [[UIScreen mainScreen]scale]);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    UIGraphicsPushContext(context);
+    
+    CGContextSetLineWidth(context, 5);
+    CGContextSetStrokeColorWithColor(context, [UIColor purpleColor].CGColor);
+    
+    for (int i = 0; i < 3; i++) {
+        float width = 25*(i+1);
+        float x = ((100-width)/2);
+        float y = ((100-width)/2);
+        CGContextStrokeEllipseInRect(context, CGRectMake(x, y, width, width));
+    }
+    
+    UIGraphicsPopContext();
+    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImageView *imageView = [[UIImageView alloc]initWithFrame:frame];
+    imageView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:imageView];
+    imageView.image = outputImage;
+    
+    CGRect rect = CGRectMake(point.x-(50/4), point.y-(50/4), 25, 25);
+    
+    [UIView animateWithDuration:0.5 animations:^{
+        imageView.frame = rect;
+    } completion:^(BOOL finished) {
+        if (finished) {
+            [UIView animateWithDuration:0.2 animations:^{
+                [imageView removeFromSuperview];
+            }];
+        }
+    }];
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
@@ -164,11 +206,12 @@ CGRect screenBounds;
     CGPoint point = [[touches anyObject]locationInView:self.view];
     CGRect inRangeRect = CGRectMake(point.x-100, point.y-100, 200, 200);
 
-    if (CGRectContainsPoint(inRangeRect, _ball.center)) {
+    if (CGRectContainsPoint(inRangeRect, _ball.center) && !CGRectContainsPoint(_pauseButton.frame, point)) {
         CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
         float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
         CGSize dVector = CGSizeMake(vector.width/fabsf(vector.width), vector.height/fabsf(vector.height));
         [_ball moveSexilyWithTheta:theta andDirectionVector:dVector];
+        [self showPurpleShitAtPoint:point];
     }
 }
 
