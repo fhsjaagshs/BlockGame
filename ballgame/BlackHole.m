@@ -98,7 +98,7 @@
     CGGradientRef gradientTwo = CGGradientCreateWithColorComponents(rgb, colorsTwo, nil, sizeof(colorsTwo)/(sizeof(colorsTwo[0])*4));
     CGColorSpaceRelease(rgb);
     
-    CGAffineTransform transform = CGAffineTransformMakeScale(self.bounds.size.width, self.bounds.size.height);
+    CGAffineTransform transform = CGAffineTransformMakeScale(rectb.size.width, rectb.size.height);
     
     CGContextSaveGState(context);
     

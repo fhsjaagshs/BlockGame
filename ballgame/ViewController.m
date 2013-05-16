@@ -297,13 +297,33 @@ CGRect screenBounds;
         return;
     }
     
+    if (!_startButton.hidden) {
+        return;
+    }
+    
+    if ([_pauseButton.titleLabel.text isEqualToString:@"Resume"]) {
+        return;
+    }
+    
     CGPoint point = [[touches anyObject]locationInView:self.view];
+    
+    if (CGRectContainsPoint(_pauseButton.frame, point)) {
+        return;
+    }
+    
     CGRect inRangeRect = CGRectMake(point.x-100, point.y-100, 200, 200);
+    CGRect inRangeRectTwo = CGRectMake(point.x-200, point.y-200, 400, 400);
 
-    if (CGRectContainsPoint(inRangeRect, _ball.center) && !CGRectContainsPoint(_pauseButton.frame, point)) {
+    if (CGRectContainsPoint(inRangeRect, _ball.center)) {
         CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
         float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
         CGSize dVector = CGSizeMake(vector.width/fabsf(vector.width), vector.height/fabsf(vector.height));
+        [self moveSexilyWithTheta:theta andDirectionVector:dVector];
+        [self showPurpleShitAtPoint:point];
+    } else if (CGRectContainsPoint(inRangeRectTwo, _ball.center)) {
+        CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
+        float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
+        CGSize dVector = CGSizeMake((vector.width/fabsf(vector.width))/4, (vector.height/fabsf(vector.height))/4);
         [self moveSexilyWithTheta:theta andDirectionVector:dVector];
         [self showPurpleShitAtPoint:point];
     }
@@ -317,10 +337,6 @@ CGRect screenBounds;
 - (void)killBlackHoles {
     [_blackHoles makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_blackHoles removeAllObjects];
-}
-
-- (void)hideBlackHoles {
-    [_blackHoles makeObjectsPerformSelector:@selector(setHidden:) withObject:(id)kCFBooleanTrue];
 }
 
 - (BOOL)checkIfHitBlackHole {
@@ -351,15 +367,20 @@ CGRect screenBounds;
         _blackHoles = [NSMutableArray array];
     }
     
-    int blackHolesC = [self numberOfBlackHoles];
-    
-    int remainder = blackHolesC-_blackHoles.count;
-    
-    for (int i = 0; i < remainder; i++) {
-        BlackHole *blackHoleman = [[BlackHole alloc]init];
-        [self.view addSubview:blackHoleman];
-        [blackHoleman redrawRectWithBallFrame:_ball.frame];
-        [_blackHoles addObject:blackHoleman];
+    if (_difficulty.selectedSegmentIndex == 0) {
+        [_blackHoles makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        [_blackHoles removeAllObjects];
+    } else {
+        int blackHolesC = [self numberOfBlackHoles];
+        
+        int remainder = blackHolesC-_blackHoles.count;
+        
+        for (int i = 0; i < remainder; i++) {
+            BlackHole *blackHoleman = [[BlackHole alloc]init];
+            [self.view addSubview:blackHoleman];
+            [blackHoleman redrawRectWithBallFrame:_ball.frame];
+            [_blackHoles addObject:blackHoleman];
+        }
     }
 }
 
@@ -617,7 +638,6 @@ CGRect screenBounds;
     
     if (index == 0)  {
         [_difficultyLabel setText:@"Easy"];
-        [self killBlackHoles];
     } else if (index == 1) {
         [_difficultyLabel setText:@"Medium"];
     } else if (index == 2) {
@@ -625,6 +645,8 @@ CGRect screenBounds;
     } else if (index == 3) {
         [_difficultyLabel setText:@"Insane"];
     }
+    
+    [self updateBlackHoles];
 }
 
 - (void)themeChanged {
@@ -719,8 +741,8 @@ CGRect screenBounds;
 
     [self reloadHighscoresWithBlock:nil];
     
-    [self hideBlackHoles];
-
+    [self killBlackHoles];
+    
     [_bonusHole setHidden:YES];
     
     [self startTimer];
