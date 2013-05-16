@@ -264,9 +264,7 @@ CGRect screenBounds;
     
     for (int i = 0; i < 3; i++) {
         float width = 25*(i+1);
-        float x = ((100-width)/2);
-        float y = ((100-width)/2);
-        CGContextStrokeEllipseInRect(context, CGRectMake(x, y, width, width));
+        CGContextStrokeEllipseInRect(context, CGRectMake(((100-width)/2), ((100-width)/2), width, width));
     }
     
     UIGraphicsPopContext();
@@ -278,10 +276,8 @@ CGRect screenBounds;
     [self.view addSubview:imageView];
     imageView.image = outputImage;
     
-    CGRect rect = CGRectMake(point.x-(50/4), point.y-(50/4), 25, 25);
-    
     [UIView animateWithDuration:0.5 animations:^{
-        imageView.frame = rect;
+        imageView.frame = CGRectMake(point.x-(50/4), point.y-(50/4), 25, 25);
     } completion:^(BOOL finished) {
         if (finished) {
             [UIView animateWithDuration:0.2 animations:^{
@@ -310,20 +306,23 @@ CGRect screenBounds;
     if (CGRectContainsPoint(_pauseButton.frame, point)) {
         return;
     }
-    
-    CGRect inRangeRect = CGRectMake(point.x-100, point.y-100, 200, 200);
-    CGRect inRangeRectTwo = CGRectMake(point.x-200, point.y-200, 400, 400);
 
-    if (CGRectContainsPoint(inRangeRect, _ball.center)) {
+    if (CGRectContainsPoint(CGRectMake(point.x-100, point.y-100, 200, 200), _ball.center)) {
         CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
         float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
         CGSize dVector = CGSizeMake(vector.width/fabsf(vector.width), vector.height/fabsf(vector.height));
         [self moveSexilyWithTheta:theta andDirectionVector:dVector];
         [self showPurpleShitAtPoint:point];
-    } else if (CGRectContainsPoint(inRangeRectTwo, _ball.center)) {
+    } else if (CGRectContainsPoint(CGRectMake(point.x-200, point.y-200, 400, 400), _ball.center)) {
         CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
         float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
-        CGSize dVector = CGSizeMake((vector.width/fabsf(vector.width))/4, (vector.height/fabsf(vector.height))/4);
+        CGSize dVector = CGSizeMake((vector.width/fabsf(vector.width))/3, (vector.height/fabsf(vector.height))/3);
+        [self moveSexilyWithTheta:theta andDirectionVector:dVector];
+        [self showPurpleShitAtPoint:point];
+    } else {
+        CGSize vector = CGSizeMake(_ball.center.x-point.x, _ball.center.y-point.y);
+        float theta = fabsf(atan(vector.height/vector.width)-M_PI_2);
+        CGSize dVector = CGSizeMake((vector.width/fabsf(vector.width))/5, (vector.height/fabsf(vector.height))/5);
         [self moveSexilyWithTheta:theta andDirectionVector:dVector];
         [self showPurpleShitAtPoint:point];
     }
