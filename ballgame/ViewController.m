@@ -9,8 +9,6 @@
 #import "ViewController.h"
 #import "AppDelegate.h"
 
-CGRect screenBounds;
-
 @interface ViewController ()
 
 @property (nonatomic, assign) float bv_theta;
@@ -23,17 +21,19 @@ CGRect screenBounds;
 
 @property (nonatomic, assign) float t_timeLeft;
 
+@property (nonatomic, assign) CGRect screenBounds;
+
 @end
 
 
 @implementation ViewController
 
 - (void)loadView {
-    screenBounds = [[UIScreen mainScreen]bounds];
+    self.screenBounds = [[UIScreen mainScreen]bounds];
     
     BOOL isClassicMode = ([[NSUserDefaults standardUserDefaults]boolForKey:themeIndexKey] == 1);
     
-    self.view = [[BackgroundView alloc]initWithFrame:screenBounds];
+    self.view = [[BackgroundView alloc]initWithFrame:_screenBounds];
     self.view.backgroundColor = [UIColor darkGrayColor];
     [(BackgroundView *)self.view setClassicMode:isClassicMode];
     
@@ -422,7 +422,7 @@ CGRect screenBounds;
         return NO;
     }
     
-    if (!CGRectContainsPoint(screenBounds, _ball.center)) {
+    if (!CGRectContainsPoint(_screenBounds, _ball.center)) {
         [self gameOver];
         return NO;
     }
@@ -438,7 +438,7 @@ CGRect screenBounds;
     
     CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
     
-    if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
+    if (CGRectContainsPoint(_screenBounds, newCenterPoint)) {
         _ball.center = newCenterPoint;
     } else {
         [self gameOver];
@@ -472,7 +472,7 @@ CGRect screenBounds;
     } else {
         CGPoint newCenterPointRecur = CGPointMake(newCenterPoint.x+rateX, newCenterPoint.y+rateY);
         
-        if (CGRectContainsPoint(screenBounds, newCenterPointRecur)) {
+        if (CGRectContainsPoint(_screenBounds, newCenterPointRecur)) {
             _ball.center = newCenterPointRecur;
         } else {
             [self gameOver];
@@ -516,24 +516,24 @@ CGRect screenBounds;
     
     if (whichSide == 1) {
         // left
-        int limit = (screenBounds.size.height-90);
+        int limit = (_screenBounds.size.height-90);
         y = arc4random()%limit;
     } else if (whichSide == 2) {
         // right
-        int limit = (screenBounds.size.height-90);
+        int limit = (_screenBounds.size.height-90);
         y = arc4random()%limit;
-        x = screenBounds.size.width-30;
+        x = _screenBounds.size.width-30;
     } else if (whichSide == 3) {
         // top
-        int limit = (screenBounds.size.width-90);
+        int limit = (_screenBounds.size.width-90);
         x = arc4random()%limit;
         width = 90;
         height = 30;
     } else if (whichSide == 4) {
         // bottom
-        int limit = (screenBounds.size.width-90);
+        int limit = (_screenBounds.size.width-90);
         x = arc4random()%limit;
-        y = screenBounds.size.height-30;
+        y = _screenBounds.size.height-30;
         width = 90;
         height = 30;
     }
