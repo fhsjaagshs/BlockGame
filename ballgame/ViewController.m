@@ -269,27 +269,30 @@ CGRect screenBounds;
     
     CGRect frame = CGRectMake(point.x-50, point.y-50, 100, 100);
     
-    UIGraphicsBeginImageContextWithOptions(frame.size, NO, [[UIScreen mainScreen]scale]);
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    UIGraphicsPushContext(context);
-    
-    CGContextSetLineWidth(context, 5);
-    CGContextSetStrokeColorWithColor(context, [UIColor purpleColor].CGColor);
-    
-    for (int i = 0; i < 3; i++) {
-        float width = 25*(i+1);
-        CGContextStrokeEllipseInRect(context, CGRectMake(((100-width)/2), ((100-width)/2), width, width));
+    if (!_purpleImage) {
+        
+        UIGraphicsBeginImageContextWithOptions(frame.size, NO, [[UIScreen mainScreen]scale]);
+        
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        UIGraphicsPushContext(context);
+        
+        CGContextSetLineWidth(context, 5);
+        CGContextSetStrokeColorWithColor(context, [[UIColor colorWithRed:165.0f/255.0f green:91.0f/255.0f blue:1.0f alpha:1.0f]CGColor]);
+        
+        for (int i = 0; i < 3; i++) {
+            float width = 25*(i+1);
+            CGContextStrokeEllipseInRect(context, CGRectMake(((100-width)/2), ((100-width)/2), width, width));
+        }
+        
+        UIGraphicsPopContext();
+        self.purpleImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
     }
-    
-    UIGraphicsPopContext();
-    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:frame];
     imageView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:imageView];
-    imageView.image = outputImage;
+    imageView.image = _purpleImage;
     
     [UIView animateWithDuration:0.5 animations:^{
         imageView.frame = CGRectMake(point.x-(50/4), point.y-(50/4), 25, 25);
@@ -695,7 +698,6 @@ CGRect screenBounds;
     [self.view bringSubviewToFront:_difficulty];
     [self.view bringSubviewToFront:_theme];
     [self.view bringSubviewToFront:_startButton];
-    [self.view bringSubviewToFront:_gameOverLabel];
     [self.view bringSubviewToFront:_leaderboardButton];
     
     int64_t gameOverScore = _score.text.intValue;
