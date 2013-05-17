@@ -116,6 +116,8 @@ CGRect screenBounds;
     [_leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_leaderboardButton];
     
+   // UIColor *steelBlueColor = [UIColor colorWithRed:70.0f/255.0f green:130.0f/255.0f blue:180.0f/255.0f alpha:1.0f];
+    
     self.theme = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
     _theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _theme.frame = CGRectMake(77, 402, 166, 30);
