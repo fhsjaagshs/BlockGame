@@ -657,6 +657,7 @@ CGRect screenBounds;
     
     if (index == 0)  {
         [_difficultyLabel setText:@"Easy"];
+        [self killBlackHoles];
     } else if (index == 1) {
         [_difficultyLabel setText:@"Medium"];
     } else if (index == 2) {
@@ -664,8 +665,6 @@ CGRect screenBounds;
     } else if (index == 3) {
         [_difficultyLabel setText:@"Insane"];
     }
-    
-    [self updateBlackHoles];
 }
 
 - (void)themeChanged {
