@@ -23,6 +23,9 @@ CGRect screenBounds;
 // Black hole movement
 @property (nonatomic, assign) float bh_timeSinceRedraw;
 
+// Target Management
+@property (nonatomic, assign) float t_timeLeft;
+
 @end
 
 
@@ -189,11 +192,23 @@ CGRect screenBounds;
     
     [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:[NSNumber numberWithFloat:_link.duration]];
     
-    if (_difficulty.selectedSegmentIndex > 0) {
+    int index = _difficulty.selectedSegmentIndex;
+    
+    if (index > 0) {
+        
+        if (index > 1) {
+            self.t_timeLeft += _link.duration;
+            
+            if (floorf(_t_timeLeft) >= 6-index) {
+                [self randomizePosition];
+                self.t_timeLeft = 0;
+            }
+        }
+        
         if (_blackHoles.count > 0) {
             self.bh_timeSinceRedraw += _link.duration;
             
-            if (floorf(_bh_timeSinceRedraw) >= (5-_difficulty.selectedSegmentIndex)) {
+            if (floorf(_bh_timeSinceRedraw) >= (5-index)) {
                 [self redraw];
                 self.bh_timeSinceRedraw = 0;
             }
@@ -403,7 +418,7 @@ CGRect screenBounds;
     }
     
     if (!CGRectContainsPoint(screenBounds, _ball.center)) {
-        [self gameOverWithoutBlackholeStoppage];
+        [self gameOver];
         return NO;
     }
     
@@ -421,7 +436,7 @@ CGRect screenBounds;
     if (CGRectContainsPoint(screenBounds, newCenterPoint)) {
         _ball.center = newCenterPoint;
     } else {
-        [self gameOverWithoutBlackholeStoppage];
+        [self gameOver];
         return;
     }
 
@@ -455,7 +470,7 @@ CGRect screenBounds;
         if (CGRectContainsPoint(screenBounds, newCenterPointRecur)) {
             _ball.center = newCenterPointRecur;
         } else {
-            [self gameOverWithoutBlackholeStoppage];
+            [self gameOver];
         }
         
         frame = _ball.frame;
@@ -656,10 +671,6 @@ CGRect screenBounds;
 }
 
 - (void)gameOver {
-    [self gameOverWithoutBlackholeStoppage];
-}
-
-- (void)gameOverWithoutBlackholeStoppage {
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
         return;
@@ -679,6 +690,13 @@ CGRect screenBounds;
     [_leaderboardButton setHidden:NO];
     [_pauseButton setHidden:YES];
     [_startButton setTitle:@"Retry" forState:UIControlStateNormal];
+    
+    [self.view bringSubviewToFront:_themeLabel];
+    [self.view bringSubviewToFront:_difficulty];
+    [self.view bringSubviewToFront:_theme];
+    [self.view bringSubviewToFront:_startButton];
+    [self.view bringSubviewToFront:_gameOverLabel];
+    [self.view bringSubviewToFront:_leaderboardButton];
     
     int64_t gameOverScore = _score.text.intValue;
     
@@ -794,6 +812,7 @@ CGRect screenBounds;
     
     [self updateBlackHoles];
     [self redrawBonusHole];
+    self.t_timeLeft = 0;
 }
 
 - (void)flashScoreLabelToGreen {
