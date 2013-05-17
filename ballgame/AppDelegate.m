@@ -25,11 +25,16 @@ NSString * const savedScoreKey = @"savedScore";
     return YES;
 }
 
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    [((ViewController *)_window.rootViewController) startTimer];
+}
+
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     ViewController *viewController = ((ViewController *)_window.rootViewController);
     if (viewController.motionManager.isAccelerometerActive) {
         [viewController togglePause];
     }
+    [[NSUserDefaults standardUserDefaults]synchronize];
 }
 
 @end

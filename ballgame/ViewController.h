@@ -19,7 +19,6 @@
 @property (strong, nonatomic) UISegmentedControl *theme;
 @property (strong, nonatomic) UILabel *score;
 @property (strong, nonatomic) UILabel *gameOverLabel;
-@property (strong, nonatomic) BackgroundView *theMainView;
 @property (strong, nonatomic) UILabel *themeLabel;
 @property (strong, nonatomic) UIButton *startButton;
 @property (strong, nonatomic) UIButton *pauseButton;
@@ -37,6 +36,9 @@
 
 - (void)gameOver;
 - (void)togglePause;
+
+- (void)startTimer;
+- (void)stopTimer;
 
 - (BOOL)checkStuff;
 

@@ -10,4 +10,6 @@
 
 @interface BackgroundView : UIView
 
+- (void)setClassicMode:(BOOL)classic;
+
 @end

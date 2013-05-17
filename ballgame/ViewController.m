@@ -13,17 +13,14 @@ CGRect screenBounds;
 
 @interface ViewController ()
 
-// Ball view sexy movement
 @property (nonatomic, assign) float bv_theta;
 @property (nonatomic, assign) float bv_numMovements;
 @property (nonatomic, assign) BOOL bv_shouldGetNumMovements;
 @property (nonatomic, assign) CGSize bv_dVector;
 @property (nonatomic, assign) BOOL bv_shouldSexilyMove;
 
-// Black hole movement
 @property (nonatomic, assign) float bh_timeSinceRedraw;
 
-// Target Management
 @property (nonatomic, assign) float t_timeLeft;
 
 @end
@@ -32,15 +29,13 @@ CGRect screenBounds;
 @implementation ViewController
 
 - (void)loadView {
-    [super loadView];
-    
     screenBounds = [[UIScreen mainScreen]bounds];
     
-    self.view.backgroundColor = [UIColor darkGrayColor];
+    BOOL isClassicMode = ([[NSUserDefaults standardUserDefaults]boolForKey:themeIndexKey] == 1);
     
-    self.theMainView = [[BackgroundView alloc]initWithFrame:screenBounds];
-    _theMainView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:_theMainView];
+    self.view = [[BackgroundView alloc]initWithFrame:screenBounds];
+    self.view.backgroundColor = [UIColor darkGrayColor];
+    [(BackgroundView *)self.view setClassicMode:isClassicMode];
     
     self.difficultyLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 150, 320, 17)];
     _difficultyLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
@@ -115,9 +110,7 @@ CGRect screenBounds;
     [_leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
     [_leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_leaderboardButton];
-    
-   // UIColor *steelBlueColor = [UIColor colorWithRed:70.0f/255.0f green:130.0f/255.0f blue:180.0f/255.0f alpha:1.0f];
-    
+
     self.theme = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
     _theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _theme.frame = CGRectMake(77, 402, 166, 30);
@@ -137,6 +130,7 @@ CGRect screenBounds;
     [self.view addSubview:_difficulty];
     
     self.target = [[TargetView alloc]init];
+    [_target setClassicMode:isClassicMode];
     [self.view addSubview:_target];
     
     self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
@@ -172,12 +166,18 @@ CGRect screenBounds;
     }
     
     [self difficultyChanged];
-    [self themeChanged];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self stopTimer];
 }
 
 - (void)startTimer {
-    self.link = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameTick)];
-    [_link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    if (!_link) {
+        self.link = [CADisplayLink displayLinkWithTarget:self selector:@selector(gameTick)];
+        [_link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+    }
 }
 
 - (void)stopTimer {
@@ -670,7 +670,7 @@ CGRect screenBounds;
 - (void)themeChanged {
     [[NSUserDefaults standardUserDefaults]setFloat:_theme.selectedSegmentIndex forKey:themeIndexKey];
     BOOL isSelectedIndexOne = (_theme.selectedSegmentIndex == 1);
-    [_theMainView setHidden:isSelectedIndexOne];
+    [(BackgroundView *)self.view setClassicMode:isSelectedIndexOne];
     [_target setClassicMode:isSelectedIndexOne];
 }
 

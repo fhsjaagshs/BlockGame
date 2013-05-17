@@ -14,6 +14,8 @@ float UIAlertPosition = 0;
 
 - (void)layoutSubviews {
     
+    self.layer.shouldRasterize = YES;
+    
     Class UIAlertButton = NSClassFromString(@"UIAlertButton");
     Class UILabelClass = [UILabel class];
     Class UIImageViewClass = [UIImageView class];

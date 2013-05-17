@@ -8,11 +8,29 @@
 
 #import "BackgroundView.h"
 
+@interface BackgroundView ()
+
+@property (nonatomic, assign) BOOL isClassicMode;
+
+@end
+
 @implementation BackgroundView
 
+- (void)setClassicMode:(BOOL)classic {
+    self.isClassicMode = classic;
+    [self setNeedsDisplay];
+}
+
 - (void)drawRect:(CGRect)rect {
-    UIImage *scaled = [UIImage imageWithCGImage:[[UIImage imageNamed:@"background"]CGImage] scale:[[UIScreen mainScreen]scale] orientation:UIImageOrientationUp];
-    [scaled drawInRect:self.bounds];
+    if (_isClassicMode) {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSaveGState(context);
+        CGContextSetFillColorWithColor(context, [[UIColor darkGrayColor]CGColor]);
+        CGContextFillRect(context, self.bounds);
+        CGContextRestoreGState(context);
+    } else {
+        [[UIImage imageNamed:@"background"]drawInRect:self.bounds];
+    }
 }
 
 @end

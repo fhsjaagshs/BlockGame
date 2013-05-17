@@ -87,42 +87,20 @@
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGRect rectb = self.bounds;
-    
-    CGFloat colorsOne[] = { 1, 1, 1, 1, 1, 0, 0, 1 };
-    CGFloat colorsTwo[] = { 0, 0, 0, 1, 0.65625, 0.8046875, 0.9453125, 1 };
-    
+
+    CGFloat colorsOne[] = { 1, 0, 0, 1, 0, 0, 0, 1 };
+
     CGColorSpaceRef rgb = CGColorSpaceCreateDeviceRGB();
     CGGradientRef gradientOne = CGGradientCreateWithColorComponents(rgb, colorsOne, nil, 2);
-    CGGradientRef gradientTwo = CGGradientCreateWithColorComponents(rgb, colorsTwo, nil, sizeof(colorsTwo)/(sizeof(colorsTwo[0])*4));
     CGColorSpaceRelease(rgb);
-    
-    CGAffineTransform transform = CGAffineTransformMakeScale(rectb.size.width, rectb.size.height);
-    
+
     CGContextSaveGState(context);
-    
-    CGContextAddEllipseInRect(context, rectb);
-    CGContextClip(context);
-    CGContextDrawLinearGradient(context, gradientOne, CGPointMake(CGRectGetMidX(rectb), CGRectGetMinY(rectb)), CGPointMake(CGRectGetMidX(rectb), CGRectGetMaxY(rectb)), 0);
-    
-    CGContextRestoreGState(context);
-    
-    CGContextSaveGState(context);
-    
     CGContextAddEllipseInRect(context, rect);
-    CGContextDrawPath(context, kCGPathStroke);
-    CGContextConcatCTM(context, transform);
-    CGContextBeginPath(context);
-    CGContextAddArc(context, 0.5, 0.5, 0.3, 0, 6.28318531, 0);
-    CGContextClosePath(context);
     CGContextClip(context);
-    CGContextDrawLinearGradient(context, gradientTwo, CGPointMake(0.5, 0), CGPointMake(0.5, 1), 0);
-    
+    CGContextDrawLinearGradient(context, gradientOne, CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect)), CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect)), 0);
     CGContextRestoreGState(context);
     
     CGGradientRelease(gradientOne);
-    CGGradientRelease(gradientTwo);
 }
 
 @end
