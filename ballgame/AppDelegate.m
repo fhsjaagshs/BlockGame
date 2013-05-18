@@ -29,6 +29,10 @@ NSString * const savedScoreKey = @"savedScore";
     [[ImageCache sharedInstance]removeAllObjects];
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application {
+    [[NSUserDefaults standardUserDefaults]synchronize];
+}
+
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     ViewController *viewController = ((ViewController *)_window.rootViewController);
     
