@@ -25,8 +25,16 @@ NSString * const savedScoreKey = @"savedScore";
     return YES;
 }
 
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+    [[ImageCache sharedInstance]removeAllObjects];
+}
+
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    [((ViewController *)_window.rootViewController) startTimer];
+    ViewController *viewController = ((ViewController *)_window.rootViewController);
+    
+    if (viewController.hitSideForGameOver) {
+        [viewController startTimer];
+    }
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {

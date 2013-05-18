@@ -44,7 +44,7 @@ UIColor *oldBGColor;
         [super drawRect:rect];
     } else {
         CGSize size = self.bounds.size;
-        UIImage *image = [UIImage imageNamed:(size.width > size.height)?@"target-hor":@"target-ver"];
+        UIImage *image = [UIImage uncachedImageNamed:(size.width > size.height)?@"target-hor":@"target-ver"];
         [image drawInRect:self.bounds];
     }
 }

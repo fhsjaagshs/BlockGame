@@ -16,11 +16,7 @@
 		F1225DCC1468919B005D6793 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DCB1468919B005D6793 /* main.m */; };
 		F1225DD01468919B005D6793 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DCF1468919B005D6793 /* AppDelegate.m */; };
 		F1225DD31468919B005D6793 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DD21468919B005D6793 /* ViewController.m */; };
-		F126568A171B3E5500B0ED95 /* background.png in Resources */ = {isa = PBXBuildFile; fileRef = F126567D171B3E5500B0ED95 /* background.png */; };
-		F126568B171B3E5500B0ED95 /* background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F126567E171B3E5500B0ED95 /* background@2x.png */; };
-		F126568C171B3E5500B0ED95 /* background~586@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F126567F171B3E5500B0ED95 /* background~586@2x.png */; };
 		F126568D171B3E5500B0ED95 /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265680171B3E5500B0ED95 /* ball.png */; };
-		F126568E171B3E5500B0ED95 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265681171B3E5500B0ED95 /* Default-568h@2x.png */; };
 		F126568F171B3E5500B0ED95 /* default.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265682171B3E5500B0ED95 /* default.png */; };
 		F1265690171B3E5500B0ED95 /* default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265683171B3E5500B0ED95 /* default@2x.png */; };
 		F1265691171B3E5500B0ED95 /* leaderboard.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265684171B3E5500B0ED95 /* leaderboard.png */; };
@@ -35,7 +31,10 @@
 		F12656A7171B867600B0ED95 /* target-ver.png in Resources */ = {isa = PBXBuildFile; fileRef = F12656A3171B867600B0ED95 /* target-ver.png */; };
 		F12656A8171B867600B0ED95 /* target-ver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F12656A4171B867600B0ED95 /* target-ver@2x.png */; };
 		F12A6B8A147880A700CEF48B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F12A6B89147880A700CEF48B /* GameKit.framework */; };
+		F131D91F17481944008D5710 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F131D91E17481944008D5710 /* Default-568h@2x.png */; };
+		F14793091747A556007EA740 /* UIImage+uncachedImageNamed.m in Sources */ = {isa = PBXBuildFile; fileRef = F14793081747A556007EA740 /* UIImage+uncachedImageNamed.m */; };
 		F1679DBC1715EEB600334E1B /* BallView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1679DBB1715EEB600334E1B /* BallView.m */; };
+		F173EDC017471EB000E158FA /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F173EDBF17471EB000E158FA /* ImageCache.m */; };
 		F1ABC76F17162B3100389EDB /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1ABC76E17162B3100389EDB /* CoreMotion.framework */; };
 		F1ABC77217164ABB00389EDB /* BackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1ABC77117164ABB00389EDB /* BackgroundView.m */; };
 		F1BB0A0D14CF9B7300D132CD /* NSCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */; };
@@ -64,11 +63,7 @@
 		F1225DCF1468919B005D6793 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		F1225DD11468919B005D6793 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F1225DD21468919B005D6793 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		F126567D171B3E5500B0ED95 /* background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = background.png; sourceTree = "<group>"; };
-		F126567E171B3E5500B0ED95 /* background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background@2x.png"; sourceTree = "<group>"; };
-		F126567F171B3E5500B0ED95 /* background~586@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "background~586@2x.png"; sourceTree = "<group>"; };
 		F1265680171B3E5500B0ED95 /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
-		F1265681171B3E5500B0ED95 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		F1265682171B3E5500B0ED95 /* default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = default.png; sourceTree = "<group>"; };
 		F1265683171B3E5500B0ED95 /* default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "default@2x.png"; sourceTree = "<group>"; };
 		F1265684171B3E5500B0ED95 /* leaderboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard.png; sourceTree = "<group>"; };
@@ -83,8 +78,13 @@
 		F12656A3171B867600B0ED95 /* target-ver.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "target-ver.png"; sourceTree = "<group>"; };
 		F12656A4171B867600B0ED95 /* target-ver@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "target-ver@2x.png"; sourceTree = "<group>"; };
 		F12A6B89147880A700CEF48B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		F131D91E17481944008D5710 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		F14793071747A556007EA740 /* UIImage+uncachedImageNamed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+uncachedImageNamed.h"; sourceTree = "<group>"; };
+		F14793081747A556007EA740 /* UIImage+uncachedImageNamed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+uncachedImageNamed.m"; sourceTree = "<group>"; };
 		F1679DBA1715EEB600334E1B /* BallView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BallView.h; sourceTree = "<group>"; };
 		F1679DBB1715EEB600334E1B /* BallView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BallView.m; sourceTree = "<group>"; };
+		F173EDBE17471EB000E158FA /* ImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCache.h; sourceTree = "<group>"; };
+		F173EDBF17471EB000E158FA /* ImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCache.m; sourceTree = "<group>"; };
 		F1ABC76E17162B3100389EDB /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		F1ABC77017164ABB00389EDB /* BackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundView.h; sourceTree = "<group>"; };
 		F1ABC77117164ABB00389EDB /* BackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundView.m; sourceTree = "<group>"; };
@@ -177,13 +177,10 @@
 		F126567C171B3E5500B0ED95 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				F126567D171B3E5500B0ED95 /* background.png */,
-				F126567E171B3E5500B0ED95 /* background@2x.png */,
-				F126567F171B3E5500B0ED95 /* background~586@2x.png */,
 				F1265680171B3E5500B0ED95 /* ball.png */,
-				F1265681171B3E5500B0ED95 /* Default-568h@2x.png */,
 				F1265682171B3E5500B0ED95 /* default.png */,
 				F1265683171B3E5500B0ED95 /* default@2x.png */,
+				F131D91E17481944008D5710 /* Default-568h@2x.png */,
 				F126569B171B7CD100B0ED95 /* icon.png */,
 				F126569C171B7CD100B0ED95 /* icon@2x.png */,
 				F126569D171B7CD100B0ED95 /* iTunesArtwork.png */,
@@ -218,6 +215,10 @@
 				9B4F7C2B1527B6FF00DD2C44 /* BlackHole.m */,
 				9BC024AA15291897000CC968 /* BonusHole.h */,
 				9BC024AB15291897000CC968 /* BonusHole.m */,
+				F173EDBE17471EB000E158FA /* ImageCache.h */,
+				F173EDBF17471EB000E158FA /* ImageCache.m */,
+				F14793071747A556007EA740 /* UIImage+uncachedImageNamed.h */,
+				F14793081747A556007EA740 /* UIImage+uncachedImageNamed.m */,
 			);
 			name = "Custom Classes";
 			sourceTree = "<group>";
@@ -273,11 +274,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F126568A171B3E5500B0ED95 /* background.png in Resources */,
-				F126568B171B3E5500B0ED95 /* background@2x.png in Resources */,
-				F126568C171B3E5500B0ED95 /* background~586@2x.png in Resources */,
 				F126568D171B3E5500B0ED95 /* ball.png in Resources */,
-				F126568E171B3E5500B0ED95 /* Default-568h@2x.png in Resources */,
 				F126568F171B3E5500B0ED95 /* default.png in Resources */,
 				F1265690171B3E5500B0ED95 /* default@2x.png in Resources */,
 				F1265691171B3E5500B0ED95 /* leaderboard.png in Resources */,
@@ -291,6 +288,7 @@
 				F12656A6171B867600B0ED95 /* target-hor@2x.png in Resources */,
 				F12656A7171B867600B0ED95 /* target-ver.png in Resources */,
 				F12656A8171B867600B0ED95 /* target-ver@2x.png in Resources */,
+				F131D91F17481944008D5710 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +310,8 @@
 				F1C8B53817149F860059B23D /* TargetView.m in Sources */,
 				F1679DBC1715EEB600334E1B /* BallView.m in Sources */,
 				F1ABC77217164ABB00389EDB /* BackgroundView.m in Sources */,
+				F173EDC017471EB000E158FA /* ImageCache.m in Sources */,
+				F14793091747A556007EA740 /* UIImage+uncachedImageNamed.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,7 +328,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Corinna Wiedmer-Symer (RT2G2Q9WRP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Corinna Wiedmer-Symer (RT2G2Q9WRP)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -344,7 +345,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "7F92E3B1-A326-4887-A9DA-D8D2C4CE142E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7F92E3B1-A326-4887-A9DA-D8D2C4CE142E";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -359,8 +361,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Corinna Wiedmer-Symer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Corinna Wiedmer-Symer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Corinna Wiedmer-Symer (RT2G2Q9WRP)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Corinna Wiedmer-Symer (RT2G2Q9WRP)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -370,8 +372,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "EBAB6378-6398-4C67-86F9-546BE7E90D7E";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "EBAB6378-6398-4C67-86F9-546BE7E90D7E";
+				PROVISIONING_PROFILE = "7F92E3B1-A326-4887-A9DA-D8D2C4CE142E";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "7F92E3B1-A326-4887-A9DA-D8D2C4CE142E";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

@@ -93,7 +93,7 @@
     _startButton.titleLabel.textAlignment = UITextAlignmentCenter;
     _startButton.titleLabel.shadowColor = [UIColor lightGrayColor];
     _startButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [_startButton setBackgroundImage:[UIImage imageNamed:@"startretry"] forState:UIControlStateNormal];
+    [_startButton setBackgroundImage:[UIImage uncachedImageNamed:@"startretry"] forState:UIControlStateNormal];
     [_startButton setTitle:@"Start" forState:UIControlStateNormal];
     [_startButton addTarget:self action:@selector(startOrRetry) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_startButton];
@@ -106,7 +106,7 @@
     _leaderboardButton.titleLabel.textAlignment = UITextAlignmentCenter;
     _leaderboardButton.titleLabel.shadowColor = [UIColor lightGrayColor];
     _leaderboardButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [_leaderboardButton setBackgroundImage:[UIImage imageNamed:@"leaderboard"] forState:UIControlStateNormal];
+    [_leaderboardButton setBackgroundImage:[UIImage uncachedImageNamed:@"leaderboard"] forState:UIControlStateNormal];
     [_leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
     [_leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_leaderboardButton];
@@ -271,7 +271,9 @@
     
     CGRect frame = CGRectMake(point.x-50, point.y-50, 100, 100);
     
-    if (!_purpleImage) {
+    UIImage *image = [[ImageCache sharedInstance]objectForKey:@"purpleImage"];
+    
+    if (!image) {
         
         UIGraphicsBeginImageContextWithOptions(frame.size, NO, [[UIScreen mainScreen]scale]);
         
@@ -287,14 +289,15 @@
         }
         
         UIGraphicsPopContext();
-        self.purpleImage = UIGraphicsGetImageFromCurrentImageContext();
+        image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+        [[ImageCache sharedInstance]setObject:image forKey:@"purpleImage"];
     }
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:frame];
     imageView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:imageView];
-    imageView.image = _purpleImage;
+    imageView.image = image;
     
     [UIView animateWithDuration:0.5 animations:^{
         imageView.frame = CGRectMake(point.x-(50/4), point.y-(50/4), 25, 25);
@@ -362,7 +365,7 @@
     CGRect frame = _ball.frame;
     
     for (BlackHole *blackHoleman in _blackHoles) {
-        if (CGRectIntersectsRect(frame, blackHoleman.frame) && !blackHoleman.hidden) {
+        if (CGRectIntersectsRect(frame, blackHoleman.frame)/* && !blackHoleman.hidden*/) {
             return YES;
         }
     }
@@ -423,6 +426,7 @@
     }
     
     if (!CGRectContainsPoint(_screenBounds, _ball.center)) {
+        self.hitSideForGameOver = YES;
         [self gameOver];
         return NO;
     }
@@ -441,6 +445,7 @@
     if (CGRectContainsPoint(_screenBounds, newCenterPoint)) {
         _ball.center = newCenterPoint;
     } else {
+        self.hitSideForGameOver = YES;
         [self gameOver];
         return;
     }
@@ -475,6 +480,7 @@
         if (CGRectContainsPoint(_screenBounds, newCenterPointRecur)) {
             _ball.center = newCenterPointRecur;
         } else {
+            self.hitSideForGameOver = YES;
             [self gameOver];
         }
         
@@ -684,7 +690,10 @@
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
     
     [self stopMotionManager];
-    [self stopTimer];
+    
+    if (!_hitSideForGameOver) {
+        [self stopTimer];
+    }
     
     [_themeLabel setHidden:NO];
     [_difficulty setHidden:NO];
@@ -749,10 +758,6 @@
         [self startTimer];
         [self startMotionManager];
         [self updateBlackHoles];
-        
-        if (_bonusHole.superview) {
-            [_bonusHole redrawRectWithBallFrame:_ball.frame];
-        }
     }
 }
 

@@ -29,7 +29,7 @@
         CGContextFillRect(context, self.bounds);
         CGContextRestoreGState(context);
     } else {
-        [[UIImage imageNamed:@"background"]drawInRect:self.bounds];
+        [[UIImage uncachedImageNamed:@"Default"]drawInRect:self.bounds];
     }
 }
 

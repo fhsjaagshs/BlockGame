@@ -26,13 +26,13 @@
 @property (strong, nonatomic) UIButton *leaderboardButton;
 
 @property (strong, nonatomic) BonusHole *bonusHole;
-@property (strong, nonatomic) UIImage *purpleImage;
 
 @property (strong, nonatomic) CMMotionManager *motionManager;
 @property (strong, nonatomic) NSMutableArray *blackHoles;
 @property (strong, nonatomic) CADisplayLink *link;
 
 @property (assign, nonatomic) int highscore;
+@property (assign, nonatomic) BOOL hitSideForGameOver;
 
 - (void)gameOver;
 - (void)togglePause;

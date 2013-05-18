@@ -11,7 +11,7 @@
 @implementation BallView
 
 - (void)drawRect:(CGRect)rect {
-    [[UIImage imageNamed:@"ball"]drawInRect:self.bounds];
+    [[UIImage uncachedImageNamed:@"ball"]drawInRect:self.bounds];
 }
 
 @end
