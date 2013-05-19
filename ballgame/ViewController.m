@@ -421,6 +421,7 @@
     }
     
     if ([self checkIfHitBlackHole]) {
+        self.hitSideForGameOver = NO;
         [self gameOver];
         return NO;
     }
@@ -473,13 +474,12 @@
     }
     
     if (hitBlackHole) {
+        self.hitSideForGameOver = NO;
         [self gameOver];
     } else {
-        CGPoint newCenterPointRecur = CGPointMake(newCenterPoint.x+rateX, newCenterPoint.y+rateY);
+        _ball.center = CGPointMake(newCenterPoint.x+rateX, newCenterPoint.y+rateY);
         
-        if (CGRectContainsPoint(_screenBounds, newCenterPointRecur)) {
-            _ball.center = newCenterPointRecur;
-        } else {
+        if (!CGRectContainsPoint(_screenBounds, _ball.center)) {
             self.hitSideForGameOver = YES;
             [self gameOver];
         }
