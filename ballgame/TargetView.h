@@ -15,5 +15,9 @@
 - (void)redrawWithImage;
 
 @property (nonatomic, assign) BOOL isClassicMode;
+@property (nonatomic, assign) BOOL isVerticle;
+
+@property (nonatomic) CGSize directionVector;
+- (void)moveWithDuration:(NSNumber *)duration;
 
 @end

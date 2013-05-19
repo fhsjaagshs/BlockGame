@@ -192,7 +192,10 @@
         [self moveSexilyCore];
     }
     
-    [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:[NSNumber numberWithFloat:_link.duration]];
+    NSNumber *number = [NSNumber numberWithFloat:_link.duration];
+    
+    [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:number];
+   // [_target moveWithDuration:number];
     
     int index = _difficulty.selectedSegmentIndex;
     
@@ -524,17 +527,20 @@
         // left
         int limit = (_screenBounds.size.height-90);
         y = arc4random()%limit;
+        _target.isVerticle = YES;
     } else if (whichSide == 2) {
         // right
         int limit = (_screenBounds.size.height-90);
         y = arc4random()%limit;
         x = _screenBounds.size.width-30;
+        _target.isVerticle = YES;
     } else if (whichSide == 3) {
         // top
         int limit = (_screenBounds.size.width-90);
         x = arc4random()%limit;
         width = 90;
         height = 30;
+        _target.isVerticle = NO;
     } else if (whichSide == 4) {
         // bottom
         int limit = (_screenBounds.size.width-90);
@@ -542,11 +548,14 @@
         y = _screenBounds.size.height-30;
         width = 90;
         height = 30;
+        _target.isVerticle = NO;
     }
     
     _target.frame = CGRectMake(x, y, width, height);
     _target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, width+3, height+3)]CGPath];
-
+    
+    [_target moveWithDuration:[NSNumber numberWithFloat:_link.duration]];
+    
     if (_theme.selectedSegmentIndex == 0) {
         [_target redrawWithImage];
     } else {

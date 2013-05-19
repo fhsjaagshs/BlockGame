@@ -22,8 +22,29 @@ UIColor *oldBGColor;
         self.layer.shadowRadius = 5.0f;
         self.layer.masksToBounds = NO;
         self.layer.shadowPath = nil;
+        self.directionVector = CGSizeMake(1, 1);
     }
     return self;
+}
+
+- (void)moveWithDuration:(NSNumber *)duration {
+    CGPoint center = self.center;
+    
+    float divisor = [duration floatValue]*30;
+    
+    CGPoint perspectiveCenter = CGPointMake(center.x+_isVerticle?0:(_directionVector.width/divisor), center.y+_isVerticle?(_directionVector.height/divisor):0);
+    
+    CGRect _screenBounds = [[UIScreen mainScreen]bounds];
+    
+    if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
+        BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
+        BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
+        _directionVector.width = xTooHigh?-1*_directionVector.width:_directionVector.width;
+        _directionVector.height = yTooHigh?-1*_directionVector.height:_directionVector.height;
+        perspectiveCenter = CGPointMake(center.x+_isVerticle?0:(_directionVector.width/35), center.y+_isVerticle?(_directionVector.height/35):0);
+    }
+    
+    self.center = perspectiveCenter;
 }
 
 - (void)setClassicMode:(BOOL)cm {
