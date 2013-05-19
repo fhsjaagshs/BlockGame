@@ -34,12 +34,9 @@
 @property (assign, nonatomic) int highscore;
 @property (assign, nonatomic) BOOL hitSideForGameOver;
 
-- (void)gameOver;
 - (void)togglePause;
 
 - (void)startTimer;
 - (void)stopTimer;
-
-- (BOOL)checkStuff;
 
 @end
