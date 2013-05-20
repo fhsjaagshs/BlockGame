@@ -257,39 +257,6 @@
     }
 }
 
-- (void)moveSexilyCore {
-    
-    if (_bv_numMovements < 1) {
-        
-        if (_bv_shouldGetNumMovements) {
-            self.bv_numMovements = floorf(0.45/_link.duration);
-            self.bv_shouldGetNumMovements = NO;
-        }
-        
-        if (_bv_numMovements < 1) {
-            self.bv_shouldGetNumMovements = NO;
-            self.bv_numMovements = -1;
-            self.bv_shouldSexilyMove = NO;
-            return;
-        }
-    }
-    
-    if (![self checkStuff]) {
-        self.bv_shouldGetNumMovements = NO;
-        self.bv_numMovements = -1;
-        self.bv_shouldSexilyMove = NO;
-        return;
-    }
-    
-    float movement = log10f(_bv_numMovements)*4;
-    
-    float x = fabsf(movement*sinf(_bv_theta))*_bv_dVector.width;
-    float y = fabsf(movement*cosf(_bv_theta))*_bv_dVector.height;
-    
-    _ball.center = CGPointMake(_ball.center.x+x, _ball.center.y+y);
-    self.bv_numMovements -= 1;
-}
-
 - (void)moveSexilyWithTheta:(float)theta andDirectionVector:(CGSize)vector {
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {

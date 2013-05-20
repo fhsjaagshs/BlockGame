@@ -10,7 +10,7 @@
 
 @implementation BlackHole
 
-- (void)moveWithDuration:(NSNumber *)duration {
+/*- (void)moveWithDuration:(NSNumber *)duration {
     CGPoint center = self.center;
     
     float divisor = [duration floatValue]*30;
@@ -22,6 +22,35 @@
         BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
         _directionVector.width = xTooHigh?-1*_directionVector.width:_directionVector.width;
         _directionVector.height = yTooHigh?-1*_directionVector.height:_directionVector.height;
+        perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
+    }
+    
+    self.center = perspectiveCenter;
+}*/
+
+- (void)moveWithDuration:(NSNumber *)duration {
+    CGPoint center = self.center;
+    
+    float divisor = duration.floatValue*30;
+    
+    CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/divisor), center.y+_directionVector.height/divisor);
+    
+    float width = CGRectGetWidth(self.frame);
+    float height = CGRectGetHeight(self.frame);
+    
+    CGRect newFrame = CGRectMake(perspectiveCenter.x-(width/2), perspectiveCenter.y-(height/2), width, height);
+    
+    float maxX = CGRectGetMaxX(newFrame);
+    float maxY = CGRectGetMaxY(newFrame);
+    
+    BOOL originOutOfBounds = !CGRectContainsPoint(_screenBounds, newFrame.origin);
+    BOOL otherPointOutOfBounds = !CGRectContainsPoint(_screenBounds, CGPointMake(maxX, maxY));
+    
+    if (originOutOfBounds || otherPointOutOfBounds) {
+        BOOL xTooHigh = (maxX > _screenBounds.size.width || newFrame.origin.x <= 0);
+        BOOL yTooHigh = (maxY > _screenBounds.size.height || newFrame.origin.y <= 0);
+        _directionVector.width = (xTooHigh?-1*_directionVector.width:_directionVector.width);
+        _directionVector.height = (yTooHigh?-1*_directionVector.height:_directionVector.height);
         perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
     }
     

@@ -10,6 +10,12 @@
 
 UIColor *oldBGColor;
 
+@interface TargetView ()
+
+@property (nonatomic, assign) CGRect screenBounds;
+
+@end
+
 @implementation TargetView
 
 - (id)initWithFrame:(CGRect)frame {
@@ -23,6 +29,7 @@ UIColor *oldBGColor;
         self.layer.masksToBounds = NO;
         self.layer.shadowPath = nil;
         self.directionVector = CGSizeMake(1, 1);
+        self.screenBounds = [[UIScreen mainScreen]bounds];
     }
     return self;
 }
@@ -38,6 +45,7 @@ UIColor *oldBGColor;
         self.layer.masksToBounds = NO;
         self.layer.shadowPath = nil;
         self.directionVector = CGSizeMake(1, 1);
+        self.screenBounds = [[UIScreen mainScreen]bounds];
     }
     return self;
 }
@@ -45,29 +53,27 @@ UIColor *oldBGColor;
 - (void)moveWithDuration:(NSNumber *)duration {
     CGPoint center = self.center;
     
-    float divisor = [duration floatValue]*30;
+    float divisor = duration.floatValue*30;
     
     float xMovement = _isVerticle?0:(_directionVector.width/divisor);
     float yMovement = _isVerticle?(_directionVector.height/divisor):0;
     
     CGPoint perspectiveCenter = CGPointMake(center.x+xMovement, center.y+yMovement);
     
-    CGRect _screenBounds = [[UIScreen mainScreen]bounds];
-    
-    float width = self.frame.size.width;
-    float height = self.frame.size.height;
+    float width = CGRectGetWidth(self.frame);
+    float height = CGRectGetHeight(self.frame);
     
     CGRect newFrame = CGRectMake(perspectiveCenter.x-(width/2), perspectiveCenter.y-(height/2), width, height);
+    
+    float maxX = CGRectGetMaxX(newFrame);
+    float maxY = CGRectGetMaxY(newFrame);
 
-    NSLog(@"newFrame: %@",NSStringFromCGRect(newFrame));
+    BOOL originOutOfBounds = !CGRectContainsPoint(_screenBounds, newFrame.origin);
+    BOOL otherPointOutOfBounds = !CGRectContainsPoint(_screenBounds, CGPointMake(maxX, maxY));
     
-    if (!CGRectContainsRect(_screenBounds, newFrame)) {
-    
-//    if (!CGRectContainsPoint(_screenBounds, perspectiveCenter) || !CGRectContainsPoint(_screenBounds, CGPointMake(perspectiveCenter.x+width, perspectiveCenter.y+height))) {
-    
- //   if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
-        BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
-        BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
+    if (originOutOfBounds || otherPointOutOfBounds) {        
+        BOOL xTooHigh = (maxX > _screenBounds.size.width || newFrame.origin.x <= 0);
+        BOOL yTooHigh = (maxY > _screenBounds.size.height || newFrame.origin.y <= 0);
         _directionVector.width = (xTooHigh?-1*_directionVector.width:_directionVector.width);
         _directionVector.height = (yTooHigh?-1*_directionVector.height:_directionVector.height);
         
