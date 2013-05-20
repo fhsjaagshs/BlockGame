@@ -357,7 +357,7 @@
 
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
-    _motionManager.accelerometerUpdateInterval = 1/60; // used to be 1/180
+    _motionManager.accelerometerUpdateInterval = 1/120; // used to be 1/180, then 1/60
 }
 
 - (void)killBlackHoles {
@@ -369,7 +369,7 @@
     CGRect frame = _ball.frame;
     
     for (BlackHole *blackHoleman in _blackHoles) {
-        if (CGRectIntersectsRect(frame, blackHoleman.frame)/* && !blackHoleman.hidden*/) {
+        if (CGRectIntersectsRect(frame, blackHoleman.frame)) {
             return YES;
         }
     }
@@ -401,11 +401,13 @@
         
         int remainder = blackHolesC-_blackHoles.count;
         
-        for (int i = 0; i < remainder; i++) {
-            BlackHole *blackHoleman = [[BlackHole alloc]init];
-            [self.view addSubview:blackHoleman];
-            [blackHoleman redrawRectWithBallFrame:_ball.frame];
-            [_blackHoles addObject:blackHoleman];
+        if (remainder > 0) {
+            for (int i = 0; i < remainder; i++) {
+                BlackHole *blackHoleman = [[BlackHole alloc]init];
+                [self.view addSubview:blackHoleman];
+                [blackHoleman redrawRectWithBallFrame:_ball.frame];
+                [_blackHoles addObject:blackHoleman];
+            }
         }
     }
 }
@@ -440,67 +442,12 @@
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    int speed = (_difficulty.selectedSegmentIndex+1)*4;
+    int speed = (_difficulty.selectedSegmentIndex+1)*6;
     
     float rateX = speed*acceleration.x;
     float rateY = -1*speed*acceleration.y;
     
-    CGPoint newCenterPoint = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
-    
-    if (CGRectContainsPoint(_screenBounds, newCenterPoint)) {
-        _ball.center = newCenterPoint;
-    } else {
-        self.hitSideForGameOver = YES;
-        [self gameOver];
-        return;
-    }
-
-    CGRect frame = _ball.frame;
-    
-    if (CGRectIntersectsRect(frame, _target.frame)) {
-        [self randomizePosition];
-        [self addOneToScore];
-    }
-    
-    if (CGRectIntersectsRect(frame, _bonusHole.frame) && !_bonusHole.hidden) {
-        _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
-        [self flashScoreLabelToGreen];
-        [_bonusHole setHidden:YES];
-    }
-    
-    BOOL hitBlackHole = NO;
-    
-    for (BlackHole *blackHoleman in _blackHoles) {
-        if (CGRectIntersectsRect(frame, blackHoleman.frame) && !blackHoleman.hidden) {
-            hitBlackHole = YES;
-            break;
-        }
-    }
-    
-    if (hitBlackHole) {
-        self.hitSideForGameOver = NO;
-        [self gameOver];
-    } else {
-        _ball.center = CGPointMake(newCenterPoint.x+rateX, newCenterPoint.y+rateY);
-        
-        if (!CGRectContainsPoint(_screenBounds, _ball.center)) {
-            self.hitSideForGameOver = YES;
-            [self gameOver];
-        }
-        
-        frame = _ball.frame;
-        
-        if (CGRectIntersectsRect(frame, _target.frame)) {
-            [self randomizePosition];
-            [self addOneToScore];
-        }
-        
-        if (CGRectIntersectsRect(frame, _bonusHole.frame) && !_bonusHole.hidden) {
-            _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
-            [self flashScoreLabelToGreen];
-            [_bonusHole setHidden:YES];
-        }
-    }
+    _ball.center = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
 }
 
 - (void)startMotionManager {
