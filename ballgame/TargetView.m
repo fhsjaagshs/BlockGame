@@ -13,6 +13,7 @@ UIColor *oldBGColor;
 @interface TargetView ()
 
 @property (nonatomic, assign) CGRect screenBounds;
+@property (nonatomic) CGSize directionVector;
 
 @end
 
@@ -50,10 +51,10 @@ UIColor *oldBGColor;
     return self;
 }
 
-- (void)moveWithDuration:(NSNumber *)duration {
+- (void)moveWithDuration:(float)duration {
     CGPoint center = self.center;
     
-    float divisor = duration.floatValue*30;
+    float divisor = duration*30;
     
     float xMovement = _isVerticle?0:(_directionVector.width/divisor);
     float yMovement = _isVerticle?(_directionVector.height/divisor):0;

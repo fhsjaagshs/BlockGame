@@ -11,9 +11,7 @@
 @interface BlackHole : UIView
 
 @property (nonatomic) BOOL isMoving;
-@property (nonatomic) CGSize directionVector;
 @property (nonatomic) float dVectorDivisor;
-@property (nonatomic) CGRect screenBounds;
 
 - (id)initWithBallframe:(CGRect)ballframe;
 

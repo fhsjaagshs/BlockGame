@@ -28,6 +28,13 @@ void animateImageView(UIImageView *imageView, CGRect bounds) {
     }];
 }
 
+@interface BonusHole ()
+
+@property (nonatomic) CGSize directionVector;
+@property (nonatomic) CGRect screenBounds;
+
+@end
+
 @implementation BonusHole
 
 - (void)animateImageView:(UIImageView *)imageView {
@@ -35,34 +42,69 @@ void animateImageView(UIImageView *imageView, CGRect bounds) {
 }
 
 - (void)animateCircles {
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.frame.size.width+25, self.frame.size.width+25), NO, [[UIScreen mainScreen]scale]);
-
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    UIGraphicsPushContext(context);
     
-    CGContextSaveGState(context);
+    UIImage *image = [[ImageCache sharedInstance]objectForKey:@"greenRings"];
     
-    CGContextSetLineWidth(context, 2.5);
-    CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
-    
-    for (int i = 0; i < 5; i++) {
-        float width = self.frame.size.width+5+1.5*(i+1);
-        float x = (self.frame.size.width+25-width)/2;
-        float y = (self.frame.size.height+25-width)/2;
-        CGContextStrokeEllipseInRect(context, CGRectMake(x, y, width, width));
+    if (!image) {
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(self.frame.size.width+25, self.frame.size.width+25), NO, [[UIScreen mainScreen]scale]);
+        
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        UIGraphicsPushContext(context);
+        
+        CGContextSaveGState(context);
+        
+        CGContextSetLineWidth(context, 2.5);
+        CGContextSetStrokeColorWithColor(context, [UIColor greenColor].CGColor);
+        
+        for (int i = 0; i < 5; i++) {
+            float width = self.frame.size.width+5+1.5*(i+1);
+            float x = (self.frame.size.width+25-width)/2;
+            float y = (self.frame.size.height+25-width)/2;
+            CGContextStrokeEllipseInRect(context, CGRectMake(x, y, width, width));
+        }
+        
+        CGContextRestoreGState(context);
+        
+        UIGraphicsPopContext();
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        [[ImageCache sharedInstance]setObject:image forKey:@"greenRings"];
     }
-    
-    CGContextRestoreGState(context);
-    
-    UIGraphicsPopContext();
-    UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
     
     UIImageView *imageView = [[UIImageView alloc]initWithFrame:self.bounds];
     self.backgroundColor = [UIColor clearColor];
     [self addSubview:imageView];
-    imageView.image = outputImage;
+    imageView.image = image;
     [self animateImageView:imageView];
+}
+
+- (void)moveWithDuration:(float)duration {
+    CGPoint center = self.center;
+    
+    float divisor = duration*30;
+    
+    CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/divisor), center.y+_directionVector.height/divisor);
+    
+    float width = CGRectGetWidth(self.frame);
+    float height = CGRectGetHeight(self.frame);
+    
+    CGRect newFrame = CGRectMake(perspectiveCenter.x-(width/2), perspectiveCenter.y-(height/2), width, height);
+    
+    float maxX = CGRectGetMaxX(newFrame);
+    float maxY = CGRectGetMaxY(newFrame);
+    
+    BOOL originOutOfBounds = !CGRectContainsPoint(_screenBounds, newFrame.origin);
+    BOOL otherPointOutOfBounds = !CGRectContainsPoint(_screenBounds, CGPointMake(maxX, maxY));
+    
+    if (originOutOfBounds || otherPointOutOfBounds) {
+        BOOL xTooHigh = (maxX > _screenBounds.size.width || newFrame.origin.x <= 0);
+        BOOL yTooHigh = (maxY > _screenBounds.size.height || newFrame.origin.y <= 0);
+        _directionVector.width = (xTooHigh?-1*_directionVector.width:_directionVector.width);
+        _directionVector.height = (yTooHigh?-1*_directionVector.height:_directionVector.height);
+        perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
+    }
+    
+    self.center = perspectiveCenter;
 }
 
 - (void)muckWithFrame:(CGRect)ballframe {
@@ -88,10 +130,22 @@ void animateImageView(UIImageView *imageView, CGRect bounds) {
     [self animateCircles];
 }
 
+- (id)init {
+    self = [super init];
+    if (self) {
+        self.screenBounds = [UIScreen mainScreen].bounds;
+        self.backgroundColor = [UIColor clearColor];
+        self.directionVector = CGSizeMake(1, 1);
+    }
+    return self;
+}
+
 - (id)initWithBallframe:(CGRect)ballframe {
     self = [super initWithFrame:ballframe];
     if (self) {
+        self.screenBounds = [UIScreen mainScreen].bounds;
         self.backgroundColor = [UIColor clearColor];
+        self.directionVector = CGSizeMake(1, 1);
         [self muckWithFrame:ballframe];
     }
     return self;

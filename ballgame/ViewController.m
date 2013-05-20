@@ -218,10 +218,11 @@
         self.bv_numMovements -= 1;
     }
     
-    NSNumber *number = [NSNumber numberWithFloat:_link.duration];
+    float duration = _link.duration;
     
-    [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:number];
-    [_target moveWithDuration:number];
+    [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:[NSNumber numberWithFloat:duration]];
+    [_target moveWithDuration:duration];
+    [_bonusHole moveWithDuration:duration];
     
     if (![self checkStuff]) {
         self.bv_shouldGetNumMovements = NO;

@@ -8,25 +8,14 @@
 
 #import "BlackHole.h"
 
-@implementation BlackHole
+@interface BlackHole ()
 
-/*- (void)moveWithDuration:(NSNumber *)duration {
-    CGPoint center = self.center;
-    
-    float divisor = [duration floatValue]*30;
-    
-    CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/divisor), center.y+_directionVector.height/divisor);
-    
-    if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
-        BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
-        BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
-        _directionVector.width = xTooHigh?-1*_directionVector.width:_directionVector.width;
-        _directionVector.height = yTooHigh?-1*_directionVector.height:_directionVector.height;
-        perspectiveCenter = CGPointMake(center.x+(_directionVector.width/35), center.y+(_directionVector.height/35));
-    }
-    
-    self.center = perspectiveCenter;
-}*/
+@property (nonatomic) CGSize directionVector;
+@property (nonatomic) CGRect screenBounds;
+
+@end
+
+@implementation BlackHole
 
 - (void)moveWithDuration:(NSNumber *)duration {
     CGPoint center = self.center;
