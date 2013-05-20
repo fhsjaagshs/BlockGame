@@ -443,11 +443,7 @@
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
     int speed = (_difficulty.selectedSegmentIndex+1)*6;
-    
-    float rateX = speed*acceleration.x;
-    float rateY = -1*speed*acceleration.y;
-    
-    _ball.center = CGPointMake(_ball.center.x+rateX, _ball.center.y+rateY);
+    _ball.center = CGPointMake(_ball.center.x+(speed*acceleration.x), _ball.center.y+(-1*speed*acceleration.y));
 }
 
 - (void)startMotionManager {
