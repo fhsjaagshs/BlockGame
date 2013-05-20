@@ -365,17 +365,6 @@
     [_blackHoles removeAllObjects];
 }
 
-- (BOOL)checkIfHitBlackHole {
-    CGRect frame = _ball.frame;
-    
-    for (BlackHole *blackHoleman in _blackHoles) {
-        if (CGRectIntersectsRect(frame, blackHoleman.frame)) {
-            return YES;
-        }
-    }
-    return NO;
-}
-
 - (int)numberOfBlackHoles {
     int index = _difficulty.selectedSegmentIndex;
     int max = (index > 0)?2+index:0;
@@ -426,10 +415,12 @@
         [_bonusHole setHidden:YES];
     }
     
-    if ([self checkIfHitBlackHole]) {
-        self.hitSideForGameOver = NO;
-        [self gameOver];
-        return NO;
+    for (BlackHole *blackHoleman in _blackHoles) {
+        if (CGRectIntersectsRect(frame, blackHoleman.frame)) {
+            self.hitSideForGameOver = NO;
+            [self gameOver];
+            return NO;
+        }
     }
     
     if (!CGRectContainsPoint(_screenBounds, _ball.center)) {
