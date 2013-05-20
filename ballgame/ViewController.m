@@ -188,6 +188,11 @@
 }
 
 - (void)gameTick {
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
+        return;
+    }
+    
     if (_bv_shouldSexilyMove) {
         [self moveSexilyCore];
     }
@@ -195,7 +200,7 @@
     NSNumber *number = [NSNumber numberWithFloat:_link.duration];
     
     [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:number];
-   // [_target moveWithDuration:number];
+    [_target moveWithDuration:number];
     
     int index = _difficulty.selectedSegmentIndex;
     
@@ -514,6 +519,9 @@
 }
 
 - (void)randomizePosition {
+    
+    _target.hidden = NO;
+    
     [_target setClassicMode:!(_theme.selectedSegmentIndex == 0)];
     
     int whichSide = (arc4random()%4)+1;
@@ -554,16 +562,12 @@
     _target.frame = CGRectMake(x, y, width, height);
     _target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, width+3, height+3)]CGPath];
     
-    [_target moveWithDuration:[NSNumber numberWithFloat:_link.duration]];
-    
     if (_theme.selectedSegmentIndex == 0) {
         [_target redrawWithImage];
     } else {
         NSArray *colors = [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor yellowColor], [UIColor redColor], [UIColor greenColor], [UIColor cyanColor], [UIColor magentaColor], [UIColor brownColor], [UIColor blackColor], nil];
         [_target redrawWithBackgroundColor:[colors objectAtIndex:arc4random()%8]];
     }
-    
-    _target.hidden = NO;
 }
 
 - (NSString *)getCurrentLeaderboard {
@@ -774,7 +778,6 @@
     [[NSUserDefaults standardUserDefaults]setBool:NO forKey:gameOverKey];
 
     [self reloadHighscoresWithBlock:nil];
-    
     [self killBlackHoles];
     
     [_bonusHole setHidden:YES];

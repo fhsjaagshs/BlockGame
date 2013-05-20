@@ -12,6 +12,21 @@ UIColor *oldBGColor;
 
 @implementation TargetView
 
+- (id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.layer.shouldRasterize = YES;
+        self.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.layer.shadowOpacity = 0.9f;
+        self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+        self.layer.shadowRadius = 5.0f;
+        self.layer.masksToBounds = NO;
+        self.layer.shadowPath = nil;
+        self.directionVector = CGSizeMake(1, 1);
+    }
+    return self;
+}
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -32,16 +47,23 @@ UIColor *oldBGColor;
     
     float divisor = [duration floatValue]*30;
     
-    CGPoint perspectiveCenter = CGPointMake(center.x+_isVerticle?0:(_directionVector.width/divisor), center.y+_isVerticle?(_directionVector.height/divisor):0);
+    float xMovement = _isVerticle?0:(_directionVector.width/divisor);
+    float yMovement = _isVerticle?(_directionVector.height/divisor):0;
+    
+    CGPoint perspectiveCenter = CGPointMake(center.x+xMovement, center.y+yMovement);
     
     CGRect _screenBounds = [[UIScreen mainScreen]bounds];
     
     if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
         BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
         BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
-        _directionVector.width = xTooHigh?-1*_directionVector.width:_directionVector.width;
-        _directionVector.height = yTooHigh?-1*_directionVector.height:_directionVector.height;
-        perspectiveCenter = CGPointMake(center.x+_isVerticle?0:(_directionVector.width/35), center.y+_isVerticle?(_directionVector.height/35):0);
+        _directionVector.width = (xTooHigh?-1*_directionVector.width:_directionVector.width);
+        _directionVector.height = (yTooHigh?-1*_directionVector.height:_directionVector.height);
+        
+        float XnewMovement = _isVerticle?0:(_directionVector.width/divisor);
+        float YnewMovement = _isVerticle?(_directionVector.height/divisor):0;
+        
+        perspectiveCenter = CGPointMake(center.x+XnewMovement, center.y+YnewMovement);
     }
     
     self.center = perspectiveCenter;
