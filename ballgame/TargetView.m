@@ -54,7 +54,18 @@ UIColor *oldBGColor;
     
     CGRect _screenBounds = [[UIScreen mainScreen]bounds];
     
-    if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
+    float width = self.frame.size.width;
+    float height = self.frame.size.height;
+    
+    CGRect newFrame = CGRectMake(perspectiveCenter.x-(width/2), perspectiveCenter.y-(height/2), width, height);
+
+    NSLog(@"newFrame: %@",NSStringFromCGRect(newFrame));
+    
+    if (!CGRectContainsRect(_screenBounds, newFrame)) {
+    
+//    if (!CGRectContainsPoint(_screenBounds, perspectiveCenter) || !CGRectContainsPoint(_screenBounds, CGPointMake(perspectiveCenter.x+width, perspectiveCenter.y+height))) {
+    
+ //   if (!CGRectContainsPoint(_screenBounds, perspectiveCenter)) {
         BOOL xTooHigh = (perspectiveCenter.x > _screenBounds.size.width || perspectiveCenter.x <= 0);
         BOOL yTooHigh = (perspectiveCenter.y > _screenBounds.size.height || perspectiveCenter.y <= 0);
         _directionVector.width = (xTooHigh?-1*_directionVector.width:_directionVector.width);

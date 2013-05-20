@@ -29,6 +29,7 @@
 		F12656A8171B867600B0ED95 /* target-ver@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F12656A4171B867600B0ED95 /* target-ver@2x.png */; };
 		F12A6B8A147880A700CEF48B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F12A6B89147880A700CEF48B /* GameKit.framework */; };
 		F131D91F17481944008D5710 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F131D91E17481944008D5710 /* Default-568h@2x.png */; };
+		F132523E174AB7AB001FBA97 /* CGRectFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = F132523D174AB7AB001FBA97 /* CGRectFunctions.m */; };
 		F14793091747A556007EA740 /* UIImage+uncachedImageNamed.m in Sources */ = {isa = PBXBuildFile; fileRef = F14793081747A556007EA740 /* UIImage+uncachedImageNamed.m */; };
 		F1679DBC1715EEB600334E1B /* BallView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1679DBB1715EEB600334E1B /* BallView.m */; };
 		F173EDC017471EB000E158FA /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F173EDBF17471EB000E158FA /* ImageCache.m */; };
@@ -75,6 +76,8 @@
 		F12656A4171B867600B0ED95 /* target-ver@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "target-ver@2x.png"; sourceTree = "<group>"; };
 		F12A6B89147880A700CEF48B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		F131D91E17481944008D5710 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		F132523C174AB7AB001FBA97 /* CGRectFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGRectFunctions.h; sourceTree = "<group>"; };
+		F132523D174AB7AB001FBA97 /* CGRectFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGRectFunctions.m; sourceTree = "<group>"; };
 		F14793071747A556007EA740 /* UIImage+uncachedImageNamed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+uncachedImageNamed.h"; sourceTree = "<group>"; };
 		F14793081747A556007EA740 /* UIImage+uncachedImageNamed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+uncachedImageNamed.m"; sourceTree = "<group>"; };
 		F1679DBA1715EEB600334E1B /* BallView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BallView.h; sourceTree = "<group>"; };
@@ -216,6 +219,8 @@
 				F173EDBF17471EB000E158FA /* ImageCache.m */,
 				F14793071747A556007EA740 /* UIImage+uncachedImageNamed.h */,
 				F14793081747A556007EA740 /* UIImage+uncachedImageNamed.m */,
+				F132523C174AB7AB001FBA97 /* CGRectFunctions.h */,
+				F132523D174AB7AB001FBA97 /* CGRectFunctions.m */,
 			);
 			name = "Custom Classes";
 			sourceTree = "<group>";
@@ -308,6 +313,7 @@
 				F1ABC77217164ABB00389EDB /* BackgroundView.m in Sources */,
 				F173EDC017471EB000E158FA /* ImageCache.m in Sources */,
 				F14793091747A556007EA740 /* UIImage+uncachedImageNamed.m in Sources */,
+				F132523E174AB7AB001FBA97 /* CGRectFunctions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

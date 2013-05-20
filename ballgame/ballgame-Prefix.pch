@@ -21,4 +21,6 @@
 
     #import "UIImage+uncachedImageNamed.h"
     #import "ImageCache.h"
+
+    #import "CGRectFunctions.h"
 #endif
