@@ -29,6 +29,20 @@
 @implementation ViewController
 
 - (void)loadView {
+
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    
+    UIColor *transparentGrey = [UIColor colorWithWhite:0.666 alpha:0.5];
+    
+    UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    UIGraphicsPushContext(context);
+    CGContextSetFillColorWithColor(context, [transparentGrey CGColor]);
+    CGContextFillRect(context, rect);
+    UIGraphicsPopContext();
+    UIImage *transparentImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
     self.screenBounds = [[UIScreen mainScreen]bounds];
     
     BOOL isClassicMode = ([[NSUserDefaults standardUserDefaults]boolForKey:themeIndexKey] == 1);
@@ -87,26 +101,26 @@
     
     self.startButton = [UIButton buttonWithType:UIButtonTypeCustom];
     _startButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
-    _startButton.frame = CGRectMake(124, 228, 72, 37);
+    _startButton.frame = CGRectMake(124, 230, 72, 30);
     _startButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     _startButton.titleLabel.textColor = [UIColor whiteColor];
     _startButton.titleLabel.textAlignment = UITextAlignmentCenter;
     _startButton.titleLabel.shadowColor = [UIColor lightGrayColor];
     _startButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [_startButton setBackgroundImage:[UIImage uncachedImageNamed:@"startretry"] forState:UIControlStateNormal];
     [_startButton setTitle:@"Start" forState:UIControlStateNormal];
+    [_startButton setBackgroundImage:transparentImage forState:UIControlStateNormal];
     [_startButton addTarget:self action:@selector(startOrRetry) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_startButton];
     
     self.leaderboardButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _leaderboardButton.frame = CGRectMake(102, 273, 113, 37);
+    _leaderboardButton.frame = CGRectMake(102, 275, 113, 30);
     _leaderboardButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleWidth;
     _leaderboardButton.titleLabel.font = [UIFont boldSystemFontOfSize:15];
     _leaderboardButton.titleLabel.textColor = [UIColor whiteColor];
     _leaderboardButton.titleLabel.textAlignment = UITextAlignmentCenter;
     _leaderboardButton.titleLabel.shadowColor = [UIColor lightGrayColor];
     _leaderboardButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
-    [_leaderboardButton setBackgroundImage:[UIImage uncachedImageNamed:@"leaderboard"] forState:UIControlStateNormal];
+    [_leaderboardButton setBackgroundImage:transparentImage forState:UIControlStateNormal];
     [_leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
     [_leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_leaderboardButton];
@@ -115,18 +129,20 @@
     _theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _theme.frame = CGRectMake(77, 402, 166, 30);
     _theme.segmentedControlStyle = UISegmentedControlStyleBar;
-    _theme.tintColor = [UIColor lightGrayColor];
     [_theme setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults]floatForKey:themeIndexKey]];
     [_theme addTarget:self action:@selector(themeChanged) forControlEvents:UIControlEventValueChanged];
+    [_theme setBackgroundImage:transparentImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [_theme setDividerImage:transparentImage forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [self.view addSubview:_theme];
     
     self.difficulty = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Easy", @"Medium", @"Hard", @"Insane", nil]];
     _difficulty.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _difficulty.frame = CGRectMake(42, 326, 237, 30);
     _difficulty.segmentedControlStyle = UISegmentedControlStyleBar;
-    _difficulty.tintColor = [UIColor lightGrayColor];
     [_difficulty setSelectedSegmentIndex:[[NSUserDefaults standardUserDefaults]floatForKey:difficultyIndexKey]];
     [_difficulty addTarget:self action:@selector(difficultyChanged) forControlEvents:UIControlEventValueChanged];
+    [_difficulty setBackgroundImage:transparentImage forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [_difficulty setDividerImage:transparentImage forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [self.view addSubview:_difficulty];
     
     self.target = [[TargetView alloc]init];
@@ -433,7 +449,7 @@
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    int speed = (_difficulty.selectedSegmentIndex+1)*6;
+    int speed = (_difficulty.selectedSegmentIndex+1)*10;
     _ball.center = CGPointMake(_ball.center.x+(speed*acceleration.x), _ball.center.y+(-1*speed*acceleration.y));
 }
 

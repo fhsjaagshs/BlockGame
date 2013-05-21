@@ -17,10 +17,6 @@
 		F1225DD01468919B005D6793 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DCF1468919B005D6793 /* AppDelegate.m */; };
 		F1225DD31468919B005D6793 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1225DD21468919B005D6793 /* ViewController.m */; };
 		F126568D171B3E5500B0ED95 /* ball.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265680171B3E5500B0ED95 /* ball.png */; };
-		F1265691171B3E5500B0ED95 /* leaderboard.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265684171B3E5500B0ED95 /* leaderboard.png */; };
-		F1265692171B3E5500B0ED95 /* leaderboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265685171B3E5500B0ED95 /* leaderboard@2x.png */; };
-		F1265693171B3E5500B0ED95 /* startretry.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265686171B3E5500B0ED95 /* startretry.png */; };
-		F1265694171B3E5500B0ED95 /* startretry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1265687171B3E5500B0ED95 /* startretry@2x.png */; };
 		F126569E171B7CD100B0ED95 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F126569B171B7CD100B0ED95 /* icon.png */; };
 		F126569F171B7CD100B0ED95 /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F126569C171B7CD100B0ED95 /* icon@2x.png */; };
 		F12656A5171B867600B0ED95 /* target-hor.png in Resources */ = {isa = PBXBuildFile; fileRef = F12656A1171B867600B0ED95 /* target-hor.png */; };
@@ -64,10 +60,6 @@
 		F1225DD11468919B005D6793 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		F1225DD21468919B005D6793 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		F1265680171B3E5500B0ED95 /* ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ball.png; sourceTree = "<group>"; };
-		F1265684171B3E5500B0ED95 /* leaderboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = leaderboard.png; sourceTree = "<group>"; };
-		F1265685171B3E5500B0ED95 /* leaderboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "leaderboard@2x.png"; sourceTree = "<group>"; };
-		F1265686171B3E5500B0ED95 /* startretry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = startretry.png; sourceTree = "<group>"; };
-		F1265687171B3E5500B0ED95 /* startretry@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "startretry@2x.png"; sourceTree = "<group>"; };
 		F126569B171B7CD100B0ED95 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		F126569C171B7CD100B0ED95 /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		F12656A1171B867600B0ED95 /* target-hor.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "target-hor.png"; sourceTree = "<group>"; };
@@ -184,10 +176,6 @@
 				F131D91E17481944008D5710 /* Default-568h@2x.png */,
 				F126569B171B7CD100B0ED95 /* icon.png */,
 				F126569C171B7CD100B0ED95 /* icon@2x.png */,
-				F1265684171B3E5500B0ED95 /* leaderboard.png */,
-				F1265685171B3E5500B0ED95 /* leaderboard@2x.png */,
-				F1265686171B3E5500B0ED95 /* startretry.png */,
-				F1265687171B3E5500B0ED95 /* startretry@2x.png */,
 				F12656A1171B867600B0ED95 /* target-hor.png */,
 				F12656A2171B867600B0ED95 /* target-hor@2x.png */,
 				F12656A3171B867600B0ED95 /* target-ver.png */,
@@ -277,10 +265,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F126568D171B3E5500B0ED95 /* ball.png in Resources */,
-				F1265691171B3E5500B0ED95 /* leaderboard.png in Resources */,
-				F1265692171B3E5500B0ED95 /* leaderboard@2x.png in Resources */,
-				F1265693171B3E5500B0ED95 /* startretry.png in Resources */,
-				F1265694171B3E5500B0ED95 /* startretry@2x.png in Resources */,
 				F126569E171B7CD100B0ED95 /* icon.png in Resources */,
 				F126569F171B7CD100B0ED95 /* icon@2x.png in Resources */,
 				F12656A5171B867600B0ED95 /* target-hor.png in Resources */,
