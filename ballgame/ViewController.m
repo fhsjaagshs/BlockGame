@@ -19,8 +19,6 @@
 
 @property (nonatomic, assign) float bh_timeSinceRedraw;
 
-@property (nonatomic, assign) float t_timeLeft;
-
 @property (nonatomic, assign) CGRect screenBounds;
 
 @end
@@ -250,16 +248,6 @@
     int index = _difficulty.selectedSegmentIndex;
     
     if (index > 0) {
-        
-        if (index > 1) {
-            self.t_timeLeft += _link.duration;
-            
-            if (floorf(_t_timeLeft) >= 6-index) {
-                [self randomizePosition];
-                self.t_timeLeft = 0;
-            }
-        }
-        
         if (_blackHoles.count > 0) {
             self.bh_timeSinceRedraw += _link.duration;
             
@@ -778,7 +766,6 @@
     
     [self updateBlackHoles];
     [self redrawBonusHole];
-    self.t_timeLeft = 0;
 }
 
 - (void)flashScoreLabelToGreen {
