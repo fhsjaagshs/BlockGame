@@ -30,8 +30,8 @@ void animateImageView(UIImageView *imageView, CGRect bounds) {
 
 @interface BonusHole ()
 
-@property (nonatomic) CGSize directionVector;
-@property (nonatomic) CGRect screenBounds;
+@property (nonatomic, assign) CGSize directionVector;
+@property (nonatomic, assign) CGRect screenBounds;
 
 @end
 
@@ -80,8 +80,6 @@ void animateImageView(UIImageView *imageView, CGRect bounds) {
 
 - (void)moveWithDuration:(float)duration {
     CGPoint center = self.center;
-    
-    NSLog(@"%f",duration);
     
     float divisor = duration*15;
     

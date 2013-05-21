@@ -10,8 +10,8 @@
 
 @interface BlackHole ()
 
-@property (nonatomic) CGSize directionVector;
-@property (nonatomic) CGRect screenBounds;
+@property (nonatomic, assign) CGSize directionVector;
+@property (nonatomic, assign) CGRect screenBounds;
 
 @end
 

@@ -13,7 +13,7 @@ UIColor *oldBGColor;
 @interface TargetView ()
 
 @property (nonatomic, assign) CGRect screenBounds;
-@property (nonatomic) CGSize directionVector;
+@property (nonatomic, assign) CGSize directionVector;
 
 @end
 

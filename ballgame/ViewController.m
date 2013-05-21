@@ -9,19 +9,13 @@
 #import "ViewController.h"
 #import "AppDelegate.h"
 
-@interface ViewController ()
-
-@property (nonatomic, assign) float bv_theta;
-@property (nonatomic, assign) float bv_numMovements;
-@property (nonatomic, assign) BOOL bv_shouldGetNumMovements;
-@property (nonatomic, assign) CGSize bv_dVector;
-@property (nonatomic, assign) BOOL bv_shouldSexilyMove;
-
-@property (nonatomic, assign) float bh_timeSinceRedraw;
-
-@property (nonatomic, assign) CGRect screenBounds;
-
-@end
+float _bv_theta;
+float _bv_numMovements;
+BOOL _bv_shouldGetNumMovements;
+CGSize _bv_dVector;
+BOOL _bv_shouldSexilyMove;
+float _bh_timeSinceRedraw;
+CGRect _screenBounds;
 
 
 @implementation ViewController
@@ -41,7 +35,7 @@
     UIImage *transparentImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    self.screenBounds = [[UIScreen mainScreen]bounds];
+    _screenBounds = [[UIScreen mainScreen]bounds];
     
     BOOL isClassicMode = ([[NSUserDefaults standardUserDefaults]boolForKey:themeIndexKey] == 1);
     
@@ -184,7 +178,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self stopTimer];
+    
+    if (_motionManager.accelerometerActive && ![[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
+        [self togglePause];
+    }
 }
 
 - (void)startTimer {
@@ -204,21 +201,26 @@
 - (void)gameTick {
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
+        if (_hitSideForGameOver) {
+            [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:[NSNumber numberWithFloat:_link.duration]];
+        }
         return;
     }
+    
+    float duration = _link.duration;
     
     if (_bv_shouldSexilyMove) {
         if (_bv_numMovements < 1) {
             
             if (_bv_shouldGetNumMovements) {
-                self.bv_numMovements = floorf(0.45/_link.duration);
-                self.bv_shouldGetNumMovements = NO;
+                _bv_numMovements = floorf(0.45/duration);
+                _bv_shouldGetNumMovements = NO;
             }
             
             if (_bv_numMovements < 1) {
-                self.bv_shouldGetNumMovements = NO;
-                self.bv_numMovements = -1;
-                self.bv_shouldSexilyMove = NO;
+                _bv_shouldGetNumMovements = NO;
+                _bv_numMovements = -1;
+                _bv_shouldSexilyMove = NO;
                 return;
             }
         }
@@ -228,20 +230,20 @@
         float x = fabsf(movement*sinf(_bv_theta))*_bv_dVector.width;
         float y = fabsf(movement*cosf(_bv_theta))*_bv_dVector.height;
         
-        _ball.center = CGPointMake(_ball.center.x+x, _ball.center.y+y);
-        self.bv_numMovements -= 1;
+        CGPoint center = _ball.center;
+        
+        _ball.center = CGPointMake(center.x+x, center.y+y);
+        _bv_numMovements -= 1;
     }
-    
-    float duration = _link.duration;
     
     [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:[NSNumber numberWithFloat:duration]];
     [_target moveWithDuration:duration];
     [_bonusHole moveWithDuration:duration];
     
     if (![self checkStuff]) {
-        self.bv_shouldGetNumMovements = NO;
-        self.bv_numMovements = -1;
-        self.bv_shouldSexilyMove = NO;
+        _bv_shouldGetNumMovements = NO;
+        _bv_numMovements = -1;
+        _bv_shouldSexilyMove = NO;
         return;
     }
     
@@ -249,15 +251,15 @@
     
     if (index > 0) {
         if (_blackHoles.count > 0) {
-            self.bh_timeSinceRedraw += _link.duration;
+            _bh_timeSinceRedraw += duration;
             
             if (floorf(_bh_timeSinceRedraw) >= (5-index)) {
                 [self redraw];
-                self.bh_timeSinceRedraw = 0;
+                _bh_timeSinceRedraw = 0;
             }
             
         } else {
-            self.bh_timeSinceRedraw = 0;
+            _bh_timeSinceRedraw = 0;
         }
     }
 }
@@ -265,14 +267,14 @@
 - (void)moveSexilyWithTheta:(float)theta andDirectionVector:(CGSize)vector {
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:gameOverKey]) {
-        self.bv_shouldSexilyMove = NO;
+        _bv_shouldSexilyMove = NO;
         return;
     }
     
-    self.bv_theta = theta;
-    self.bv_dVector = vector;
-    self.bv_shouldGetNumMovements = YES;
-    self.bv_shouldSexilyMove = YES;
+    _bv_theta = theta;
+    _bv_dVector = vector;
+    _bv_shouldGetNumMovements = YES;
+    _bv_shouldSexilyMove = YES;
 }
 
 - (void)showPurpleShitAtPoint:(CGPoint)point {
@@ -637,10 +639,6 @@
     [[NSUserDefaults standardUserDefaults]removeObjectForKey:savedScoreKey];
     
     [self stopMotionManager];
-    
-    if (!_hitSideForGameOver) {
-        [self stopTimer];
-    }
     
     [_themeLabel setHidden:NO];
     [_difficulty setHidden:NO];

@@ -18,11 +18,19 @@ NSString * const savedScoreKey = @"savedScore";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    application.idleTimerDisabled = YES;
+    application.idleTimerDisabled = NO;
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     _window.rootViewController = [[ViewController alloc]init];
     [_window makeKeyAndVisible];
     return YES;
+}
+
+- (void)applicationWillResignActive:(UIApplication *)application {
+    ViewController *viewController = ((ViewController *)_window.rootViewController);
+    if (viewController.motionManager.isAccelerometerActive) {
+        [viewController togglePause];
+    }
+    [[NSUserDefaults standardUserDefaults]synchronize];
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
@@ -30,22 +38,6 @@ NSString * const savedScoreKey = @"savedScore";
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    [[NSUserDefaults standardUserDefaults]synchronize];
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    ViewController *viewController = ((ViewController *)_window.rootViewController);
-    
-    if (viewController.hitSideForGameOver) {
-        [viewController startTimer];
-    }
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    ViewController *viewController = ((ViewController *)_window.rootViewController);
-    if (viewController.motionManager.isAccelerometerActive) {
-        [viewController togglePause];
-    }
     [[NSUserDefaults standardUserDefaults]synchronize];
 }
 
