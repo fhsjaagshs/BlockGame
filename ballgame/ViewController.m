@@ -437,7 +437,7 @@
 }
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
-    int speed = (_difficulty.selectedSegmentIndex+1)*10;
+    int speed = (_difficulty.selectedSegmentIndex+1)*8;
     _ball.center = CGPointMake(_ball.center.x+(speed*acceleration.x), _ball.center.y+(-1*speed*acceleration.y));
 }
 
@@ -565,14 +565,14 @@
             leaderboardController.timeScope = GKLeaderboardTimeScopeAllTime;
             leaderboardController.leaderboardDelegate = self;
             
-            UIView *blockerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 200, 60)];
+            UIView *blockerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 100, 60)];
             blockerView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.8];
             blockerView.center = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2);
             blockerView.clipsToBounds = YES;
             blockerView.layer.cornerRadius = 10;
             
             UIActivityIndicatorView	*spinner = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-            spinner.center = CGPointMake(blockerView.bounds.size.width/2, (blockerView.bounds.size.height/2)+10);
+            spinner.center = CGPointMake(blockerView.bounds.size.width/2, (blockerView.bounds.size.height/2));
             [blockerView addSubview:spinner];
             [self.view addSubview:blockerView];
             [spinner startAnimating];
