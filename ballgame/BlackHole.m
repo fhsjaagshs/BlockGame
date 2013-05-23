@@ -17,10 +17,16 @@
 
 @implementation BlackHole
 
+- (void)setDifficultyWithNSNumber:(NSNumber *)number {
+    self.difficulty = number.intValue;
+}
+
 - (void)moveWithDuration:(NSNumber *)duration {
     CGPoint center = self.center;
     
-    float divisor = duration.floatValue*30;
+    float metadivisor = (_difficulty > 2)?15:30;
+    
+    float divisor = duration.floatValue*metadivisor;
     
     CGPoint perspectiveCenter = CGPointMake(center.x+(_directionVector.width/divisor), center.y+_directionVector.height/divisor);
     

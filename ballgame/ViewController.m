@@ -17,7 +17,6 @@ BOOL _bv_shouldSexilyMove;
 float _bh_timeSinceRedraw;
 CGRect _screenBounds;
 
-
 @implementation ViewController
 
 - (void)loadView {
@@ -388,7 +387,9 @@ CGRect _screenBounds;
         _blackHoles = [NSMutableArray array];
     }
     
-    if (_difficulty.selectedSegmentIndex == 0) {
+    int index = _difficulty.selectedSegmentIndex;
+    
+    if (index == 0) {
         [_blackHoles makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [_blackHoles removeAllObjects];
     } else {
@@ -400,6 +401,7 @@ CGRect _screenBounds;
             for (int i = 0; i < remainder; i++) {
                 BlackHole *blackHoleman = [[BlackHole alloc]init];
                 [self.view addSubview:blackHoleman];
+                [blackHoleman setDifficulty:index];
                 [blackHoleman redrawRectWithBallFrame:_ball.frame];
                 [_blackHoles addObject:blackHoleman];
             }
@@ -620,6 +622,10 @@ CGRect _screenBounds;
     } else if (index == 3) {
         [_difficultyLabel setText:@"Insane"];
     }
+    
+    [_blackHoles makeObjectsPerformSelector:@selector(setDifficultyWithNSNumber:) withObject:[NSNumber numberWithInt:index]];
+    [_bonusHole setDifficulty:index];
+    [_target setDifficulty:index];
 }
 
 - (void)themeChanged {
@@ -740,6 +746,7 @@ CGRect _screenBounds;
     
     if (!_bonusHole) {
         self.bonusHole = [[BonusHole alloc]init];
+        _bonusHole.difficulty = _difficulty.selectedSegmentIndex;
         [self.view addSubview:_bonusHole];
     }
     

@@ -54,7 +54,9 @@ UIColor *oldBGColor;
 - (void)moveWithDuration:(float)duration {
     CGPoint center = self.center;
     
-    float divisor = duration*30;
+    float metadivisor = (_difficulty > 2)?15:30;
+    
+    float divisor = duration*metadivisor;
     
     float xMovement = _isVerticle?0:(_directionVector.width/divisor);
     float yMovement = _isVerticle?(_directionVector.height/divisor):0;

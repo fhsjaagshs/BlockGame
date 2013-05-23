@@ -20,4 +20,8 @@
 
 - (void)moveWithDuration:(NSNumber *)duration;
 
+- (void)setDifficultyWithNSNumber:(NSNumber *)number;
+
+@property (nonatomic, assign) int difficulty;
+
 @end

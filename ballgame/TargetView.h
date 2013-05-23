@@ -19,4 +19,6 @@
 
 - (void)moveWithDuration:(float)duration;
 
+@property (nonatomic, assign) int difficulty;
+
 @end
