@@ -24,7 +24,7 @@
 - (void)moveWithDuration:(NSNumber *)duration {
     CGPoint center = self.center;
     
-    float metadivisor = (_difficulty > 2)?15:30;
+    float metadivisor = (_difficulty > 2)?(30/1.5):30;
     
     float divisor = duration.floatValue*metadivisor;
     

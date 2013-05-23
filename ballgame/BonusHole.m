@@ -81,7 +81,7 @@ void animateImageView(UIImageView *imageView, CGRect bounds) {
 - (void)moveWithDuration:(float)duration {
     CGPoint center = self.center;
     
-    float metadivisor = (_difficulty > 2)?7.5:15;
+    float metadivisor = (_difficulty > 2)?(15/1.5):15;
     
     float divisor = duration*metadivisor;
     
