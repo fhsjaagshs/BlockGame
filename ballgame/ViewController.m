@@ -21,7 +21,7 @@ CGRect _screenBounds;
 
 - (void)loadView {
 
-    CGRect rect = CGRectMake(0, 0, 1, 1);
+    CGRect rect = CGRectMake(0, 0, 1, 30);
     
     UIColor *transparentGrey = [UIColor colorWithWhite:0.666 alpha:0.5];
     
@@ -143,6 +143,7 @@ CGRect _screenBounds;
     self.ball = [[BallView alloc]initWithFrame:CGRectMake(141, 172, 38, 38)];
     _ball.center = self.view.center;
     _ball.layer.shouldRasterize = YES;
+    _ball.layer.rasterizationScale = [UIScreen mainScreen].scale;
     _ball.layer.shadowColor = [[UIColor blackColor]CGColor];
     _ball.layer.shadowOpacity = 0.7f;
     _ball.layer.shadowOffset = CGSizeZero;
@@ -309,7 +310,7 @@ CGRect _screenBounds;
     imageView.image = image;
     
     [UIView animateWithDuration:0.5 animations:^{
-        imageView.frame = CGRectMake(point.x-(50/4), point.y-(50/4), 25, 25);
+        imageView.frame = CGRectMake(point.x-(50/2), point.y-(50/2), 25, 25);
     } completion:^(BOOL finished) {
         if (finished) {
             [UIView animateWithDuration:0.2 animations:^{
@@ -362,7 +363,7 @@ CGRect _screenBounds;
 
 - (void)createMotionManager {
     self.motionManager = [[CMMotionManager alloc]init];
-    _motionManager.accelerometerUpdateInterval = 1/120; // used to be 1/180, then 1/60
+    _motionManager.accelerometerUpdateInterval = 1/120; // used to be 1/180, then 1/60, then 1/120
 }
 
 - (void)killBlackHoles {
@@ -442,7 +443,9 @@ CGRect _screenBounds;
 
 - (void)handleAcceleration:(CMAcceleration)acceleration {
     int speed = (_difficulty.selectedSegmentIndex+1)*8;
-    _ball.center = CGPointMake(_ball.center.x+(speed*acceleration.x), _ball.center.y+(-1*speed*acceleration.y));
+    [UIView animateWithDuration:1/120 animations:^{
+        _ball.center = CGPointMake(_ball.center.x+(speed*acceleration.x), _ball.center.y+(-1*speed*acceleration.y));
+    }];
 }
 
 - (void)startMotionManager {
@@ -498,7 +501,7 @@ CGRect _screenBounds;
     }
     
     _target.frame = CGRectMake(x, y, width, height);
-    _target.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(-3, -3, width+3, height+3)]CGPath];
+    _target.layer.shadowPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(-3, -3, width+6, height+6) cornerRadius:3].CGPath;
     
     if (_theme.selectedSegmentIndex == 0) {
         [_target redrawWithImage];

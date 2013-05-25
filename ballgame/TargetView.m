@@ -24,8 +24,8 @@ UIColor *oldBGColor;
     if (self) {
         self.layer.shouldRasterize = YES;
         self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowOpacity = 0.9f;
-        self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+        self.layer.shadowOpacity = 0.7f;
+        self.layer.shadowOffset = CGSizeZero;
         self.layer.shadowRadius = 5.0f;
         self.layer.masksToBounds = NO;
         self.layer.shadowPath = nil;
@@ -40,8 +40,8 @@ UIColor *oldBGColor;
     if (self) {
         self.layer.shouldRasterize = YES;
         self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowOpacity = 0.9f;
-        self.layer.shadowOffset = CGSizeMake(0.0f, 0.0f);
+        self.layer.shadowOpacity = 0.7f;
+        self.layer.shadowOffset = CGSizeZero;
         self.layer.shadowRadius = 5.0f;
         self.layer.masksToBounds = NO;
         self.layer.shadowPath = nil;
