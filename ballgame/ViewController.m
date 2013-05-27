@@ -238,7 +238,10 @@ CGRect _screenBounds;
     
     [_blackHoles makeObjectsPerformSelector:@selector(moveWithDuration:) withObject:[NSNumber numberWithFloat:duration]];
     [_target moveWithDuration:duration];
-    [_bonusHole moveWithDuration:duration];
+    
+    if (!_bonusHole.hidden) {
+        [_bonusHole moveWithDuration:duration];
+    }
     
     if (![self checkStuff]) {
         _bv_shouldGetNumMovements = NO;
@@ -394,16 +397,22 @@ CGRect _screenBounds;
         [_blackHoles makeObjectsPerformSelector:@selector(removeFromSuperview)];
         [_blackHoles removeAllObjects];
     } else {
-        int blackHolesC = [self numberOfBlackHoles];
+        int max = (index > 0)?2+index:0;
+        int blackHolesC = floorf(_score.text.intValue/10);
+        
+        if (blackHolesC > max) {
+            blackHolesC = max;
+        }
         
         int remainder = blackHolesC-_blackHoles.count;
         
         if (remainder > 0) {
+            CGRect frame = _ball.frame;
             for (int i = 0; i < remainder; i++) {
                 BlackHole *blackHoleman = [[BlackHole alloc]init];
                 [self.view addSubview:blackHoleman];
                 [blackHoleman setDifficulty:index];
-                [blackHoleman redrawRectWithBallFrame:_ball.frame];
+                [blackHoleman redrawRectWithBallFrame:frame];
                 [_blackHoles addObject:blackHoleman];
             }
         }
@@ -412,16 +421,16 @@ CGRect _screenBounds;
 
 - (BOOL)checkStuff {
     CGRect frame = _ball.frame;
-
-    if (CGRectIntersectsRect(frame, _target.frame)) {
-        [self randomizePosition];
-        [self addOneToScore];
-    }
     
     if (CGRectIntersectsRect(frame, _bonusHole.frame) && !_bonusHole.hidden) {
         _score.text = [NSString stringWithFormat:@"%d",_score.text.intValue+5];
         [self flashScoreLabelToGreen];
         [_bonusHole setHidden:YES];
+    }
+    
+    if (CGRectIntersectsRect(frame, _target.frame)) {
+        [self randomizePosition];
+        [self addOneToScore];
     }
     
     for (BlackHole *blackHoleman in _blackHoles) {

@@ -14,6 +14,8 @@ UIColor *oldBGColor;
 
 @property (nonatomic, assign) CGRect screenBounds;
 @property (nonatomic, assign) CGSize directionVector;
+@property (nonatomic, assign) BOOL currentImageIsVerticle;
+@property (nonatomic, assign) BOOL hasImageDrawnAlready;
 
 @end
 
@@ -91,6 +93,7 @@ UIColor *oldBGColor;
 
 - (void)setClassicMode:(BOOL)cm {
     self.isClassicMode = cm;
+    self.hasImageDrawnAlready = NO;
     self.backgroundColor = cm?oldBGColor:[UIColor clearColor];
     self.layer.cornerRadius = 5;
     [self setNeedsDisplay];
@@ -105,10 +108,14 @@ UIColor *oldBGColor;
 - (void)drawRect:(CGRect)rect {
     if (_isClassicMode) {
         [super drawRect:rect];
+    } else if (((_currentImageIsVerticle && _isVerticle) || (!_currentImageIsVerticle && !_isVerticle)) && _hasImageDrawnAlready) {
+        [super drawRect:rect];
     } else {
         CGSize size = self.bounds.size;
         UIImage *image = [UIImage uncachedImageNamed:(size.width > size.height)?@"target-hor":@"target-ver"];
         [image drawInRect:self.bounds];
+        _currentImageIsVerticle = !(size.width > size.height);
+        self.hasImageDrawnAlready = YES;
     }
 }
 
