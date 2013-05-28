@@ -174,6 +174,7 @@ CGRect _screenBounds;
     }
     
     [self difficultyChanged];
+    _blackHoles = [NSMutableArray array];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -387,10 +388,6 @@ CGRect _screenBounds;
 }
 
 - (void)updateBlackHoles {
-    if (_blackHoles.count == 0) {
-        _blackHoles = [NSMutableArray array];
-    }
-    
     int index = _difficulty.selectedSegmentIndex;
     
     if (index == 0) {

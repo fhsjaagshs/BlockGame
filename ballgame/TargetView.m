@@ -31,6 +31,7 @@ UIColor *oldBGColor;
         self.layer.shadowPath = nil;
         self.directionVector = CGSizeMake(1, 1);
         self.screenBounds = [[UIScreen mainScreen]bounds];
+        self.layer.cornerRadius = 5;
     }
     return self;
 }
@@ -47,6 +48,7 @@ UIColor *oldBGColor;
         self.layer.shadowPath = nil;
         self.directionVector = CGSizeMake(1, 1);
         self.screenBounds = [[UIScreen mainScreen]bounds];
+        self.layer.cornerRadius = 5;
     }
     return self;
 }
@@ -92,7 +94,6 @@ UIColor *oldBGColor;
 - (void)setClassicMode:(BOOL)cm {
     self.isClassicMode = cm;
     self.backgroundColor = cm?oldBGColor:[UIColor clearColor];
-    self.layer.cornerRadius = 5;
     [self setNeedsDisplay];
 }
 
