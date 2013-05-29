@@ -126,7 +126,7 @@ CGRect _screenBounds;
     [_theme setDividerImage:transparentImage forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [self.view addSubview:_theme];
     
-    self.difficulty = [[NSCustomSegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Easy", @"Medium", @"Hard", @"Insane", nil]];
+    self.difficulty = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Easy", @"Medium", @"Hard", @"Insane", nil]];
     _difficulty.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _difficulty.frame = CGRectMake(42, 326, 237, 30);
     _difficulty.segmentedControlStyle = UISegmentedControlStyleBar;
