@@ -97,7 +97,7 @@ CGRect _screenBounds;
     _startButton.titleLabel.textColor = [UIColor whiteColor];
     _startButton.titleLabel.textAlignment = UITextAlignmentCenter;
     _startButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-    _startButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    _startButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
     [_startButton setTitle:@"Start" forState:UIControlStateNormal];
     [_startButton setBackgroundImage:transparentImage forState:UIControlStateNormal];
     [_startButton addTarget:self action:@selector(startOrRetry) forControlEvents:UIControlEventTouchUpInside];
@@ -110,13 +110,13 @@ CGRect _screenBounds;
     _leaderboardButton.titleLabel.textColor = [UIColor whiteColor];
     _leaderboardButton.titleLabel.textAlignment = UITextAlignmentCenter;
     _leaderboardButton.titleLabel.shadowColor = [UIColor lightGrayColor];
-    _leaderboardButton.titleLabel.shadowOffset = CGSizeMake(1, 1);
+    _leaderboardButton.titleLabel.shadowOffset = CGSizeMake(0, -1);
     [_leaderboardButton setBackgroundImage:transparentImage forState:UIControlStateNormal];
     [_leaderboardButton setTitle:@"Leaderboard" forState:UIControlStateNormal];
     [_leaderboardButton addTarget:self action:@selector(showLeaderboard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_leaderboardButton];
 
-    self.theme = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
+    self.theme = [[NSCustomSegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Modern", @"Classic", nil]];
     _theme.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _theme.frame = CGRectMake(77, 402, 166, 30);
     _theme.segmentedControlStyle = UISegmentedControlStyleBar;
@@ -126,7 +126,7 @@ CGRect _screenBounds;
     [_theme setDividerImage:transparentImage forLeftSegmentState:UIControlStateNormal rightSegmentState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [self.view addSubview:_theme];
     
-    self.difficulty = [[UISegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Easy", @"Medium", @"Hard", @"Insane", nil]];
+    self.difficulty = [[NSCustomSegmentedControl alloc]initWithItems:[NSArray arrayWithObjects:@"Easy", @"Medium", @"Hard", @"Insane", nil]];
     _difficulty.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
     _difficulty.frame = CGRectMake(42, 326, 237, 30);
     _difficulty.segmentedControlStyle = UISegmentedControlStyleBar;
@@ -635,6 +635,7 @@ CGRect _screenBounds;
     [_blackHoles makeObjectsPerformSelector:@selector(setDifficultyWithNSNumber:) withObject:[NSNumber numberWithInt:index]];
     [_bonusHole setDifficulty:index];
     [_target setDifficulty:index];
+    [_difficulty setNeedsLayout];
 }
 
 - (void)themeChanged {
@@ -642,6 +643,7 @@ CGRect _screenBounds;
     BOOL isSelectedIndexOne = (_theme.selectedSegmentIndex == 1);
     [(BackgroundView *)self.view setClassicMode:isSelectedIndexOne];
     [_target setClassicMode:isSelectedIndexOne];
+    [_theme setNeedsLayout];
 }
 
 - (void)gameOver {

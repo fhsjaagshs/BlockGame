@@ -15,8 +15,8 @@
 @property (strong, nonatomic) BallView *ball;
 @property (strong, nonatomic) TargetView *target;
 
-@property (strong, nonatomic) UISegmentedControl *difficulty;
-@property (strong, nonatomic) UISegmentedControl *theme;
+@property (strong, nonatomic) NSCustomSegmentedControl *difficulty;
+@property (strong, nonatomic) NSCustomSegmentedControl *theme;
 @property (strong, nonatomic) UILabel *score;
 @property (strong, nonatomic) UILabel *gameOverLabel;
 @property (strong, nonatomic) UILabel *themeLabel;

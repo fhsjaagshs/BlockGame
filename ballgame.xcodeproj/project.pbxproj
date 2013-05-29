@@ -31,6 +31,7 @@
 		F173EDC017471EB000E158FA /* ImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F173EDBF17471EB000E158FA /* ImageCache.m */; };
 		F1809F9C1748389400687998 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = F1809F9A1748389400687998 /* Default.png */; };
 		F1809F9D1748389400687998 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F1809F9B1748389400687998 /* Default@2x.png */; };
+		F18E174317558EEC00E4FA60 /* NSCustomSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F18E174217558EEC00E4FA60 /* NSCustomSegmentedControl.m */; };
 		F1ABC76F17162B3100389EDB /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1ABC76E17162B3100389EDB /* CoreMotion.framework */; };
 		F1ABC77217164ABB00389EDB /* BackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1ABC77117164ABB00389EDB /* BackgroundView.m */; };
 		F1BB0A0D14CF9B7300D132CD /* NSCustomAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */; };
@@ -78,6 +79,8 @@
 		F173EDBF17471EB000E158FA /* ImageCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCache.m; sourceTree = "<group>"; };
 		F1809F9A1748389400687998 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		F1809F9B1748389400687998 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		F18E174117558EEC00E4FA60 /* NSCustomSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCustomSegmentedControl.h; sourceTree = "<group>"; };
+		F18E174217558EEC00E4FA60 /* NSCustomSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCustomSegmentedControl.m; sourceTree = "<group>"; };
 		F1ABC76E17162B3100389EDB /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		F1ABC77017164ABB00389EDB /* BackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundView.h; sourceTree = "<group>"; };
 		F1ABC77117164ABB00389EDB /* BackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundView.m; sourceTree = "<group>"; };
@@ -191,6 +194,8 @@
 				9B456C5C151FC66B003E86E4 /* networkTest.m */,
 				F1BE1F3E1713940000221669 /* GCManager.h */,
 				F1BE1F3F1713940000221669 /* GCManager.m */,
+				F18E174117558EEC00E4FA60 /* NSCustomSegmentedControl.h */,
+				F18E174217558EEC00E4FA60 /* NSCustomSegmentedControl.m */,
 				F1BB0A0B14CF9B7300D132CD /* NSCustomAlertView.h */,
 				F1BB0A0C14CF9B7300D132CD /* NSCustomAlertView.m */,
 				F1ABC77017164ABB00389EDB /* BackgroundView.h */,
@@ -298,6 +303,7 @@
 				F173EDC017471EB000E158FA /* ImageCache.m in Sources */,
 				F14793091747A556007EA740 /* UIImage+uncachedImageNamed.m in Sources */,
 				F132523E174AB7AB001FBA97 /* CGRectFunctions.m in Sources */,
+				F18E174317558EEC00E4FA60 /* NSCustomSegmentedControl.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
