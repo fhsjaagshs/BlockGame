@@ -18,7 +18,7 @@ NSString * const savedScoreKey = @"savedScore";
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    application.idleTimerDisabled = NO;
+    application.idleTimerDisabled = YES;
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     _window.rootViewController = [[ViewController alloc]init];
     [_window makeKeyAndVisible];
